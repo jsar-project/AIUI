@@ -1,7 +1,8 @@
----
+***
+
 name: "aiui-dev"
 description: "Specialized agent for developing AIUI applications. Invoke when writing AIUI code, needing API references for jsui/wx, debugging AIUI applications, or aligning AIUI visual design with this Skill's design guidelines."
----
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # AIUI Agent Developer Guide
 
@@ -78,6 +79,7 @@ export default {
 In AIUI, each page acts as a Model Context Protocol (MCP) UI component. The configuration for each page is defined in its respective `page.json` (or within the `<script def>` block of an `.ink` file). This configuration declares the page's capabilities and the expected input parameters for rendering.
 
 Key fields in page configuration:
+
 - `description`: A clear, natural language description of what the page UI represents or what task it accomplishes. This helps the AI or system understand the page's purpose.
 - `schema`: Defines the expected input data structure for rendering the UI.
   - `data`: A JSON Schema object specifying the properties, types, and required fields needed to populate the page's initial state.
@@ -223,9 +225,6 @@ For parameter-by-parameter documentation, event behavior, content model notes, a
 For runtime API details, constructor behavior, supported overloads, and current implementation limits, see [apis.md](./apis.md).
 
 - **`<view>`**: The fundamental layout container, similar to `<div>` in HTML.
-- **`<swiper>`**: A swipeable container currently backed by the base view implementation.
-- **`<swiper-item>`**: An item inside `<swiper>`, currently backed by the base view implementation.
-- **`<fragment>`**: A lightweight grouping container currently backed by the base view implementation.
 - **`<text>`**: Displays text content. Similar to `<span>` in HTML.
 - **`<icon>`**: An icon-like text element currently rendered through the text component implementation.
 - **`<image>`**: Displays local or remote images.
@@ -233,11 +232,7 @@ For runtime API details, constructor behavior, supported overloads, and current 
 - **`<canvas>`**: A component for custom 2D drawing.
 - **`<scroll-view>`**: A scrollable container for content that exceeds the visible area.
 - **`<chart>`**: A chart component supporting Line, Area, Pie, and Radar charts.
-- **`<input>`**: A focusable single-line text input component.
-- **`<textarea>`**: A focusable multi-line text input component.
-- **`<switch>`**: A toggle control for boolean on/off state.
 - **`<lottie-view>`**: Renders Lottie animations from inline JSON, local files, or remote URLs.
-- **`<streamdown>`**: Renders Markdown-style streaming text content with optional streaming caret behavior.
 - **`<a2ui>`**: A specialized component for rendering agent-generated UI commands dynamically.
 - **`<error-state>`**: A compact status component that displays an optional icon with a message.
 
@@ -304,6 +299,7 @@ WXSS extends standard CSS with features tailored for mobile and wearable devices
 ### 5.2 Selectors
 
 AIUI supports most standard CSS selectors:
+
 - **Class Selector (`.class`)**: The recommended way to style components.
 - **ID Selector (`#id`)**.
 - **Type Selector (`element`)**: e.g., `view`, `text`.
@@ -363,6 +359,7 @@ When generating code:
 ## 8. Usage Examples (WeChat APIs)
 
 ### Take a Photo with Camera
+
 ```javascript
 import wx from 'wx';
 
@@ -372,7 +369,9 @@ console.log('Image data size:', photo.data.byteLength);
 ```
 
 ### Crypto & UUID Generation
+
 ```javascript
 const uuid = crypto.randomUUID();
 const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('hello AIUI'));
 ```
+

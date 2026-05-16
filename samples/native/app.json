@@ -1,9 +1,0 @@
-{
-  "pages": [
-    "pages/camera/index",
-    "pages/minimax-tts/index"
-  ],
-  "window": {
-    "navigationBarTitleText": "Chat Samples"
-  }
-}

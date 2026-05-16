@@ -1,0 +1,8 @@
+{
+  "pages": [
+    "pages/minimax-tts/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "Minimax TTS Sample"
+  }
+}

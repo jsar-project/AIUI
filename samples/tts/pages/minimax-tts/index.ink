@@ -41,15 +41,6 @@ export default {
     });
   },
 
-  backToCamera() {
-    if (getCurrentPages().length > 1) {
-      wx.navigateBack();
-      return;
-    }
-
-    wx.navigateTo({ url: '/pages/camera/index' });
-  },
-
   async playTts() {
     this.setData({
       errorMessage: '',
@@ -96,7 +87,6 @@ export default {
     <view class="actions">
       <button class="primary-button" bindtap="playTts">Play</button>
       <button class="secondary-button" bindtap="stopTts">Stop</button>
-      <button class="ghost-button" bindtap="backToCamera">Back To Camera</button>
     </view>
 
     <view class="card">
@@ -170,8 +160,7 @@ export default {
   }
 
   .primary-button,
-  .secondary-button,
-  .ghost-button {
+  .secondary-button {
     flex: 1;
     font-size: 14px;
     border-radius: 999px;
@@ -185,12 +174,6 @@ export default {
   .secondary-button {
     background: #1b2027;
     color: #f5f7fa;
-    border: 1px solid #303643;
-  }
-
-  .ghost-button {
-    background: transparent;
-    color: #dfe5ef;
     border: 1px solid #303643;
   }
 

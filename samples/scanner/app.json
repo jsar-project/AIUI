@@ -1,0 +1,8 @@
+{
+  "pages": [
+    "pages/camera/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "Barcode Scanner Sample"
+  }
+}
