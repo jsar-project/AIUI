@@ -1,8 +1,8 @@
-***
+---
 
 name: "aiui-dev"
 description: "Specialized agent for developing AIUI applications. Invoke when writing AIUI code, needing API references for jsui/wx, debugging AIUI applications, or aligning AIUI visual design with this Skill's design guidelines."
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
 # AIUI Agent Developer Guide
 
