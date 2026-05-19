@@ -307,9 +307,43 @@ AIUI supports most standard CSS selectors:
 
 *Recommendation: Prioritize using Class Selectors to ensure optimal rendering performance.*
 
-### 5.3 Flexbox Layout
+### 5.3 Layout
 
-AIUI's view engine provides robust support for Flexbox. It is the primary and recommended method for building responsive layouts in AIUI.
+AIUI supports both **Flexbox** and **Grid** layout through the Ink CSS engine.
+
+- **Flexbox** is the primary and recommended choice for most one-dimensional layouts such as vertical stacks, horizontal toolbars, centered content, and card internals.
+- **Grid** is supported for two-dimensional layouts where rows and columns need to be controlled together.
+
+Supported Flexbox properties include:
+
+- `display: flex`
+- `flex-direction`
+- `flex-wrap`
+- `justify-content`
+- `align-items`
+- `flex-grow`
+- `flex-shrink`
+- `flex-basis`
+- `gap`, `row-gap`, `column-gap`
+
+Supported Grid properties include:
+
+- `display: grid`
+- `grid-template-columns`
+- `grid-template-rows`
+- `grid-auto-columns`
+- `grid-auto-rows`
+- `grid-auto-flow`
+- `grid-column`, `grid-column-start`, `grid-column-end`
+- `grid-row`, `grid-row-start`, `grid-row-end`
+- `grid-area`
+- `align-content`
+- `justify-items`
+- `align-self`
+- `justify-self`
+- `gap`, `row-gap`, `column-gap`
+
+Prefer Flexbox when either layout model can work. Use Grid when the UI clearly benefits from explicit row and column placement.
 
 ```css
 .container {
@@ -317,8 +351,141 @@ AIUI's view engine provides robust support for Flexbox. It is the primary and re
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 12px;
 }
 ```
+
+### 5.4 Styling
+
+AIUI supports a practical subset of CSS properties for visual styling. When generating styles, stay within the properties that are known to be supported by the Ink CSS engine.
+
+Commonly supported styling properties include:
+
+- **Box model and sizing**: `width`, `height`, `min-width`, `min-height`, `max-width`, `max-height`, `margin`, `padding`, `box-sizing`
+- **Positioning and overflow**: `position`, `inset`, `overflow`, `overflow-x`, `overflow-y`, `z-index`
+- **Colors and backgrounds**: `color`, `background-color`, custom properties, and `var(--token)` references
+- **Borders and outlines**: `border`, `border-width`, `border-style`, `border-color`, `border-radius`, `outline`, `outline-width`, `outline-style`, `outline-color`, `outline-offset`
+- **Typography**: `font-size`, `line-height`, `font-weight`, `font-family`, `font-style`, `font-variant`, `text-align`, `white-space`, `word-break`
+- **Effects and visibility**: `opacity`, `visibility`, `box-shadow`, `filter`, `transform`, `transform-origin`
+- **Motion**: `transition`, `transition-property`, `transition-duration`, `transition-timing-function`, `transition-delay`, `animation`, `animation-name`, `animation-duration`, `animation-timing-function`, `animation-delay`, `animation-iteration-count`, `animation-direction`, `animation-fill-mode`
+
+Prefer simple, production-safe CSS. Do not assume browser-only features or unsupported CSS shorthands beyond what AIUI and Ink CSS explicitly support.
+
+When styling AIUI interfaces:
+
+- Prefer AIUI's built-in theme tokens instead of hardcoding colors, spacing, border widths, or radii
+- Reference theme values with `var(--token-name)`
+- Keep custom properties semantically named when introducing new local tokens
+
+Built-in green theme token reference:
+
+| Token | Category | Purpose |
+| --- | --- | --- |
+| `--app-width` | App layout | Defines the standard application width. |
+| `--app-height-min` | App layout | Defines the minimum recommended application height. |
+| `--app-height-max` | App layout | Defines the maximum recommended application height. |
+| `--color-primary` | Core colors | Primary brand and action color. |
+| `--color-primary-60` | Core colors | Reduced-opacity primary color for secondary emphasis. |
+| `--color-primary-40` | Core colors | Lower-opacity primary color for highlights and subtle fills. |
+| `--color-secondary` | Core colors | Secondary accent color derived from the primary palette. |
+| `--color-background` | Core colors | Default page or app background color. |
+| `--color-surface` | Core colors | Surface color for cards and panels. |
+| `--color-surface-highlight` | Core colors | Highlighted surface fill for selected or emphasized areas. |
+| `--color-text-primary` | Core colors | Default high-priority text color. |
+| `--color-text-secondary` | Core colors | Lower-emphasis text color for supporting copy. |
+| `--border-width-thin` | Borders and radii | Thin border width for subtle separators and outlines. |
+| `--border-width-default` | Borders and radii | Standard border width for common components. |
+| `--border-width-strong` | Borders and radii | Heavy border width for strong emphasis. |
+| `--border-color-default` | Borders and radii | Default border color for most components. |
+| `--border-color-muted` | Borders and radii | Softer border color for low-emphasis dividers. |
+| `--border-color-strong` | Borders and radii | Strong border color for emphasized boundaries. |
+| `--border-color-accent` | Borders and radii | Accent border color for interactive or highlighted states. |
+| `--border-color-success` | Borders and radii | Border color for success states. |
+| `--border-color-danger` | Borders and radii | Border color for error or destructive states. |
+| `--border-color-warning` | Borders and radii | Border color for warning states. |
+| `--border-color-highlight` | Borders and radii | Border color for featured or highlighted elements. |
+| `--border-color-contrast` | Borders and radii | High-contrast border color for strong separation. |
+| `--border-color-fallback` | Borders and radii | Fallback border color when a semantic border token is unavailable. |
+| `--card-border-width` | Borders and radii | Default border width for card components. |
+| `--card-border-color` | Borders and radii | Default border color for card components. |
+| `--radius-sm` | Borders and radii | Small corner radius. |
+| `--radius-md` | Borders and radii | Medium corner radius used by standard components. |
+| `--spacing-sm` | Spacing | Small spacing unit. |
+| `--spacing-md` | Spacing | Medium spacing unit used for default padding and gaps. |
+| `--spacing-lg` | Spacing | Large spacing unit for more open layouts. |
+| `--card-padding` | Card tokens | Default inner padding for cards. |
+| `--card-title-font-size` | Card tokens | Font size for card titles. |
+| `--card-title-gap` | Card tokens | Gap between card title content and adjacent elements. |
+| `--card-footer-font-size` | Card tokens | Font size for card footer content. |
+| `--card-footer-padding-y` | Card tokens | Vertical padding for card footers. |
+| `--card-footer-margin-top` | Card tokens | Top margin separating the footer from body content. |
+| `--card-divider-width` | Card tokens | Divider thickness inside cards. |
+| `--card-divider-color` | Card tokens | Divider color inside cards. |
+| `--card-cover-height` | Card tokens | Standard media or cover area height for cards. |
+| `--card-cover-background` | Card tokens | Background color for card cover regions. |
+| `--error-state-icon-size` | Error state tokens | Icon size for error-state components. |
+| `--error-state-icon-gap` | Error state tokens | Gap between error icon and text. |
+| `--error-state-font-size` | Error state tokens | Font size for error-state text. |
+| `--error-state-text-color` | Error state tokens | Text color for error-state content. |
+| `--error-state-background` | Error state tokens | Background fill for error-state containers. |
+| `--error-state-border-width` | Error state tokens | Border width for error-state containers. |
+| `--error-state-border-color` | Error state tokens | Border color for error-state containers. |
+| `--input-background-color` | Input tokens | Background color for input fields. |
+| `--input-border-width` | Input tokens | Border width for input fields. |
+| `--input-border-color` | Input tokens | Border color for input fields. |
+| `--input-placeholder-color` | Input tokens | Text color for placeholder content. |
+| `--input-padding-y` | Input tokens | Vertical padding inside inputs. |
+| `--input-padding-x` | Input tokens | Horizontal padding inside inputs. |
+| `--input-radius` | Input tokens | Corner radius for inputs. |
+| `--calendar-padding` | Calendar tokens | Outer padding for calendar components. |
+| `--calendar-background` | Calendar tokens | Background color for calendars. |
+| `--calendar-border-width` | Calendar tokens | Border width for calendar containers. |
+| `--calendar-border-color` | Calendar tokens | Border color for calendar containers. |
+| `--calendar-radius` | Calendar tokens | Corner radius for calendar containers. |
+| `--calendar-title-gap` | Calendar tokens | Gap around the calendar title area. |
+| `--calendar-title-font-size` | Calendar tokens | Font size for calendar titles. |
+| `--calendar-title-color` | Calendar tokens | Text color for calendar titles. |
+| `--calendar-weekday-gap` | Calendar tokens | Gap between weekday labels. |
+| `--calendar-weekday-font-size` | Calendar tokens | Font size for weekday labels. |
+| `--calendar-weekday-color` | Calendar tokens | Text color for weekday labels. |
+| `--calendar-cell-min-height` | Calendar tokens | Minimum height for day cells. |
+| `--calendar-cell-radius` | Calendar tokens | Corner radius for calendar day cells. |
+| `--calendar-selected-indicator-size` | Calendar tokens | Size of the selected-day indicator. |
+| `--calendar-day-font-size` | Calendar tokens | Font size for day numbers. |
+| `--calendar-day-color` | Calendar tokens | Text color for day numbers. |
+| `--calendar-annotation-font-size` | Calendar tokens | Font size for day annotations or notes. |
+| `--calendar-holiday-color` | Calendar tokens | Accent color used for holidays. |
+| `--calendar-event-color` | Calendar tokens | Accent color used for events. |
+| `--calendar-marker-size` | Calendar tokens | Size of event or holiday markers. |
+| `--calendar-holiday-marker-color` | Calendar tokens | Marker color for holidays. |
+| `--calendar-event-marker-color` | Calendar tokens | Marker color for events. |
+| `--calendar-outside-month-color` | Calendar tokens | Text color for days outside the current month. |
+| `--calendar-selected-bg` | Calendar tokens | Background color for the selected day. |
+| `--calendar-selected-color` | Calendar tokens | Text color for the selected day. |
+| `--calendar-today-border-color` | Calendar tokens | Border color used to indicate today. |
+| `--calendar-today-text-color` | Calendar tokens | Text color used to indicate today. |
+| `--chart-color` | Chart tokens | Primary chart color. |
+| `--chart-positive-color` | Chart tokens | Color for positive chart values or trends. |
+| `--chart-negative-color` | Chart tokens | Color for negative chart values or trends. |
+| `--chart-reference-color` | Chart tokens | Color for reference lines or benchmarks. |
+| `--chart-stroke-color` | Chart tokens | Default stroke color for chart lines and frames. |
+| `--chart-stroke-width` | Chart tokens | Default stroke width for chart lines and frames. |
+| `--chart-radar-fill-color` | Chart tokens | Fill color for radar chart areas. |
+| `--chart-fill-style` | Chart tokens | Fill style mode used by chart rendering. |
+| `--chart-panel-background` | Chart tokens | Background color for chart panels. |
+| `--chart-frame-background` | Chart tokens | Background color for chart frames or plot areas. |
+| `--theme-color` | Compatibility tokens | Compatibility token mapping to the main theme color. |
+| `--theme-bg` | Compatibility tokens | Compatibility token mapping to the theme background. |
+| `--theme-border` | Compatibility tokens | Compatibility token for a default themed border shorthand. |
+| `--theme-radius` | Compatibility tokens | Compatibility token mapping to the default radius. |
+| `--theme-padding` | Compatibility tokens | Compatibility token mapping to the default padding. |
 
 ## 6. Design Guidelines
 
@@ -335,11 +502,10 @@ When developing AIUI applications, especially for wearable devices, it is crucia
 
 ### 6.2 Color Palette
 
-- **Primary Color**: Use `#40FF5E` as the primary brand/action color.
-  - 100% Opacity: `#40FF5E` (Main elements, active states)
-  - 60% Opacity: `rgba(64, 255, 94, 0.6)` (Secondary elements, hover states)
-  - 40% Opacity: `rgba(64, 255, 94, 0.4)` (Background highlights, disabled states)
-- **Default Text Color**: Use the Primary Color `#40FF5E` as the default text color unless a more specific semantic color is required.
+- **Theme First**: Prefer AIUI's built-in theme tokens as the public styling interface.
+- **Token Usage**: Use `var(--color-primary)`, `var(--color-text-primary)`, `var(--color-background)`, `var(--spacing-md)`, `var(--radius-md)`, and related semantic tokens before introducing hardcoded values.
+- **Green Theme Reference**: If you intentionally target the green wearable visual language, prefer the built-in green theme tokens instead of hardcoding `#40FF5E`, `rgba(64, 255, 94, 0.6)`, or `rgba(64, 255, 94, 0.4)` directly.
+- **Default Text Color**: Prefer semantic text tokens such as `var(--color-text-primary)` or `var(--color-text-secondary)` unless a specific component token is more appropriate.
 
 ### 6.3 Prohibitions
 
@@ -374,4 +540,3 @@ console.log('Image data size:', photo.data.byteLength);
 const uuid = crypto.randomUUID();
 const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('hello AIUI'));
 ```
-
