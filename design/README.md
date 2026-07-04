@@ -1,16 +1,23 @@
 # AIUI Visual Design Language
 
-This directory holds the canonical visual design language for **AIUI** — the
-single-green monochrome HUD aesthetic constrained to RokidGlasses1 /
-RokidGlasses2, whose hardware can only reproduce one luminous green channel
-over pure black.
+> **Scope**: This design system currently applies only to **single-green
+> monochrome display** devices — RokidGlasses1 / RokidGlasses2, whose hardware
+> can reproduce only one luminous green channel over pure black. AIUI may add
+> a separate full-color variant (e.g. `design-system-fullcolor.md`) in the
+> future; until then, treat everything here as specific to the monochrome-green
+> hardware, not as a general-purpose AIUI visual language.
+
+This directory holds the **monochrome-green** visual design language for
+**AIUI**. The `-monochrome` suffix on each file is intentional: it scopes the
+content to single-color display hardware and leaves room for additional
+display-type variants later.
 
 ## Files
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`design-system.md`](./design-system.md) | Full token spec: colors, typography, spacing, radii, border widths, component chrome, and Do's & Don'ts. The diff-able source of truth. | Contributors, designers, AI agents |
-| [`preview.html`](./preview.html) | A self-contained, browsable visual showcase of every token and component. Open it directly in any browser — no build step. | Anyone who wants to see the system at a glance |
+| [`design-system-monochrome.md`](./design-system-monochrome.md) | Full token spec for the single-green display: colors, typography, spacing, radii, border widths, component chrome, and Do's & Don'ts. The diff-able source of truth. | Contributors, designers, AI agents |
+| [`preview-monochrome.html`](./preview-monochrome.html) | A self-contained, browsable visual showcase of every token and component. Open it directly in any browser — no build step. | Anyone who wants to see the system at a glance |
 
 ## Why a separate design language?
 
@@ -26,21 +33,29 @@ channel. That constraint shapes every decision here:
 - **Errors stay green** — error states use a muted border + faint fill rather
   than red, which the hardware cannot reproduce.
 
-See the [Do's & Don'ts](./design-system.md#dos-and-donts) section of the spec
-for the full set of rules.
+See the [Do's & Don'ts](./design-system-monochrome.md#dos-and-donts) section
+of the spec for the full set of rules.
 
 ## How it fits into the repository
 
 | Audience | Where you meet the design language |
 |----------|------------------------------------|
-| AI agents (Claude Code, Cursor, Codex, …) | Bundled inside [`skills/aiui-dev/design-system.md`](../skills/aiui-dev/design-system.md) when installed via `npx skills add` |
+| AI agents (Claude Code, Cursor, Codex, …) | Bundled inside [`skills/aiui-dev/design-system-monochrome.md`](../skills/aiui-dev/design-system-monochrome.md) when installed via `npx skills add` |
 | Human developers | This directory, linked from the root [`README.md`](../README.md) |
 | Sample authors | Mirror these tokens when building pages under [`samples/`](../samples/) |
 
-The copy at `skills/aiui-dev/design-system.md` is intentionally identical to
-`design-system.md` here — it is bundled into the AI skill so agents can align
-generated code with the same tokens without fetching remote URLs. When you
-edit one, please update the other to keep them in sync.
+The copy at `skills/aiui-dev/design-system-monochrome.md` is intentionally
+identical to `design-system-monochrome.md` here — it is bundled into the AI
+skill so agents can align generated code with the same tokens without fetching
+remote URLs. When you edit one, please update the other to keep them in sync.
+
+## Future variants
+
+This monochrome-green system is the *first* AIUI display-type variant. When
+AIUI ships on full-color display hardware, the intent is to add a sibling
+spec (e.g. `design-system-fullcolor.md` + `preview-fullcolor.html`) under
+this same directory, sharing token structure but expanding the palette beyond
+the single green channel.
 
 ## License
 
