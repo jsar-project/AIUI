@@ -1,6 +1,6 @@
 ---
 version: alpha
-name: Rokid AIUI (yodaos-sprite-greenonly) Analysis
+name: Rokid AIUI Monochrome-Green Visual Design Language
 target:
   devices: ["RokidGlasses1", "RokidGlasses2"]
   display: "single-green monochrome display"
@@ -101,6 +101,10 @@ components:
     height-min: 120px
     height-max: 380px
     backgroundColor: "{colors.background}"
+  # Canvas dimension aliases — referenced as {components.app-width}, {components.height-min}, {components.height-max} elsewhere in this spec.
+  app-width: 480px
+  height-min: 120px
+  height-max: 380px
   card:
     description: "Base content container — the foundational surface of every AIUI interface."
     backgroundColor: "{colors.surface}"
@@ -257,11 +261,11 @@ components:
 
 ## Overview
 
-Rokid AIUI is the web rendered as a **heads-up display over the real world**, locked to **single-green AR glasses (RokidGlasses1 / RokidGlasses2)**. Where most UI systems reach for full-color palettes and soft Material shadows, AIUI builds itself out of a single luminous green on pure black — a hard constraint forced by the **single-green-display hardware**, which physically can reproduce only the green channel and no other hue. That limitation is then turned into a coherent visual identity. Every interface is a **floating card** pinned in the user's field of view: a `{colors.surface}` black panel outlined in green, filled only with translucent green where emphasis is needed, carrying green text that glows against the transparent backdrop of the physical environment behind it.
+Rokid AIUI is rendered as a **heads-up display over the real world**, locked to **single-green AR glasses (RokidGlasses1 / RokidGlasses2)**. Where most UI systems reach for full-color palettes and soft Material shadows, AIUI builds itself out of a single luminous green on pure black — a hard constraint forced by the **single-green-display hardware**, which physically can reproduce only the green channel and no other hue. That limitation is then turned into a coherent visual identity. Every interface is a **floating card** pinned in the user's field of view: a `{colors.surface}` black panel outlined in green, filled only with translucent green where emphasis is needed, carrying green text that glows against the transparent backdrop of the physical environment behind it.
 
 The system runs on a **monochrome value ladder rather than a hue range**. A single color — `{colors.primary}` Rokid Green — is the entire chromatic vocabulary. It is deployed at four opacity steps to build the whole hierarchy: full strength (`{colors.primary}`) for titles, key data, and high-priority interaction outlines; 60% (`{colors.primary-60}`) for secondary text, default borders, and mid-emphasis layers; 40% (`{colors.primary-40}`) for light fills, surface highlights, and muted dividers; and 8% (`{colors.primary-08}`) for the faintest input/error fills. There is no second hue. Hierarchy, emphasis, and even error states are expressed entirely through **green opacity + border weight + surface layering**, never through color.
 
-Structure comes from **outlines, not shadows**. The documentation is explicit: this token set favors *light fills, clear outlines, and stable whitespace*, which suits a transparent AR display better than relying on shadows. A card is a `{colors.surface}` black rectangle with a `{border-width.default}` 2px `{colors.border-default}` green-60% outline and `{rounded.md}` 12px corners; emphasis is achieved by stepping the surface to `{colors.surface-highlight}` (green-40% fill) and the border to `{colors.border-accent}` (full green), or thickening the outline to `{border-width.strong}` 4px. The whole thing floats as a `{components.app-canvas}` panel capped at `{spacing.lg}`-aware dimensions — `{colors.app-width}` 480px wide, between 120px and 380px tall, scrolling past that rather than expanding unbounded.
+Structure comes from **outlines, not shadows**. The documentation is explicit: this token set favors *light fills, clear outlines, and stable whitespace*, which suits a transparent AR display better than relying on shadows. A card is a `{colors.surface}` black rectangle with a `{border-width.default}` 2px `{colors.border-default}` green-60% outline and `{rounded.md}` 12px corners; emphasis is achieved by stepping the surface to `{colors.surface-highlight}` (green-40% fill) and the border to `{colors.border-accent}` (full green), or thickening the outline to `{border-width.strong}` 4px. The whole thing floats as a `{components.app-canvas}` panel capped at `{spacing.lg}`-aware dimensions — `{components.app-width}` 480px wide, between 120px and 380px tall, scrolling past that rather than expanding unbounded.
 
 The system is **token-driven and host-injected**. AIUI's visual design is not a static color convention but a reusable infrastructure organized around **Design Tokens** (CSS custom properties). The host environment injects the theme first as the default token layer; the application can override variables in `app.wxss`, page styles, and component-local styles. The recommended built-in Ink theme is `yodaos-sprite-greenonly`, which encodes every value below into a single CSS file so that switching themes never requires markup changes.
 
@@ -308,7 +312,7 @@ AIUI renders through a **Skia-powered native runtime** and follows Web/WXSS CSS 
 
 ### Hierarchy
 
-> AIUI does not publish explicit typography size/weight tokens in its visual spec; type is deferred to the theme. The scale below is a **recommended baseline** calibrated to the 480px-wide card context and AR-glasses readability, expressed in the system's token idiom.
+> The `typography.*` tokens above are the recommended baseline scale for this HUD aesthetic, calibrated to the 480px-wide card context and AR-glasses readability. They are host/application-overridable — the theme layer and WXSS may replace them without changing markup.
 
 | Token | Font | Size | Weight | Line Height | Letter Spacing | Use |
 |---|---|---|---|---|---|---|
