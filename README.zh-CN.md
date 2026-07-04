@@ -35,6 +35,15 @@ npm create @yodaos-pkg/aiui-agent my-agent
 - `canvas`、`canvas_api`、`chart`、`lottie`：绘制与视觉内容示例
 - `media_query`、`css_vars`、`filter`、`transform`：样式与响应式行为示例
 
+## 🎨 设计系统
+
+[`design/`](./design/) 目录存放 **AIUI 视觉设计语言** 的规范——这是为 RokidGlasses1 / RokidGlasses2 这种单绿色单色显示屏定制的 HUD 视觉语言，硬件只能在纯黑之上再现单一的绿色通道。
+
+- [`design/design-system.md`](./design/design-system.md) ——完整的 token 规范：颜色（同一种绿色在纯黑之上分四个透明度层级）、排版、间距、圆角、描边宽度以及组件外观，并附带“应做与不应做”清单。
+- [`design/preview.html`](./design/preview.html) ——一份自包含、可直接在浏览器打开的可视化预览，无需任何构建步骤即可浏览全部 token 与组件。
+
+同一份规范也会随下方的 `aiui-dev` 技能一同打包分发，因此 AI 编码助手在生成 AIUI 代码时会自动对齐这些 token。
+
 ## 🤖 AI Agent 技能
 
 我们提供了内置说明文档和上下文文件，帮助 LLM（大语言模型）或 AI 编码助手更高效地编写 AIUI 代码。
@@ -66,6 +75,10 @@ npx skills add https://github.com/jsar-project/AIUI/tree/v0.1.0/skills/aiui-dev
 
 ```text
 .
+├── design/
+│   ├── design-system.md      # AIUI 视觉设计语言（token 规范）
+│   ├── preview.html          # 设计系统的可视化预览
+│   └── README.md             # 设计语言的一页介绍
 ├── packages/
 │   └── create-aiui-agent/    # 用于创建 AIUI Agent 项目的 npm CLI
 ├── samples/

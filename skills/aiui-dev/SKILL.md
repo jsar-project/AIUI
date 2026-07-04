@@ -825,6 +825,8 @@ When generating AIUI code:
 
 ## 6. Design Guidelines
 
+> The full visual design language — color tokens, typography, spacing, radii, border widths, component chrome, and Do's & Don'ts — lives in [`design-system.md`](./design-system.md). It is the canonical spec for the single-green monochrome HUD aesthetic on RokidGlasses1 / RokidGlasses2. Treat it as the source of truth whenever you choose colors, spacing, or component styling; the cheat-sheet below only summarizes the rules that come up most often during code generation.
+
 When developing AIUI applications, especially for wearable devices, it is crucial to follow these design guidelines to ensure a consistent and user-friendly experience.
 
 ### 6.1 Dimensions and Layout

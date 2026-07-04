@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Design System Analysis of Rokid AIUI (yodaos-sprite-greenonly)</title><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  *{box-sizing:border-box;}
+  :root{
+    --g:#40ff5e;
+    --g-60:rgba(64,255,94,0.6);
+    --g-40:rgba(64,255,94,0.4);
+    --g-20:rgba(64,255,94,0.2);
+    --g-08:rgba(64,255,94,0.08);
+    --text:rgba(64,255,94,0.85);
+    --black:#000000;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
+  }
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);background:var(--black);color:var(--g);-webkit-font-smoothing:antialiased;}
+  /* checkerboard to reveal translucent tokens */
+  .checker{background-image:linear-gradient(45deg,#0a0a0a 25%,transparent 25%),linear-gradient(-45deg,#0a0a0a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#0a0a0a 75%),linear-gradient(-45deg,transparent 75%,#0a0a0a 75%);background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0px;}
+
+  .nav{padding:0 48px;height:64px;background:var(--black);border-bottom:2px solid var(--g-60);position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;}
+  .nav-left{display:flex;align-items:center;gap:20px;justify-self:start;}
+  .nav-brand{font-weight:700;font-size:15px;font-family:var(--mono);letter-spacing:0;}
+  .nav-brand .dot{display:inline-block;width:9px;height:9px;border-radius:9999px;background:var(--g);margin-right:8px;vertical-align:1px;box-shadow:0 0 8px var(--g);}
+  .nav-github{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text);text-decoration:none;padding:5px 10px;border:1px solid var(--g-40);border-radius:12px;opacity:0.8;transition:opacity 200ms ease;font-family:inherit;line-height:1;white-space:nowrap;}
+  .nav-github:hover{opacity:1;border-color:var(--g);}
+  .nav-links{list-style:none;display:flex;gap:28px;margin:0;padding:0;font-size:14px;font-weight:500;justify-self:center;}
+  .nav-links li{color:var(--text);cursor:pointer;}
+  .nav-links li:hover{color:var(--g);}
+  .nav-cta{background:transparent;color:var(--g);border:1px solid var(--g);border-radius:12px;padding:8px 22px;font-weight:600;font-size:14px;cursor:pointer;font-family:var(--sans);justify-self:end;letter-spacing:0;}
+  .nav-cta:hover{background:var(--g-08);}
+
+  .hero{padding:96px 48px;background:var(--black);max-width:1440px;margin:0 auto;display:block;}
+  .hero-content{max-width:1200px;}
+  .hero .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin:0 0 20px;}
+  .hero h1{font-family:var(--mono);font-size:64px;font-weight:700;line-height:1.05;color:var(--g);margin:0 0 24px;letter-spacing:-1px;}
+  .hero h1 .soft{color:var(--text);}
+  .hero p{font-size:18px;color:var(--text);max-width:840px;margin:0 0 36px;line-height:1.55;}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .btn-primary{background:transparent;color:var(--g);border:1px solid var(--g);border-radius:12px;height:48px;padding:0 27px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;letter-spacing:0;}
+  .btn-primary:hover{background:var(--g-08);}
+  .btn-secondary{background:transparent;color:var(--text);border:1px solid var(--g-40);border-radius:12px;height:48px;padding:0 27px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;}
+  .btn-secondary:hover{color:var(--g);border-color:var(--g-60);}
+
+  section{padding:80px 48px;max-width:1440px;margin:0 auto;}
+  .section-eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text);margin-bottom:8px;display:block;}
+  .section-heading{font-family:var(--mono);font-size:34px;font-weight:700;letter-spacing:-0.5px;margin:0 0 12px;color:var(--g);}
+  .section-desc{color:var(--text);max-width:760px;margin:0 0 36px;line-height:1.55;font-size:15px;}
+
+  .palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+  .swatch{border:1px solid var(--g-40);border-radius:12px;overflow:hidden;background:var(--black);}
+  .swatch-fill{height:90px;}
+  .swatch-meta{padding:12px;}
+  .swatch-name{font-weight:600;font-size:13px;margin:0 0 2px;color:var(--g);font-family:var(--mono);}
+  .swatch-hex{font-family:var(--mono);font-size:11px;color:var(--text);margin:0 0 6px;word-break:break-all;}
+  .swatch-role{font-size:12px;color:var(--text);margin:0;line-height:1.4;}
+
+  .type-row{display:grid;grid-template-columns:240px 1fr;gap:24px;padding:20px 0;border-top:1px solid var(--g-20);align-items:baseline;}
+  .type-meta{font-family:var(--mono);font-size:11px;color:var(--text);line-height:1.6;}
+  .type-meta .lbl{color:var(--g);}
+
+  .button-grid,.card-grid,.form-grid,.elevation-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+  .demo-card{border:1px solid var(--g-40);border-radius:12px;padding:22px;background:var(--black);}
+  .label{font-size:11px;color:var(--text);display:block;margin-bottom:14px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.5px;}
+  .demo-note{font-size:12px;color:var(--text);margin:12px 0 0;line-height:1.5;}
+  .feature-card{background:var(--black);border:2px solid var(--g-60);border-radius:12px;padding:22px;}
+  .feature-card h4{margin:0 0 8px;font-size:17px;font-weight:700;font-family:var(--mono);color:var(--g);}
+  .feature-card p{margin:0;color:var(--text);font-size:13px;line-height:1.5;}
+
+  .ex-input-demo{width:100%;background:var(--g-08);border:1px solid var(--g-60);color:var(--g);padding:10px 14px;font-family:var(--sans);font-size:14px;border-radius:12px;}
+  .ex-input-demo::placeholder{color:var(--text);}
+
+  .spacing-row,.radius-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .spacing-box{background:var(--g);height:40px;border-radius:12px;box-shadow:0 0 12px var(--g-40);}
+  .spacing-label,.radius-label{font-family:var(--mono);font-size:11px;color:var(--text);margin-top:6px;text-align:center;}
+  .radius-box{width:90px;height:90px;background:var(--black);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--g);}
+
+  .elev-card{border-radius:12px;padding:22px;font-size:13px;color:var(--text);line-height:1.5;}
+  .elev-0{background:var(--g-08);border:1px solid var(--g-60);}
+  .elev-1{background:var(--black);border:2px solid var(--g-60);}
+  .elev-2{background:var(--g-40);border:2px solid var(--g);}
+  .elev-3{background:var(--black);border:4px solid var(--g);}
+
+  .responsive-table{width:100%;border-collapse:collapse;font-size:14px;}
+  .responsive-table th,.responsive-table td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--g-20);}
+  .responsive-table th{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text);font-family:var(--mono);}
+  .responsive-table td{color:var(--g);}
+  .responsive-table td.muted{color:var(--text);}
+  .device-ladder{display:flex;gap:12px;align-items:flex-end;margin-top:24px;flex-wrap:wrap;}
+
+  /* device mockup */
+  .glasses-mock{background:var(--black);border:1px solid var(--g-40);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--text);flex-direction:column;gap:6px;padding:8px;}
+  .glasses-mock .px{color:var(--g);}
+
+  .footer{padding:32px 48px;border-top:1px solid var(--g-20);font-size:13px;color:var(--text);text-align:center;font-family:var(--mono);}
+
+  @media (max-width:1024px){section{padding:64px 32px;}.section-heading{font-size:28px;}.nav-links{display:none;}.type-row{grid-template-columns:1fr;gap:8px;}.hero h1{font-size:48px;}}
+  @media (max-width:720px){.nav{padding:12px 20px;height:auto;min-height:56px;grid-template-columns:1fr auto;}.nav-cta{display:none;}.hero{padding:48px 20px;}.hero h1{font-size:34px;}section{padding:48px 20px;}.section-heading{font-size:24px;}.palette-grid,.button-grid,.card-grid,.form-grid,.elevation-grid{grid-template-columns:1fr !important;gap:16px;}.footer{padding:24px 16px;}}
+</style></head><body>
+<div class="hero"><div class="hero-content">
+  <p class="eyebrow">Visual Design · single-green display</p>
+  <h1>Rokid AIUI <span class="soft">— green HUD over the real world</span></h1>
+  <p>A transparent-display HUD aesthetic constrained to single-green AR glasses (RokidGlasses1 / RokidGlasses2), whose hardware renders only one luminous green channel over pure black. The entire interface is one hue at four opacity tiers — outlines, not shadows; translucent fills; stable whitespace. A host-driven Design Token system tuned for legibility on monochrome-green hardware.</p>
+  <div class="hero-actions"><button class="btn-primary">View Tokens</button><button class="btn-secondary">Interaction Design</button></div>
+</div></div>
+
+<section>
+  <span class="section-eyebrow">01 — Foundations</span>
+  <h2 class="section-heading">Color Palette</h2>
+  <p class="section-desc">A single green at four opacities over pure black — dictated by the single-green display of RokidGlasses1 / RokidGlasses2. No red, blue, or secondary hue is physically available. Every emphasis decision is an opacity step on the same hue, never a different color.</p>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-fill checker" style="background:#40ff5e;"></div><div class="swatch-meta"><p class="swatch-name">primary</p><p class="swatch-hex">#40ff5e</p><p class="swatch-role">Rokid Green — titles, key data, high-priority interaction outlines</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.6);"></div><div class="swatch-meta"><p class="swatch-name">primary-60</p><p class="swatch-hex">rgba(64,255,94,0.6)</p><p class="swatch-role">Secondary text, default borders, mid-emphasis layers</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.4);"></div><div class="swatch-meta"><p class="swatch-name">primary-40</p><p class="swatch-hex">rgba(64,255,94,0.4)</p><p class="swatch-role">Light fills, surface highlights, muted dividers</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.08);"></div><div class="swatch-meta"><p class="swatch-name">primary-08</p><p class="swatch-hex">rgba(64,255,94,0.08)</p><p class="swatch-role">Trace fill — input and error-state backgrounds</p></div></div>
+    <div class="swatch"><div class="swatch-fill" style="background:#000000;"></div><div class="swatch-meta"><p class="swatch-name">background</p><p class="swatch-hex">#000000</p><p class="swatch-role">Page-level base — see-through to the real world</p></div></div>
+    <div class="swatch"><div class="swatch-fill" style="background:#000000;"></div><div class="swatch-meta"><p class="swatch-name">surface</p><p class="swatch-hex">#000000</p><p class="swatch-role">Card / panel / container base</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.4);"></div><div class="swatch-meta"><p class="swatch-name">surface-highlight</p><p class="swatch-hex">= primary-40</p><p class="swatch-role">Highlighted cards and demo blocks</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.6);"></div><div class="swatch-meta"><p class="swatch-name">border-default</p><p class="swatch-hex">= primary-60</p><p class="swatch-role">Default neutral outline — most normal frames</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.4);"></div><div class="swatch-meta"><p class="swatch-name">border-muted</p><p class="swatch-hex">= primary-40</p><p class="swatch-role">Soft dividers and weak separators</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:#40ff5e;"></div><div class="swatch-meta"><p class="swatch-name">border-accent</p><p class="swatch-hex">= primary</p><p class="swatch-role">Accent outline — highlighted containers, key states</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:rgba(64,255,94,0.08);"></div><div class="swatch-meta"><p class="swatch-name">error-bg</p><p class="swatch-hex">= primary-08</p><p class="swatch-role">Error-hint fill — stays green, no red</p></div></div>
+    <div class="swatch"><div class="swatch-fill checker" style="background:#40ff5e;"></div><div class="swatch-meta"><p class="swatch-name">on-primary</p><p class="swatch-hex">#000000</p><p class="swatch-role">Text/icon on a solid-green fill — black for contrast</p></div></div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">02 — Foundations</span>
+  <h2 class="section-heading">Typography</h2>
+  <p class="section-desc">Titles use the <strong style="color:var(--g);">monospace</strong> stack — the fixed-width numerals read like a heads-up terminal over the real world. Body copy and UI labels stay on the proportional <strong style="color:var(--g);">sans-serif</strong> (system/Android default) stack. No named typeface is required. Hierarchy is by weight and size, not color — since the whole palette is green, size and weight must carry the structure.</p>
+
+  <div class="type-row"><div class="type-meta"><span class="lbl">display</span><br>monospace · 24px / 700<br>lh 1.25 · ls 0<br>Card hero titles, panel headings — HUD-terminal voice</div><div style="font-family:var(--mono);font-size:24px;font-weight:700;line-height:1.25;color:var(--g);">Agent Overview</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">heading</span><br>monospace · 18px / 700<br>lh 1.3 · ls 0<br>Section headings within a card</div><div style="font-family:var(--mono);font-size:18px;font-weight:700;line-height:1.3;color:var(--g);">Today's Schedule</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">body</span><br>sans-serif · 15px / 400<br>lh 1.5 · ls 0<br>Primary body copy, descriptions</div><div style="font-family:var(--sans);font-size:15px;font-weight:400;line-height:1.5;color:var(--g);">You have three meetings today, starting at 10:00 with the design review.</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">body-sm</span><br>sans-serif · 13px / 400<br>lh 1.45 · ls 0<br>Dense lists, table cells, secondary copy</div><div style="font-family:var(--sans);font-size:13px;font-weight:400;line-height:1.45;color:var(--g);">Duration 30 min · Room 4B · 3 attendees</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">label</span><br>sans-serif · 13px / 600<br>lh 1.3 · ls 0<br>Button text, input labels, list headers</div><div style="font-family:var(--sans);font-size:13px;font-weight:600;line-height:1.3;color:var(--g);">CONFIRM SELECTION</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">caption</span><br>sans-serif · 11px / 400<br>lh 1.4 · ls 0<br>Timestamps, metadata, fine print</div><div style="font-family:var(--sans);font-size:11px;font-weight:400;line-height:1.4;color:var(--text);">Updated 2 min ago · synced</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">mono</span><br>monospace · 13px / 400<br>lh 1.4 · ls 0<br>Code, data values, technical content</div><div style="font-family:var(--mono);font-size:13px;font-weight:400;line-height:1.4;color:var(--g);">--color-primary: #40ff5e;</div></div>
+</section>
+
+<section>
+  <span class="section-eyebrow">03 — Components</span>
+  <h2 class="section-heading">Buttons &amp; Controls</h2>
+  <p class="section-desc">Emphasis is by border, not a filled colored background. The native button component carries built-in touch feedback for gaze + temple-tap interaction. On a single-green display, a full-green fill is the strongest possible affordance.</p>
+  <div class="button-grid">
+    <div class="demo-card"><span class="label">button · default</span><button class="btn-primary" style="height:44px;font-size:14px;">CONFIRM</button><p class="demo-note">Outlined accent — green border, green label, 12px radius. The everyday action.</p></div>
+    <div class="demo-card"><span class="label">button · strong fill</span><button style="background:var(--g);color:#000;border:2px solid var(--g);border-radius:12px;height:44px;padding:0 22px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;">SUBMIT</button><p class="demo-note">Full-green fill with black label — the highest-contrast "commit" action.</p></div>
+    <div class="demo-card"><span class="label">button · strong border</span><button style="background:var(--black);color:var(--g);border:4px solid var(--g);border-radius:12px;height:44px;padding:0 22px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;">CONTINUE</button><p class="demo-note">4px strong border — key interactive / active state.</p></div>
+    <div class="demo-card"><span class="label">status pill · full radius</span><span style="display:inline-flex;align-items:center;gap:6px;background:var(--g-08);border:1px solid var(--g-60);color:var(--g);border-radius:9999px;padding:5px 12px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.5px;">● online</span><p class="demo-note">Pill chip — full radius reserved for status and control affordances.</p></div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">04 — Components</span>
+  <h2 class="section-heading">Cards &amp; Surfaces</h2>
+  <p class="section-desc">The foundational surface. Nearly every interface is a vertical stack of outlined cards inside the 480px canvas. Depth comes from outline weight and green opacity — never shadow.</p>
+  <div class="card-grid">
+    <div class="feature-card"><h4>card · default</h4><p>Black fill + 2px green-60% outline, 12px corners, 12px padding. The base container every agent interface is built from.</p></div>
+    <div class="feature-card" style="background:rgba(64,255,94,0.4);border-color:var(--g);"><h4>card-highlight</h4><p>Green-40% fill + full-green accent border — the "raised" surface, used in lieu of shadow for emphasized cards and demo blocks.</p></div>
+    <div class="feature-card" style="background:rgba(64,255,94,0.08);border-color:var(--g-40);border-width:1px;"><h4>error-state</h4><p>Green-08% fill + muted green-40% border. Stays green — error is expressed by container treatment, never a red hue.</p></div>
+    <div class="feature-card" style="border-color:var(--g-40);border-width:1px;"><h4>divider / list-row</h4><p>1px green-40% rule between content blocks. List rows separate via muted dividers inside a scroll-view.</p></div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">05 — Components</span>
+  <h2 class="section-heading">Form Elements</h2>
+  <p class="section-desc">Recessed fields use the faintest trace-green fill (8%) with a thin green-60% outline — just enough to suggest a sunken field without competing with content.</p>
+  <div class="form-grid">
+    <div class="demo-card"><span class="label">text-input · single line</span><input class="ex-input-demo" placeholder="Ask the agent…"></div>
+    <div class="demo-card"><span class="label">textarea · multi-line</span><textarea class="ex-input-demo" rows="3" placeholder="Enter details or draft a reply…" style="resize:vertical;font-family:var(--sans);"></textarea></div>
+    <div class="demo-card"><span class="label">error-state hint</span><div style="background:rgba(64,255,94,0.08);border:1px solid var(--g-40);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--g);">Connection timed out — please retry.</div></div>
+    <div class="demo-card"><span class="label">field-label + input</span><div style="display:flex;flex-direction:column;gap:8px;"><span style="font-family:var(--mono);font-size:12px;color:var(--g);text-transform:uppercase;letter-spacing:0.5px;">Agent name</span><input class="ex-input-demo" placeholder="my-assistant"></div></div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">06 — Foundations</span>
+  <h2 class="section-heading">Spacing Scale</h2>
+  <p class="section-desc">Stable, moderate whitespace — enough to keep structure clear over a cluttered real-world backdrop, never so much that the card sprawls. 8px compact rhythm; 12px standard component padding; 18px page padding and section spacing.</p>
+  <div class="spacing-row">
+    <div><div class="spacing-box" style="width:4px;"></div><div class="spacing-label">xs<br>4px</div></div>
+    <div><div class="spacing-box" style="width:8px;"></div><div class="spacing-label">sm<br>8px</div></div>
+    <div><div class="spacing-box" style="width:12px;"></div><div class="spacing-label">md<br>12px</div></div>
+    <div><div class="spacing-box" style="width:18px;"></div><div class="spacing-label">lg<br>18px</div></div>
+    <div><div class="spacing-box" style="width:24px;"></div><div class="spacing-label">xl<br>24px</div></div>
+    <div><div class="spacing-box" style="width:32px;"></div><div class="spacing-label">xxl<br>32px</div></div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">07 — Foundations</span>
+  <h2 class="section-heading">Border Radius &amp; Width</h2>
+  <p class="section-desc">Consistently moderate rounding — in <span style="font-family:var(--mono);">yodaos-sprite-greenonly</span> both radius-sm and radius-md resolve to 12px. One generous radius governs nearly every container. Border weight is the other structural lever: 1px thin, 2px default, 4px strong.</p>
+  <div class="radius-row">
+    <div><div class="radius-box" style="border-radius:0;">0px</div><div class="radius-label">none</div></div>
+    <div><div class="radius-box" style="border-radius:12px;">12px</div><div class="radius-label">sm · md</div></div>
+    <div><div class="radius-box" style="border-radius:9999px;">pill</div><div class="radius-label">full</div></div>
+    <div style="margin-left:32px;"><div class="radius-box" style="border-width:1px;">1px</div><div class="radius-label">thin</div></div>
+    <div><div class="radius-box" style="border-width:2px;">2px</div><div class="radius-label">default</div></div>
+    <div><div class="radius-box" style="border-width:4px;">4px</div><div class="radius-label">strong</div></div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">08 — Foundations</span>
+  <h2 class="section-heading">Elevation &amp; Depth</h2>
+  <p class="section-desc">Outline and opacity, not shadow. The spec is explicit: light fills, clear outlines, and stable whitespace suit a transparent AR display better than shadows. There is no blurred drop-shadow vocabulary.</p>
+  <div class="elevation-grid">
+    <div class="elev-card elev-0"><strong style="color:var(--g);">0 — Recessed field</strong><br>8% green fill + 1px default outline. Inputs, textareas, error hints.</div>
+    <div class="elev-card elev-1"><strong style="color:var(--g);">1 — Card</strong><br>Black + 2px green-60% outline. Default cards and chart containers.</div>
+    <div class="elev-card elev-2"><strong style="color:var(--g);">2 — Highlighted card</strong><br>Green-40% fill + full-green accent outline. Emphasized cards, demo blocks.</div>
+    <div class="elev-card elev-3"><strong style="color:var(--g);">3 — Accent emphasis</strong><br>Full-green border thickened to 4px. Key interactive states, active rows.</div>
+  </div>
+</section>
+
+<section>
+  <span class="section-eyebrow">09 — Device constraint</span>
+  <h2 class="section-heading">Single-Green Display (RokidGlasses1 / 2)</h2>
+  <p class="section-desc">A fixed-canvas, form-factor-locked design authored for single-green AR glasses. The host theme defines the geometry; the app fills it. Content that exceeds the max height enters a scroll-view rather than resizing. Only the green channel renders, so meaning must never rely on red/blue hue cues.</p>
+  <table class="responsive-table">
+    <thead><tr><th>Token</th><th>Value</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td>--app-width</td><td class="muted">480px</td><td>Recommended app width — floating panels &amp; card interfaces</td></tr>
+      <tr><td>--app-height-min</td><td class="muted">120px</td><td>Minimum height — compact surfaces, short info cards</td></tr>
+      <tr><td>--app-height-max</td><td class="muted">380px</td><td>Maximum height — switch to scroll-view beyond this</td></tr>
+    </tbody>
+  </table>
+  <div class="device-ladder">
+    <div class="glasses-mock" style="width:120px;height:200px;"><span class="px">120px</span><span>height-min</span></div>
+    <div class="glasses-mock" style="width:120px;height:300px;"><span class="px">↓ scroll</span><span>content grows</span></div>
+    <div class="glasses-mock" style="width:120px;height:420px;"><span class="px">380px</span><span>height-max</span></div>
+    <div class="glasses-mock" style="width:300px;height:420px;"><span class="px">480px</span><span>app-width</span></div>
+  </div>
+  <p style="color:var(--text);margin-top:28px;font-size:14px;line-height:1.55;"><strong style="color:var(--g);">Interaction:</strong> non-touch by default — voice input (core mode), temple slide/tap, and head tracking. <strong style="color:var(--g);">Imagery:</strong> reproduced only in the green channel, so prefer high-luminance green-friendly assets and encode meaning via luminance, position, and labels instead of hue.</p>
+</section>
+</body></html>

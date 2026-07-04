@@ -35,6 +35,15 @@ Representative demos inside `samples/simple/pages/` include:
 - `canvas`, `canvas_api`, `chart`, `lottie`: Rendering and visual content examples.
 - `media_query`, `css_vars`, `filter`, `transform`: Styling and responsive behavior examples.
 
+## 🎨 Design System
+
+The [`design/`](./design/) directory holds the canonical **AIUI Visual Design Language** — the single-green monochrome HUD aesthetic for RokidGlasses1 / RokidGlasses2, whose hardware can only reproduce one luminous green channel over pure black.
+
+- [`design/design-system.md`](./design/design-system.md) — full token spec: colors (one green across four opacity tiers on pure black), typography, spacing, radii, border widths, and component chrome, plus Do's & Don'ts.
+- [`design/preview.html`](./design/preview.html) — a self-contained, browsable visual showcase of every token and component. Open it directly in any browser; no build step required.
+
+The same spec is also bundled inside the `aiui-dev` skill (see below), so AI agents generating AIUI code align with these tokens automatically.
+
 ## 🤖 AI Agent Skills
 
 We provide built-in instructions and context files to help LLMs (Large Language Models) or AI coding assistants write AIUI code effectively.
@@ -66,6 +75,10 @@ If you'd like to request a feature or report a bug, please use the GitHub issue 
 
 ```text
 .
+├── design/
+│   ├── design-system.md      # AIUI visual design language (token spec)
+│   ├── preview.html          # browsable visual showcase of the design system
+│   └── README.md             # one-page intro to the design language
 ├── packages/
 │   └── create-aiui-agent/    # npm CLI for scaffolding AIUI agent projects
 ├── samples/
