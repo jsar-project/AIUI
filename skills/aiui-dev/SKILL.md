@@ -825,7 +825,7 @@ When generating AIUI code:
 
 ## 6. Design Guidelines
 
-> The full visual design language for **single-green monochrome display** devices (RokidGlasses1 / RokidGlasses2) — color tokens, typography, spacing, radii, border widths, component chrome, and Do's & Don'ts — lives in [`design-system-monochrome.md`](./design-system-monochrome.md). This system currently applies **only** to single-green monochrome hardware; a separate full-color variant does not exist yet. Treat the spec as the source of truth whenever you choose colors, spacing, or component styling on monochrome-green targets; the cheat-sheet below only summarizes the rules that come up most often during code generation.
+> The full visual design language for **single-green monochrome display** devices (RokidGlasses1 / RokidGlasses2) — color tokens, typography, spacing, radii, border widths, component chrome, and Do's & Don'ts — lives in [`design-system-green.md`](./design-system-green.md). This system currently applies **only** to single-green monochrome hardware; a separate full-color variant does not exist yet. Treat the spec as the source of truth whenever you choose colors, spacing, or component styling on monochrome-green targets; the cheat-sheet below only summarizes the rules that come up most often during code generation.
 
 When developing AIUI applications, especially for wearable devices, it is crucial to follow these design guidelines to ensure a consistent and user-friendly experience.
 

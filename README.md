@@ -37,12 +37,14 @@ Representative demos inside `samples/simple/pages/` include:
 
 ## 🎨 Design System
 
-The [`design/`](./design/) directory holds AIUI's visual design language specs. Each spec is scoped to a specific **display type** — the `-monochrome` suffix marks files that target single-color display hardware.
+The [`design/`](./design/) directory holds AIUI's visual design language specs, organized by **display type**:
 
-- [`design/design-system-monochrome.md`](./design/design-system-monochrome.md) — the **single-green monochrome** token spec, currently applicable to RokidGlasses1 / RokidGlasses2, whose hardware can only reproduce one luminous green channel over pure black. Covers colors (one green across four opacity tiers), typography, spacing, radii, border widths, component chrome, and Do's & Don'ts.
-- [`design/preview-monochrome.html`](./design/preview-monochrome.html) — a self-contained, browsable visual showcase of the monochrome-green system. Open it directly in any browser; no build step required.
+- [`design/monochrome/`](./design/monochrome/) — specs for **single-color display** hardware. The active [`green`](./design/monochrome/design-system-green.md) variant targets RokidGlasses1 / RokidGlasses2, whose hardware can only reproduce one luminous green channel over pure black. Covers colors (one green across four opacity tiers), typography, spacing, radii, border widths, component chrome, and Do's & Don'ts.
+  - [`design-system-green.md`](./design/monochrome/design-system-green.md) — full token spec.
+  - [`preview-green.html`](./design/monochrome/preview-green.html) — self-contained, browsable visual showcase (no build step).
+- `design/fullcolor/` — **planned**, for full-RGB display hardware. Not yet authored.
 
-> This design system **currently applies only to single-green monochrome display devices**. A full-color variant (`design-system-fullcolor.md`) may be added in the future when AIUI ships on full-color display hardware.
+> The design system **currently applies only to single-green monochrome display devices**. The monochrome area is structured so additional hues (e.g. `amber`) and the future full-color variant can be added without renaming existing files.
 
 The same monochrome-green spec is also bundled inside the `aiui-dev` skill (see below), so AI agents generating AIUI code align with these tokens automatically.
 
@@ -78,9 +80,12 @@ If you'd like to request a feature or report a bug, please use the GitHub issue 
 ```text
 .
 ├── design/
-│   ├── design-system-monochrome.md  # AIUI monochrome-green visual design language (token spec)
-│   ├── preview-monochrome.html      # browsable visual showcase of the monochrome system
-│   └── README.md                    # one-page intro to the design language
+│   ├── README.md                       # design language index (by display type)
+│   ├── monochrome/                     # single-color display specs
+│   │   ├── README.md                   # monochrome variants (currently green)
+│   │   ├── design-system-green.md      # AIUI monochrome-green token spec
+│   │   └── preview-green.html          # browsable visual showcase (green)
+│   └── fullcolor/                      # planned — full-RGB display specs
 ├── packages/
 │   └── create-aiui-agent/    # npm CLI for scaffolding AIUI agent projects
 ├── samples/
