@@ -44,7 +44,7 @@ The [`design/`](./design/) directory holds AIUI's visual design language specs, 
   - [`preview-green.html`](./design/monochrome/preview-green.html) — self-contained, browsable visual showcase (no build step).
 - `design/fullcolor/` — **planned**, for full-RGB display hardware. Not yet authored.
 
-> The design system **currently applies only to single-green monochrome display devices**. The monochrome area is structured so additional hues (e.g. `amber`) and the future full-color variant can be added without renaming existing files.
+> The design system **currently applies only to single-green monochrome display devices**. The `design/` layout keeps the current green spec stable and leaves room for the planned full-color variant.
 
 The same monochrome-green spec is also bundled inside the `aiui-dev` skill (see below), so AI agents generating AIUI code align with these tokens automatically.
 

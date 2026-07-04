@@ -12,8 +12,8 @@ identified by their color (e.g. `green`, `amber`).
 | [`green`](./design-system-green.md) | RokidGlasses1 / RokidGlasses2 | Active |
 
 > The `green` variant is currently the only monochrome spec. Files use a
-> `-green` suffix so additional hues (e.g. `-amber`) can be added later
-> without colliding.
+> `-green` suffix so the current spec stays stable as the monochrome line
+> evolves alongside the planned full-color variant.
 
 ## Files
 

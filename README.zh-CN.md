@@ -44,7 +44,7 @@ npm create @yodaos-pkg/aiui-agent my-agent
   - [`preview-green.html`](./design/monochrome/preview-green.html) ——自包含、可直接在浏览器打开的可视化预览，无需构建。
 - `design/fullcolor/` ——**预留**，面向全彩显示硬件，尚未编写。
 
-> 本设计系统**目前仅适用于单绿色单色显示设备**。单色目录的结构便于未来新增其他颜色（如 `amber`）以及全彩版本，且无需重命名现有文件。
+> 本设计系统**目前仅适用于单绿色单色显示设备**。`design/` 目录的结构在保持当前 green 规范稳定的同时，为规划中的全彩版本预留了位置。
 
 同一份单绿规范也会随下方的 `aiui-dev` 技能一同打包分发，因此 AI 编码助手在生成 AIUI 代码时会自动对齐这些 token。
 
