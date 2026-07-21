@@ -1,6 +1,19 @@
 # AIUI Built-in Components Reference
 
-This reference is aligned with the current registered component list in `ink/packages/ink-builtin-components/src/lib.rs` and is meant to reflect the implementation that AIUI agents can rely on today.
+This file provides implementation-checked details for the components covered below. It is a curated reference rather than the complete public component catalog; use the linked component guides for the remaining supported tags.
+
+## Components Routed To The Public Guides
+
+The following supported components do not yet have full attribute and event coverage in this file. Do not infer their behavior from the similarly named HTML elements.
+
+| Component | Guide |
+| :--- | :--- |
+| `<icon>` | [Icon](../../documentation/2-components/icon.en-US.md) |
+| `<calendar>` | [Calendar](../../documentation/2-components/calendar.en-US.md) |
+| `<input>` | [Input](../../documentation/2-components/input.en-US.md) |
+| `<textarea>` | [Textarea](../../documentation/2-components/textarea.en-US.md) |
+| `<swiper>` / `<swiper-item>` | [Swiper](../../documentation/2-components/swiper.en-US.md) |
+| `<streamdown>` | [Streamdown](../../documentation/2-components/streamdown.en-US.md) |
 
 ## Common Runtime Rules
 
