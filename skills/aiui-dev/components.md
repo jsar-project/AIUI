@@ -381,6 +381,46 @@ Displays a Lottie animation loaded from inline JSON, a local file, or a remote U
 <lottie-view src="/assets/loading.json" auto-play="true" loop="true" class="loading"></lottie-view>
 ```
 
+### `<streamdown>`
+
+**Purpose**
+
+Renders Markdown-style text and can display a streaming cursor for incremental AI responses.
+
+**Supported Attributes**
+
+| Attribute | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `content` | String | `''` | Markdown content to render. |
+| `streaming` | Boolean | `false` | Shows the streaming cursor when enabled. |
+| `color` | String | inherited | Primary text color. |
+| `font-size` | Number | inherited | Primary text size. |
+
+**Content Model**
+
+- Normally authored as an empty tag
+- Rendered children are generated internally from `content`
+
+**Notes**
+
+- Designed for incremental AI-style response rendering
+- In a fixed-width flex card with centered children, the internal renderer can exceed the card instead of inheriting its available width. Constrain the `<streamdown>` element itself; add `word-break: break-all` when uninterrupted CJK or long-token content must remain inside the card
+
+**Example**
+
+```xml
+<streamdown content="{{ replyText }}" streaming="{{ isStreaming }}" class="reply"></streamdown>
+```
+
+```css
+.reply {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  word-break: break-all;
+}
+```
+
 ### `<a2ui>`
 
 **Purpose**
