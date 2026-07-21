@@ -341,7 +341,7 @@ AIUI supports basic list rendering with `ink:for`, allowing you to repeat a comp
 
 Use `item` to access the current element and `index` to access its position in the array. Prefer providing a stable `ink:key` when rendering dynamic collections.
 
-> **Current Limitation:** Nested `ink:for` is not supported yet. Keep list rendering to a single level, and flatten data in JavaScript first when you need to present hierarchical content.
+Nested `ink:for` is supported for hierarchical arrays, as demonstrated by the capabilities list sample at `samples/capabilities/pages/list/index.ink`. Each loop level rebinds the default `item` and `index` names, so an inner loop's bindings shadow the outer loop's bindings. If an inner row also needs values from its parent row, copy those values into the child data in JavaScript before rendering.
 
 ### 3.3 Built-in Components
 
