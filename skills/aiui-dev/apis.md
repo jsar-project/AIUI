@@ -2,7 +2,7 @@
 
 This file only documents APIs that have been checked against the current implementation.
 
-- The current detailed scope covers the currently verified Canvas, Bluetooth, sensor, media, AI, Web speech, `wx`, and barcode APIs available to AIUI app code.
+- The current detailed scope covers the currently verified Canvas, Bluetooth, sensor, media, AI, Web speech, `wx`, barcode, crypto, and global `fetch` APIs available to AIUI app code.
 - Do not infer standard Web API behavior unless it is explicitly listed below or in the linked reference files.
 - Do not add browser-compatible overloads or semantics that are not present in the source.
 
@@ -84,6 +84,11 @@ The currently verified APIs are:
 - `SocketTask`
 - `EventSourceTask`
 
+### Global fetch runtime
+
+- `fetch(url, options?)`
+- `Response`
+
 ### AI runtime
 
 - `LanguageModel`
@@ -95,6 +100,14 @@ The currently verified APIs are:
 - `speechSynthesis`
 - `SpeechSynthesisUtterance`
 - `SpeechRecognition`
+
+### Crypto runtime
+
+- `crypto.randomUUID()`
+- `crypto.subtle.digest(algorithm, data)`
+- `crypto.subtle.importKey(format, keyData, algorithm, extractable, keyUsages)`
+- `crypto.subtle.sign(algorithm, key, data)`
+- `CryptoKey`
 
 ### wx canvas entry point
 
@@ -217,6 +230,10 @@ Behavior notes:
 - `Sound` is available globally and as a named export from `'audio'`.
 - `LanguageModel` is mounted on `globalThis` and `window`, and is exported by `'language-model'`.
 - `speechSynthesis`, `SpeechSynthesisUtterance`, and `SpeechRecognition` are registered globally and are exported by `'speech'`.
+- `fetch` is available on the global object and resolves to a `Response` exposing `ok`, `status`, `statusText`, and `url`, with body accessors `text()`, `json()`, and `arrayBuffer()`.
+- `crypto` is available on the global object and as a default export from `'crypto'`. `crypto.subtle.digest` supports `SHA-1`, `SHA-256`, `SHA-384`, and `SHA-512`; `importKey` supports the `'raw'` format; `sign` supports `HMAC`.
+- `crypto.getRandomValues(typedArray)` exists but is currently a placeholder in this implementation; do not rely on it as a source of randomness.
+- Imported `CryptoKey` objects report `extractable` as `false`.
 
 ## Detailed References
 
@@ -225,6 +242,8 @@ Behavior notes:
 - [Device and sensor APIs](./apis-device.md)
 - [Media APIs](./apis-media.md)
 - [AI and speech APIs](./apis-ai.md)
+- [Global fetch API](../../documentation/3-api/network.en-US.md)
+- [Crypto API](../../documentation/3-api/crypto.en-US.md)
 
 ## Authoring Rules For Agents
 
