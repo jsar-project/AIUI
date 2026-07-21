@@ -418,6 +418,7 @@ Use these rules when handling page-level events:
 - `event.preventDefault()` may be called from different handlers, but for key events the host default behavior is defined on `onKeyUp(event)`.
 - For that reason, preventing a key event only takes effect when `event.preventDefault()` is applied to `onKeyUp(event)`.
 - Interception only matters for events that actually have host-level default behavior.
+- Real-device caveat: some firmware versions run the `Backspace` default (navigate back) even when the page calls `event.preventDefault()` in `onKeyUp`. Do not build core navigation on intercepting `Backspace`. Build a real page stack (`wx.navigateTo` to descend) so the host default back is itself the correct behavior, and treat back interception as best-effort for transient UI only.
 
 ### 4.2 Default Behaviors
 
@@ -432,9 +433,11 @@ Common default behaviors include:
 
 For key events, use `event.preventDefault()` on `onKeyUp(event)` when the page needs to replace the host action with custom logic. This is appropriate when:
 
-- The page manages its own back stack, dialog dismissal, or overlay closing behavior
+- The page closes transient UI such as a dialog or overlay instead of navigating back (best-effort on `Backspace`; see the real-device caveat in 4.1)
 - The page uses hardware keys for custom focus movement or shortcut handling
-- The page wants to block host navigation until validation or confirmation is complete
+- The page wants to block host navigation until validation or confirmation is complete (also best-effort on `Backspace`)
+
+Do not intercept `Backspace` to implement plain page navigation. For "go back one level", structure routes as a real stack (`wx.navigateTo` to descend) and let the host default pop it, and do not call `wx.navigateBack` from the key handler: on firmware versions that ignore `preventDefault`, the app's own navigation stacks with the host default and pops one level too many. Root-page back is the platform-standard app exit; do not suppress it.
 
 Do not call `event.preventDefault()` unless the page will provide a clear replacement behavior. If you intercept a default action without updating UI state or performing an alternative action, the page may appear unresponsive.
 
@@ -465,7 +468,7 @@ export default {
 
 `onKeyUp(event)` is useful when the page needs to react after a key is released. It is also the effective interception point for key default behavior, because the host evaluates actions such as back, scroll, and activation on key release. In AIUI hosts such as Rokid Glasses, `event.code` commonly includes:
 
-- `Backspace`: usually navigates back or requests app close unless intercepted
+- `Backspace`: usually navigates back or requests app close unless intercepted (interception is best-effort: some firmware versions run the default regardless; see 4.1)
 - `ArrowUp`: usually scrolls the root view upward unless intercepted
 - `ArrowDown`: usually scrolls the root view downward unless intercepted
 - `Enter`: usually enters navigation mode or activates the current target unless intercepted
