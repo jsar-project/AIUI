@@ -230,9 +230,6 @@ Behavior notes:
 - `Sound` is available globally and as a named export from `'audio'`.
 - `LanguageModel` is mounted on `globalThis` and `window`, and is exported by `'language-model'`.
 - `speechSynthesis`, `SpeechSynthesisUtterance`, and `SpeechRecognition` are registered globally and are exported by `'speech'`.
-- `fetch` is available on the global object and resolves to a `Response` exposing `ok`, `status`, `statusText`, and `url`, with body accessors `text()`, `json()`, and `arrayBuffer()`.
-- `crypto` is available on the global object and as a default export from `'crypto'`. `crypto.subtle.digest` supports `SHA-1`, `SHA-256`, `SHA-384`, and `SHA-512`; `importKey` supports the `'raw'` format; `sign` supports `HMAC`.
-- `crypto.getRandomValues(typedArray)` exists but is currently a placeholder in this implementation; do not rely on it as a source of randomness.
 - Imported `CryptoKey` objects report `extractable` as `false`.
 
 ## Detailed References
@@ -242,8 +239,6 @@ Behavior notes:
 - [Device and sensor APIs](./apis-device.md)
 - [Media APIs](./apis-media.md)
 - [AI and speech APIs](./apis-ai.md)
-- [Global fetch API](../../documentation/3-api/network.en-US.md)
-- [Crypto API](../../documentation/3-api/crypto.en-US.md)
 
 ## Authoring Rules For Agents
 
