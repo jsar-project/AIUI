@@ -341,8 +341,6 @@ AIUI supports basic list rendering with `ink:for`, allowing you to repeat a comp
 
 Use `item` to access the current element and `index` to access its position in the array. Prefer providing a stable `ink:key` when rendering dynamic collections.
 
-Nested `ink:for` is supported for hierarchical arrays, as demonstrated by the capabilities list sample at `samples/capabilities/pages/list/index.ink`. Each loop level rebinds the default `item` and `index` names, so an inner loop's bindings shadow the outer loop's bindings. If an inner row also needs values from its parent row, copy those values into the child data in JavaScript before rendering.
-
 ### 3.3 Built-in Components
 
 AIUI provides a set of built-in components that you can use within your WXML templates. These components are mapped to native implementations for optimal performance.
