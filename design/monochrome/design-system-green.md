@@ -4,7 +4,7 @@ name: Rokid AIUI Monochrome-Green Scientific Interface
 target:
   devices: ["RokidGlasses1", "RokidGlasses2"]
   display: "single-green monochrome transparent display"
-  reference-canvas: "448x352"
+  reference-canvas: "480x352"
 
 description: >
   Rokid AIUI's monochrome-green visual language for transparent AR glasses.
@@ -17,7 +17,7 @@ description: >
 constraints:
   - "Single-green display only. All visible pixels are expressed through one green channel at different luminance levels."
   - "Pure black represents the transparent floor. Do not depend on opaque black panels to hide the physical environment."
-  - "The full-screen reference canvas is 448x352px. Essential information must remain inside the comfortable central field."
+  - "The full-screen reference canvas is 480x352px. Essential information must remain inside the comfortable central field."
   - "Critical text, focus states, and interaction targets must remain readable against arbitrary real-world backgrounds."
   - "Color cannot encode semantics. Status and severity must also use iconography, labels, line patterns, or motion."
   - "Decorative density must never compete with task content."
@@ -127,7 +127,7 @@ motion:
 components:
   app-canvas:
     description: "Full transparent HUD canvas."
-    width: 448px
+    width: 480px
     height: 352px
     safeInsetX: 16px
     safeInsetY: 12px
@@ -278,7 +278,7 @@ components:
 
 ## Overview
 
-This specification defines the visual language for Rokid AIUI on **RokidGlasses1 / RokidGlasses2**, using the **448 × 352 px** single-green transparent display.
+This specification defines the visual language for Rokid AIUI on **RokidGlasses1 / RokidGlasses2**, using the **480 × 352 px** single-green transparent display.
 
 The hardware constraint remains fundamental: the display exposes one luminous green channel over a transparent black floor. The new visual direction treats that constraint as a **luminance, line, and whitespace system**. Interfaces should feel precise, lightweight, technical, and spatial — closer to a scientific instrument or mission-control overlay than a stack of conventional application cards.
 
@@ -401,17 +401,17 @@ Do not require a branded font file for the core system.
 - Use 500 as the normal maximum weight for UI headings.
 - Use uppercase + tracking for short technical labels only.
 - Do not set long body paragraphs in uppercase or wide tracking.
-- Keep text blocks narrow enough to scan without eye travel across the full 448px canvas.
+- Keep text blocks narrow enough to scan without eye travel across the full 480px canvas.
 - A single screen should normally expose no more than three simultaneous type levels.
 
 ## 4. Layout
 
 ### Canvas
 
-- Reference size: **448 × 352 px**
+- Reference size: **480 × 352 px**
 - Safe horizontal inset: **16px**
 - Safe vertical inset: **12px**
-- Effective default content width: **416px**
+- Effective default content width: **448px**
 
 The system still supports scrollable content where required, but the preferred experience is to reveal the minimum actionable information in the initial field of view.
 
@@ -724,7 +724,7 @@ The previous monochrome specification centered the UI on bright outlined cards. 
 
 ### Do
 
-- Keep the 448 × 352 canvas as the primary spatial constraint.
+- Keep the 480 × 352 canvas as the primary spatial constraint.
 - Use 1px lines and low visual mass for normal structure.
 - Reserve full green for focus and key values.
 - Use whitespace as a primary grouping tool.
@@ -752,7 +752,7 @@ The previous monochrome specification centered the UI on bright outlined cards. 
 
 A new AIUI screen is visually conformant when:
 
-- [ ] It fits the 448 × 352 reference canvas or has an explicit overflow strategy.
+- [ ] It fits the 480 × 352 reference canvas or has an explicit overflow strategy.
 - [ ] Primary readable text is at least 72% green luminance.
 - [ ] Normal structural lines are 1px.
 - [ ] 2px borders appear only for strong focus or equivalent emphasis.

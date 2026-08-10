@@ -65,7 +65,7 @@
   .type-meta .lbl{color:var(--ink);}
 
   /* Layout canvas */
-  .canvas-frame{width:448px;height:352px;border:1px solid var(--line-default);background:var(--black);position:relative;margin:0 auto 20px;max-width:100%;}
+  .canvas-frame{width:480px;height:352px;border:1px solid var(--line-default);background:var(--black);position:relative;margin:0 auto 20px;max-width:100%;}
   .canvas-safe{position:absolute;inset:12px 16px;border:1px dashed var(--line-trace);}
   .canvas-label{position:absolute;font-family:var(--mono);font-size:10px;color:var(--ink-secondary);}
   .spacing-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:16px;}
@@ -123,7 +123,7 @@
 <div class="hero">
   <p class="eyebrow">Monochrome-Green · Scientific Interface · v beta</p>
   <h1>Rokid AIUI — a luminance &amp; line system</h1>
-  <p>A visual language for <strong>448 × 352 px</strong> single-green transparent AR displays (RokidGlasses1 / RokidGlasses2). One green channel at controlled luminance, rendered as thin structural lines, sparse fills, compact technical typography, and spatial relationships — closer to a scientific instrument than a stack of application cards.</p>
+  <p>A visual language for <strong>480 × 352 px</strong> single-green transparent AR displays (RokidGlasses1 / RokidGlasses2). One green channel at controlled luminance, rendered as thin structural lines, sparse fills, compact technical typography, and spatial relationships — closer to a scientific instrument than a stack of application cards.</p>
   <div class="primitives"><span>Luminance</span><span>Typography</span><span>Lines</span><span>Whitespace</span></div>
 </div>
 
@@ -161,7 +161,7 @@
   <p class="section-desc">Sans-serif carries UI hierarchy at weight 500; monospace is reserved for data, logs, coordinates, and IDs. Avoid 700/bold as a default hierarchy mechanism.</p>
   <div class="type-row"><div class="type-meta"><span class="lbl">display</span><br>sans · 22px / 500<br>tracking 0.01em</div><div style="font-size:22px;font-weight:500;letter-spacing:0.01em;color:var(--ink);">Agent Overview</div></div>
   <div class="type-row"><div class="type-meta"><span class="lbl">heading</span><br>sans · 16px / 500<br>tracking 0.01em</div><div style="font-size:16px;font-weight:500;letter-spacing:0.01em;color:var(--ink-primary);">Section heading</div></div>
-  <div class="type-row"><div class="type-meta"><span class="lbl">body</span><br>sans · 14px / 400</div><div style="font-size:14px;color:var(--ink-primary);">Main readable copy — calibrated to the 448px canvas and AR-glasses reading distance.</div></div>
+  <div class="type-row"><div class="type-meta"><span class="lbl">body</span><br>sans · 14px / 400</div><div style="font-size:14px;color:var(--ink-primary);">Main readable copy — calibrated to the 480px canvas and AR-glasses reading distance.</div></div>
   <div class="type-row"><div class="type-meta"><span class="lbl">body-sm</span><br>sans · 12px / 400<br>tracking 0.01em</div><div style="font-size:12px;letter-spacing:0.01em;color:var(--ink-secondary);">Dense secondary copy for table cells and descriptions.</div></div>
   <div class="type-row"><div class="type-meta"><span class="lbl">label</span><br>sans · 11px / 500<br>tracking 0.08em · UPPER</div><div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);">ACTION LABEL</div></div>
   <div class="type-row"><div class="type-meta"><span class="lbl">caption</span><br>sans · 10px / 400<br>tracking 0.05em</div><div style="font-size:10px;letter-spacing:0.05em;color:var(--ink-secondary);">Metadata · timestamps · fine print</div></div>
@@ -171,11 +171,11 @@
 
 <section>
   <span class="section-eyebrow">03 — Layout</span>
-  <h2 class="section-heading">448 × 352 reference canvas</h2>
-  <p class="section-desc">Fixed full-screen reference. Safe insets keep critical content inside the comfortable central field; effective default content width is 416px.</p>
+  <h2 class="section-heading">480 × 352 reference canvas</h2>
+  <p class="section-desc">Fixed full-screen reference. Safe insets keep critical content inside the comfortable central field; effective default content width is 448px.</p>
   <div class="canvas-frame">
     <div class="canvas-safe"></div>
-    <span class="canvas-label" style="top:6px;left:8px;">448 × 352</span>
+    <span class="canvas-label" style="top:6px;left:8px;">480 × 352</span>
     <span class="canvas-label" style="bottom:6px;right:8px;">inset 16 / 12</span>
   </div>
   <div class="spacing-row">
@@ -243,6 +243,6 @@
   </div>
 </section>
 
-<div class="footer">Rokid AIUI · monochrome-green scientific interface · reference canvas 448 × 352 · single green channel over transparent black</div>
+<div class="footer">Rokid AIUI · monochrome-green scientific interface · reference canvas 480 × 352 · single green channel over transparent black</div>
 
 </body></html>
