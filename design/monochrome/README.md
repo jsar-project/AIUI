@@ -31,9 +31,9 @@ or data visualization. The `green` variant responds with:
   never a second color.
 - **Outlines, not shadows** — structure comes from clear borders and stable
   whitespace, because drop shadows read poorly on see-through displays.
-- **Fixed canvas** — content is width-locked (448px) and height-capped
+- **Fixed canvas** — content is width-locked (480px) and height-capped
   (≤ 352px) to stay inside the user's comfortable field of view. The
-  full screen reference size is 448 x 352.
+  full screen reference size is 480 x 352.
 - **Errors stay green** — error states use a muted border + faint fill rather
   than red, which the hardware cannot reproduce.
 

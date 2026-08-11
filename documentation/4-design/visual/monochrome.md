@@ -46,7 +46,7 @@
 
 | Token | 含义 | 值 |
 | --- | --- | --- |
-| `app-width` | 默认画布宽度 | `448px` |
+| `app-width` | 默认画布宽度 | `480px` |
 | `height-min` | 默认最小高度 | `120px` |
 | `height-max` | 默认最大高度 | `352px` |
 

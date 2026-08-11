@@ -46,7 +46,7 @@ The core constraint of this spec is simple: the device can render only one lumin
 
 | Token | Meaning | Value |
 | --- | --- | --- |
-| `app-width` | Default canvas width | `448px` |
+| `app-width` | Default canvas width | `480px` |
 | `height-min` | Default minimum height | `120px` |
 | `height-max` | Default maximum height | `352px` |
 
