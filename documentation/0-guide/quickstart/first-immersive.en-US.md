@@ -1,4 +1,4 @@
-# Your First Immersive AIUI
+# Immersive AIUI
 
 If you want AIUI to carry a more complete interaction flow instead of just placing UI inside chat messages, the best place to start is with immersive AIUI. Its core characteristic is that the main interaction happens inside a standalone interface, where the AI and the user continuously collaborate around that interface.
 

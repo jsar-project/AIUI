@@ -858,8 +858,8 @@ When developing AIUI applications, especially for wearable devices, it is crucia
 
 ### 6.1 Dimensions and Layout
 
-- **Width**: The application width is strictly **448px**.
-- **Height**: The recommended application height is between **120px and 352px**. The full screen reference size is **448 x 352**. Avoid creating overly tall pages that require excessive scrolling.
+- **Width**: The application width is strictly **480px**.
+- **Height**: The recommended application height is between **120px and 352px**. The full screen reference size is **480x352**. Avoid creating overly tall pages that require excessive scrolling.
 - **Card Style**: It is highly recommended to use a **Card Style** layout for each page. This provides a clear boundary and better visual focus in the spatial environment.
 - **Default Background**: Use **black** as the default background color.
 - **Default Border**: Use a **2px** border as the default border width for cards and key interactive elements.

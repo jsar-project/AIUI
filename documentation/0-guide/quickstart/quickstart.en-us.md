@@ -1,4 +1,4 @@
-# AIUI Quick Start (EN)
+# Quick Start
 
 ### I. Initialize an AIUI Project
 
