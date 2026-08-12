@@ -4,7 +4,7 @@
 
 ## 安装
 
-如果你已经获取了源码，可以通过 npm 或 Cargo 进行安装：
+如果你已经获取了源码，可以通过 npm 或 cargo 进行安装：
 
 ```bash
 npm install -g @yodaos-pkg/aix-cli
