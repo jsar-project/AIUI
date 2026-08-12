@@ -18,8 +18,9 @@ In addition, you can choose different documentation versions from the upper-righ
 ## 🚀 Next Steps
 
 - **[Read the introduction](/AIUI/guide/quickstart-intro)**: Understand the basic ideas behind AIUI.
-- **[Create your first conversational AIUI](/AIUI/guide/quickstart-first-chat)**: Start with card-based interaction inside the chat flow.
-- **[Create your first immersive AIUI](/AIUI/guide/quickstart-first-immersive)**: Start with complete interaction inside a standalone interface.
+- **[Quickstart](/AIUI/guide/quickstart)**: Get a quick overview of AIUI AI development, debugging, submission for review, and release.
+- **[Conversational AIUI](/AIUI/guide/quickstart-first-chat)**: Start with card-based interaction inside the chat flow.
+- **[Immersive AIUI](/AIUI/guide/quickstart-first-immersive)**: Start with complete interaction inside a standalone interface.
 - **[Learn the directory structure](/AIUI/guide/structure)**: Get familiar with how a standard intelligent agent project is organized.
 
 If you run into any issues during development, feel free to consult the relevant sections at any time.

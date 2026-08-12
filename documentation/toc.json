@@ -9,16 +9,20 @@
         "expanded": true,
         "children": [
           {
+            "id": "quickstart",
+            "label": "AIUI快速入门"
+          },
+          {
             "id": "intro",
             "label": "介绍"
           },
           {
             "id": "first-chat",
-            "label": "第一个对话式 AIUI"
+            "label": "对话式 AIUI"
           },
           {
             "id": "first-immersive",
-            "label": "第一个沉浸式 AIUI"
+            "label": "沉浸式 AIUI"
           },
           {
             "id": "ai-dev",
@@ -192,7 +196,7 @@
           },
           {
             "id": "publish",
-            "label": "发布到智能体商店"
+            "label": "发布到 Rokid Ai 智能体商店"
           }
         ],
         "hasIndex": true

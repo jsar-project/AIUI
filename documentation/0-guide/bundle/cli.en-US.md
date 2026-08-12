@@ -4,7 +4,11 @@
 
 ## Installation
 
-If you already have the source code, you can install it with Cargo:
+If you already have the source code, you can install it with npm or Cargo:
+
+```bash
+npm install -g @yodaos-pkg/aix-cli
+```
 
 ```bash
 cargo install --path packages/aix-cli

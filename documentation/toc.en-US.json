@@ -9,6 +9,10 @@
         "expanded": true,
         "children": [
           {
+            "id": "quickstart",
+            "label": "Quick Start"
+          },
+          {
             "id": "intro",
             "label": "Introduction"
           },
@@ -18,11 +22,11 @@
           },
           {
             "id": "first-immersive",
-            "label": "Your First Immersive AIUI"
+            "label": "Immersive AIUI"
           },
           {
             "id": "ai-dev",
-            "label": "Build with AI"
+            "label": "Developing with AI"
           }
         ],
         "hasIndex": true
@@ -192,7 +196,7 @@
           },
           {
             "id": "publish",
-            "label": "Publish to the Agent Store"
+            "label": "Publish to the Hi Rokid Agent Store"
           }
         ],
         "hasIndex": true

@@ -18,8 +18,9 @@
 ## 🚀 下一步
 
 - **[阅读介绍](/AIUI/guide/quickstart-intro)**：了解 AIUI 的基本理念。
-- **[创建第一个对话式 AIUI](/AIUI/guide/quickstart-first-chat)**：从聊天流中的卡片式交互开始上手。
-- **[创建第一个沉浸式 AIUI](/AIUI/guide/quickstart-first-immersive)**：从独立界面中的完整交互开始上手。
+- **[快速入门](/AIUI/guide/quickstart)**：快速了解 AIUI AI 开发、调试、提审发布
+- **[对话式 AIUI](/AIUI/guide/quickstart-first-chat)**：从聊天流中的卡片式交互开始上手。
+- **[沉浸式 AIUI](/AIUI/guide/quickstart-first-immersive)**：从独立界面中的完整交互开始上手。
 - **[了解目录结构](/AIUI/guide/structure)**：熟悉一个标准的智能体项目是如何组织的。
 
 如果你在开发过程中遇到任何问题，欢迎随时查阅相关章节。

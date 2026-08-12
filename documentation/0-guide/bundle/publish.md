@@ -1,8 +1,8 @@
 # 发布到 Rokid Ai 智能体商店
 
-在完成智能体的开发与打包（生成 `.aix` 文件）后，你可以通过 Rokid AIUI Studio其发布到Rokid Ai 智能体商店，供全球用户下载和使用。
+在完成智能体的开发与打包（生成 `.aix` 文件）后，你可以通过 Rokid AIUI Studio 其发布到 Rokid Ai 智能体商店，供中国大陆用户下载和使用。
 
-## 1. 登录AIUI Studio
+## 1. 登录 AIUI Studio
 
 访问 [AIUI Studio](https://aiui.rokid.com/space) 并使用你的开发者账号登录。如果你还没有账号，请先完成注册与开发者认证。
 
