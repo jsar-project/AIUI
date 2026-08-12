@@ -9,12 +9,12 @@
         "expanded": true,
         "children": [
           {
-            "id": "quickstart",
-            "label": "快速入门"
-          },
-          {
             "id": "intro",
             "label": "介绍"
+          },
+          {
+            "id": "quickstart",
+            "label": "快速入门"
           },
           {
             "id": "first-chat",

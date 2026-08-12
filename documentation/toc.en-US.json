@@ -9,12 +9,12 @@
         "expanded": true,
         "children": [
           {
-            "id": "quickstart",
-            "label": "Quick Start"
-          },
-          {
             "id": "intro",
             "label": "Introduction"
+          },
+          {
+            "id": "quickstart",
+            "label": "Quick Start"
           },
           {
             "id": "first-chat",
