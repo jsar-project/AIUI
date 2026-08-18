@@ -1,0 +1,8 @@
+{
+    "name": "aiui-gyroscope-test",
+    "version": "1.0.0",
+    "description": "Rokid AIUI 陀螺仪测试与绝对方向传感器诊断工具",
+    "main": "app.js",
+    "type": "module",
+    "dependencies": {}
+}

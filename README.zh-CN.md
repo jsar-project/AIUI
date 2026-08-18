@@ -23,13 +23,18 @@ npm create @yodaos-pkg/aiui-agent my-agent
 
 [`samples/`](./samples/) 目录包含可运行的示例项目，用于展示 AIUI 的功能特性，并为常见 UI 模式提供参考实现。
 
-当前仓库内提供了 [`samples/capabilities/`](./samples/capabilities/)，这是一个完整的示例应用，你可以通过它集中了解页面结构、静态资源、辅助模块以及多个功能演示。
+当前仓库提供以下示例：
+
+- [`samples/capabilities/`](./samples/capabilities/)：完整的能力演示应用，可集中了解页面结构、静态资源、辅助模块和多个功能演示。
+- [`samples/gyroscope-test/`](./samples/gyroscope-test/)：陀螺仪测试真机诊断示例，基于 `AbsoluteOrientationSensor` 验证姿态四元数、采样频率、轴向映射和回中误差。
+
+`capabilities` 示例的主要目录如下：
 
 - `pages/`：包含多种 AIUI 能力与 UI 模式的页面示例
 - `assets/`：示例中使用的静态资源，例如图片、SVG 和音频文件
 - `lib/`：供示例页面复用的辅助模块
 
-`samples/simple/pages/` 中具有代表性的示例包括：
+`samples/capabilities/pages/` 中具有代表性的示例包括：
 - `layout`、`grid`、`position`：布局与定位相关示例
 - `image`、`list`、`input_textarea`：常见 UI 基础能力示例
 - `canvas`、`canvas_api`、`chart`、`lottie`：绘制与视觉内容示例
@@ -102,7 +107,8 @@ npx skills add https://github.com/jsar-project/AIUI/tree/v0.1.0/skills/aiui-dev
 ├── packages/
 │   └── create-aiui-agent/    # 用于创建 AIUI Agent 项目的 npm CLI
 ├── samples/
-│   └── capabilities/         # 可运行的 AIUI capabilities 应用与功能演示
+│   ├── capabilities/         # 可运行的 AIUI capabilities 应用与功能演示
+│   └── gyroscope-test/       # 陀螺仪测试与绝对方向传感器真机诊断示例
 ├── skills/
 │   └── aiui-dev/             # AI Agent 技能文档（SKILL.md）
 └── .github/workflows/        # 自动化每日构建与发布工作流

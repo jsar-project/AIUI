@@ -23,13 +23,18 @@ This will generate a ready-to-use AIUI project template including:
 
 The [`samples/`](./samples/) directory contains runnable example projects that demonstrate AIUI features and provide reference implementations for common UI patterns.
 
-At the moment, the repository includes [`samples/capabilities/`](./samples/capabilities/), a complete sample app that you can use to explore page structure, assets, helper modules, and feature demos in one place.
+The repository currently provides these samples:
+
+- [`samples/capabilities/`](./samples/capabilities/): A complete capability showcase covering page structure, static assets, helper modules, and feature demos.
+- [`samples/gyroscope-test/`](./samples/gyroscope-test/): A device diagnostic named “Gyroscope Test” that uses `AbsoluteOrientationSensor` to validate pose quaternions, sampling frequency, axis mapping, and recentering error.
+
+The main directories in the `capabilities` sample are:
 
 - `pages/`: Example pages covering a range of AIUI capabilities and UI patterns.
 - `assets/`: Static resources used by the demos, such as images, SVGs, and audio files.
 - `lib/`: Helper modules shared by sample pages.
 
-Representative demos inside `samples/simple/pages/` include:
+Representative demos inside `samples/capabilities/pages/` include:
 - `layout`, `grid`, `position`: Layout and positioning patterns.
 - `image`, `list`, `input_textarea`: Common UI building blocks.
 - `canvas`, `canvas_api`, `chart`, `lottie`: Rendering and visual content examples.
@@ -102,7 +107,8 @@ If you'd like to request a feature or report a bug, please use the GitHub issue 
 ├── packages/
 │   └── create-aiui-agent/    # npm CLI for scaffolding AIUI agent projects
 ├── samples/
-│   └── capabilities/         # runnable AIUI capabilities app and feature demos
+│   ├── capabilities/         # runnable AIUI capabilities app and feature demos
+│   └── gyroscope-test/       # device diagnostic for orientation sensor behavior
 ├── skills/
 │   └── aiui-dev/             # AI Agent skill documentation (SKILL.md)
 └── .github/workflows/        # Automated daily build and publish workflows

@@ -1,0 +1,11 @@
+{
+    "pages": [
+        "pages/index/index"
+    ],
+    "window": {
+        "navigationBarTitleText": "陀螺仪测试",
+        "viewport": {
+            "width": "device-width"
+        }
+    }
+}
