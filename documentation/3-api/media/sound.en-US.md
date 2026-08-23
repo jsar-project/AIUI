@@ -4,7 +4,32 @@
 
 Compared with the general-purpose `AudioPlayer`, `Sound` offers a narrower feature set but a more direct API, making it suitable for local sound effect resources that should play immediately.
 
-## Entry
+## Play a Sound Effect
+
+```javascript
+import { Sound } from 'audio';
+
+const click = new Sound('/assets/click.wav');
+click.volume = 0.8;
+click.play();
+```
+
+## Behavior Notes
+
+- `Sound` is only used for local sound effect files.
+- Local sound effect paths support both relative paths and project-root absolute paths.
+- `Sound` does not support changing `src`, seeking to a playback position, streaming appended data, or event listeners.
+- Calling instance methods again after `destroy()` throws an error.
+
+## Use Cases
+
+- If you need a lighter local sound effect playback API, prefer `Sound`.
+- If you need more complete playback control, use [Audio Player (AudioPlayer)](/AIUI/api/media-audio-player).
+- For recording, camera, and other device media capabilities, continue with [WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis).
+
+## API Reference
+
+### Entry
 
 `Sound` can be used directly as a global or imported from the built-in `audio` module:
 
@@ -16,7 +41,7 @@ const click = new Sound('./click.wav');
 import { Sound } from 'audio';
 ```
 
-## Constructor
+### Constructor
 
 ```javascript
 new Sound(src)
@@ -26,43 +51,20 @@ new Sound(src)
 - Only local files are supported. Remote URLs such as `http://` or `https://` are not supported.
 - The audio source is bound during construction so it can be replayed quickly afterward.
 
-## Properties
+### Properties
 
-### `volume`
+#### `volume`
 - **Type**: `number`
 - **Read/Write**: Readable and writable
 - **Description**: Controls the playback volume of the current sound effect instance.
 
-## Methods
+### Methods
 
-### `play()`
+#### `play()`
 - **Description**: If the current instance is already playing, it stops the current playback first and then restarts from the beginning.
 
-### `stop()`
+#### `stop()`
 - **Description**: Stops the current sound effect playback.
 
-### `destroy()`
+#### `destroy()`
 - **Description**: Releases the underlying player resources. The instance cannot continue to be used after this call.
-
-## Behavior Notes
-
-- `Sound` is only used for local sound effect files.
-- Local sound effect paths support both relative paths and project-root absolute paths.
-- `Sound` does not support changing `src`, seeking to a playback position, streaming appended data, or event listeners.
-- Calling instance methods again after `destroy()` throws an error.
-
-## Example
-
-```javascript
-import { Sound } from 'audio';
-
-const click = new Sound('/assets/click.wav');
-click.volume = 0.8;
-click.play();
-```
-
-## Use Cases
-
-- If you need a lighter local sound effect playback API, prefer `Sound`.
-- If you need more complete playback control, use [Audio Player (AudioPlayer)](/AIUI/api/media-audio-player).
-- For recording, camera, and other device media capabilities, continue with [Media (media)](/AIUI/api/weixin-compatible-apis-media).

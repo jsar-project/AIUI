@@ -2,9 +2,43 @@
 
 AIUI 提供了一套遵循 Web 标准的 URL 解析和处理接口。你可以使用这些接口方便地解析、构造和修改 URL 及其查询参数。
 
-## 接口说明
+## 解析 URL
 
-### URL
+```javascript
+const url = new URL('https://user:pass@example.com:8080/path/to/page?id=123#section');
+
+console.log(url.protocol); // "https:"
+console.log(url.hostname); // "example.com"
+console.log(url.port);     // "8080"
+console.log(url.pathname); // "/path/to/page"
+console.log(url.search);   // "?id=123"
+console.log(url.hash);     // "#section"
+```
+
+## 修改 URL 参数
+
+```javascript
+const url = new URL('https://example.com/search');
+url.searchParams.set('q', 'aiui');
+url.searchParams.append('page', '1');
+
+console.log(url.href); // "https://example.com/search?q=aiui&page=1"
+```
+
+## 构造相对 URL
+
+```javascript
+const base = 'https://rokid.com/docs/';
+const url = new URL('aiui/start.html', base);
+
+console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
+```
+
+## API Reference
+
+### 接口说明
+
+#### URL
 
 `URL` 接口用于解析、构造、规范化和编码 URL。
 
@@ -35,7 +69,7 @@ AIUI 提供了一套遵循 Web 标准的 URL 解析和处理接口。你可以�
 
 ---
 
-### URLSearchParams
+#### URLSearchParams
 
 `URLSearchParams` 接口定义了一些处理 URL 查询参数的方法。
 
@@ -54,37 +88,3 @@ AIUI 提供了一套遵循 Web 标准的 URL 解析和处理接口。你可以�
 - **`set(name, value)`**: 设置指定名称的值。如果已存在，则替换第一个并删除其余同名项。
 - **`sort()`**: 按键名对查询参数进行排序。
 - **`toString()`**: 返回序列化后的查询字符串。
-
-## 代码示例
-
-### 1. 解析 URL
-
-```javascript
-const url = new URL('https://user:pass@example.com:8080/path/to/page?id=123#section');
-
-console.log(url.protocol); // "https:"
-console.log(url.hostname); // "example.com"
-console.log(url.port);     // "8080"
-console.log(url.pathname); // "/path/to/page"
-console.log(url.search);   // "?id=123"
-console.log(url.hash);     // "#section"
-```
-
-### 2. 修改 URL 参数
-
-```javascript
-const url = new URL('https://example.com/search');
-url.searchParams.set('q', 'aiui');
-url.searchParams.append('page', '1');
-
-console.log(url.href); // "https://example.com/search?q=aiui&page=1"
-```
-
-### 3. 构造相对 URL
-
-```javascript
-const base = 'https://rokid.com/docs/';
-const url = new URL('aiui/start.html', base);
-
-console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
-```

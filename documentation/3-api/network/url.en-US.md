@@ -2,9 +2,43 @@
 
 AIUI provides a set of URL parsing and handling interfaces that follow Web standards. You can use these interfaces to conveniently parse, construct, and modify URLs and their query parameters.
 
-## Interface Description
+## Parse a URL
 
-### URL
+```javascript
+const url = new URL('https://user:pass@example.com:8080/path/to/page?id=123#section');
+
+console.log(url.protocol); // "https:"
+console.log(url.hostname); // "example.com"
+console.log(url.port);     // "8080"
+console.log(url.pathname); // "/path/to/page"
+console.log(url.search);   // "?id=123"
+console.log(url.hash);     // "#section"
+```
+
+## Modify URL Parameters
+
+```javascript
+const url = new URL('https://example.com/search');
+url.searchParams.set('q', 'aiui');
+url.searchParams.append('page', '1');
+
+console.log(url.href); // "https://example.com/search?q=aiui&page=1"
+```
+
+## Construct a Relative URL
+
+```javascript
+const base = 'https://rokid.com/docs/';
+const url = new URL('aiui/start.html', base);
+
+console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
+```
+
+## API Reference
+
+### Interface Description
+
+#### URL
 
 The `URL` interface is used to parse, construct, normalize, and encode URLs.
 
@@ -35,7 +69,7 @@ The `URL` interface is used to parse, construct, normalize, and encode URLs.
 
 ---
 
-### URLSearchParams
+#### URLSearchParams
 
 The `URLSearchParams` interface defines methods for working with URL query parameters.
 
@@ -54,37 +88,3 @@ The `URLSearchParams` interface defines methods for working with URL query param
 - **`set(name, value)`**: Sets the value for the specified name. If it already exists, the first one is replaced and the rest with the same name are removed.
 - **`sort()`**: Sorts query parameters by key name.
 - **`toString()`**: Returns the serialized query string.
-
-## Code Examples
-
-### 1. Parse a URL
-
-```javascript
-const url = new URL('https://user:pass@example.com:8080/path/to/page?id=123#section');
-
-console.log(url.protocol); // "https:"
-console.log(url.hostname); // "example.com"
-console.log(url.port);     // "8080"
-console.log(url.pathname); // "/path/to/page"
-console.log(url.search);   // "?id=123"
-console.log(url.hash);     // "#section"
-```
-
-### 2. Modify URL Parameters
-
-```javascript
-const url = new URL('https://example.com/search');
-url.searchParams.set('q', 'aiui');
-url.searchParams.append('page', '1');
-
-console.log(url.href); // "https://example.com/search?q=aiui&page=1"
-```
-
-### 3. Construct a Relative URL
-
-```javascript
-const base = 'https://rokid.com/docs/';
-const url = new URL('aiui/start.html', base);
-
-console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
-```

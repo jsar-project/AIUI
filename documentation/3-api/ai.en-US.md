@@ -34,4 +34,4 @@ if (status === 'available') {
 - **[Speech Recognition](/AIUI/api/ai-speech-recognition)**: See how to capture the user's voice and receive recognition results.
 - **[Speech Synthesis](/AIUI/api/ai-speech-synthesis)**: See how to synthesize text into spoken output.
 - **[Large Language Model](/AIUI/api/ai-language-model)**: See how to create model sessions, request replies, and read streamed output.
-- **[Speech](/AIUI/api/weixin-compatible-apis-speech)**: See WeChat Mini Program compatible speech APIs.
+- **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See compatible speech APIs.

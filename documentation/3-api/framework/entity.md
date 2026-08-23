@@ -21,7 +21,9 @@ const first = items.item(0);
 - `page.querySelectorAll(selector)` 返回 `EntityList`
 - `entity.querySelector(selector)` 只在当前实体的子树内继续查询
 
-## 实例成员
+## API Reference
+
+### 实例成员
 
 | 成员 | 类型 | 说明 |
 | :--- | :--- | :--- |
@@ -32,7 +34,7 @@ const first = items.item(0);
 | `entity.querySelector(selector)` | `Entity \| null` | 在当前实体子树内继续查询 |
 | `entity.querySelectorAll(selector)` | `EntityList` | 在当前实体子树内查询全部匹配项 |
 
-## `entity.attributes`
+### `entity.attributes`
 
 `attributes` 返回当前实体属性表的快照对象。
 
@@ -44,7 +46,7 @@ console.log(title.attributes.role);
 
 它适合用于读取节点当前已经解析好的属性值。
 
-## `entity.dataset`
+### `entity.dataset`
 
 `dataset` 会把实体上的 `data-*` 属性映射成可读写视图。
 
@@ -62,14 +64,14 @@ delete item.dataset.index;
 - 对 `dataset` 的写入会回写到底层实体属性
 - 删除 `dataset` 字段时，会同步删除对应的 `data-*` 属性
 
-## `entity.querySelector(String selector)`
+### `entity.querySelector(String selector)`
 
 `querySelector()` 用于在当前实体的子树范围内查找第一个匹配节点。
 
 - 非法 selector 会直接抛错
 - 没有命中时返回 `null`
 
-## `entity.querySelectorAll(String selector)`
+### `entity.querySelectorAll(String selector)`
 
 `querySelectorAll()` 用于在当前实体的子树范围内查询所有匹配节点。
 
@@ -82,7 +84,7 @@ const title = container.querySelector('.title');
 const items = container.querySelectorAll('[selected]');
 ```
 
-## `EntityList`
+### `EntityList`
 
 `EntityList` 是 `querySelectorAll()` 返回的可迭代结果容器。
 

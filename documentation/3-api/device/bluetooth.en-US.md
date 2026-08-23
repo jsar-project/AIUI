@@ -4,34 +4,7 @@ AIUI provides Bluetooth capabilities based on `navigator.bluetooth`, suitable fo
 
 If your application needs to connect to heart rate belts, controllers, peripheral sensors, or other Bluetooth Low Energy devices, start here.
 
-## Use Cases
-
-- Search for and connect to BLE peripherals
-- Read device status or real-time data
-- Send control commands to devices
-- Subscribe to characteristic notifications and receive continuous updates
-
-## Entry
-
-```javascript
-const bluetooth = navigator.bluetooth;
-```
-
-## Common Capabilities
-
-### `getAvailability()`
-- Checks whether Bluetooth is available in the current runtime environment.
-
-### `getDevices()`
-- Gets the list of devices already remembered by the current runtime.
-
-### `requestDevice(options?)`
-- Prompts the user to select a device and returns the corresponding `BluetoothDevice`.
-
-### `scanDevices(options?)`
-- Starts continuous scanning and returns `BluetoothScan`, which is suitable for scenarios that require long-running device discovery.
-
-## Basic Example
+## Request and Connect to a Device
 
 ```javascript
 const device = await navigator.bluetooth.requestDevice({
@@ -64,6 +37,13 @@ scan.onDeviceFound((event) => {
 scan.stop();
 ```
 
+## Use Cases
+
+- Search for and connect to BLE peripherals
+- Read device status or real-time data
+- Send control commands to devices
+- Subscribe to characteristic notifications and receive continuous updates
+
 ## Recommendations
 
 - Prefer filtering by service UUID or device name to reduce irrelevant scan results.
@@ -81,3 +61,25 @@ scan.stop();
 
 - **[Accelerometer](/AIUI/api/device-accelerometer)**: Learn about device motion sensor capabilities.
 - **[Device](/AIUI/api/device)**: Return to the device capability overview.
+
+## API Reference
+
+### Entry
+
+```javascript
+const bluetooth = navigator.bluetooth;
+```
+
+### Common Capabilities
+
+#### `getAvailability()`
+- Checks whether Bluetooth is available in the current runtime environment.
+
+#### `getDevices()`
+- Gets the list of devices already remembered by the current runtime.
+
+#### `requestDevice(options?)`
+- Prompts the user to select a device and returns the corresponding `BluetoothDevice`.
+
+#### `scanDevices(options?)`
+- Starts continuous scanning and returns `BluetoothScan`, which is suitable for scenarios that require long-running device discovery.

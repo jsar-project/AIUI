@@ -21,7 +21,9 @@ Current behavior:
 - `page.querySelectorAll(selector)` returns an `EntityList`
 - `entity.querySelector(selector)` continues querying only within the current entity subtree
 
-## Instance Members
+## API Reference
+
+### Instance Members
 
 | Member | Type | Description |
 | :--- | :--- | :--- |
@@ -32,7 +34,7 @@ Current behavior:
 | `entity.querySelector(selector)` | `Entity \| null` | Continues querying within the current entity subtree |
 | `entity.querySelectorAll(selector)` | `EntityList` | Queries all matches within the current entity subtree |
 
-## `entity.attributes`
+### `entity.attributes`
 
 `attributes` returns a snapshot object of the current entity attribute table.
 
@@ -44,7 +46,7 @@ console.log(title.attributes.role);
 
 It is suitable for reading the resolved attribute values currently present on the node.
 
-## `entity.dataset`
+### `entity.dataset`
 
 `dataset` maps `data-*` attributes on the entity into a readable and writable view.
 
@@ -62,14 +64,14 @@ Current behavior:
 - Writing to `dataset` writes back to the underlying entity attributes
 - Deleting a `dataset` field also removes the corresponding `data-*` attribute
 
-## `entity.querySelector(String selector)`
+### `entity.querySelector(String selector)`
 
 `querySelector()` finds the first matching node within the subtree of the current entity.
 
 - An invalid selector throws directly
 - Returns `null` when nothing matches
 
-## `entity.querySelectorAll(String selector)`
+### `entity.querySelectorAll(String selector)`
 
 `querySelectorAll()` queries all matching nodes within the subtree of the current entity.
 
@@ -82,7 +84,7 @@ const title = container.querySelector('.title');
 const items = container.querySelectorAll('[selected]');
 ```
 
-## `EntityList`
+### `EntityList`
 
 `EntityList` is the iterable result container returned by `querySelectorAll()`.
 

@@ -4,26 +4,6 @@ Large language models are used for tasks such as question answering, summarizati
 
 If your application needs to generate replies based on context, or perform more complex semantic processing on user input, `LanguageModel` is usually a good place to start.
 
-## Use Cases
-
-- Conversational question answering
-- Content summarization and rewriting
-- Information extraction and structured output
-- Streaming reply generation
-- Multi-turn interactions with context
-
-## Entry Point
-
-`LanguageModel` can be used directly or imported from the built-in module:
-
-```javascript
-const status = await LanguageModel.availability();
-```
-
-```javascript
-import { LanguageModel } from 'language-model';
-```
-
 ## Check Availability First
 
 ```javascript
@@ -109,46 +89,19 @@ session.addEventListener('toolcall', (event) => {
 const result = await session.prompt('帮我查询一下杭州今天天气');
 ```
 
-### `toolcall` Event Object
-
-The `toolcall` event object contains the following properties:
-
-- `callId`: A unique identifier for the tool call.
-- `functionName`: The function name to be called.
-- `arguments`: Parsed function arguments, typically a JavaScript object.
-- `toolType`: The tool type, currently always `"function"`.
-- `index`: The index of this tool call in the current request.
-- `isComplete`: Indicates whether this tool call is complete. It is currently always `true`.
-
-### Current Capability Boundaries
+## Current Capability Boundaries
 
 - [x] Declare available functions and their parameter structures to the model.
 - [x] Receive structured tool call requests through `session.addEventListener('toolcall', ...)`.
 - [x] Plain text or text deltas returned by the backend are exposed to the frontend through `prompt()` or `promptStreaming()`.
 
-## Common Methods
+## Use Cases
 
-### `availability()`
-- **Return value**: `Promise<'available' | 'unavailable'>`
-- **Description**: Checks whether the current runtime environment can provide large language model capabilities.
-
-### `create(options?)`
-- **Return value**: `Promise<LanguageModelSession>`
-- **Description**: Creates a new model session.
-
-### `prompt(input)`
-- **Return value**: `Promise<string>`
-- **Description**: Sends a single request and returns the final text after completion.
-
-### `promptStreaming(input)`
-- **Return value**: `LanguageModelTextStream`
-- **Description**: Starts a streaming request and reads model output incrementally.
-
-### `clone()`
-- **Description**: Clones the current session context and creates a new independent session.
-
-### `destroy()`
-- **Description**: Destroys the current session and releases the session resources needed for later use.
+- Conversational question answering
+- Content summarization and rewriting
+- Information extraction and structured output
+- Streaming reply generation
+- Multi-turn interactions with context
 
 ## Recommendations
 
@@ -168,3 +121,52 @@ The `toolcall` event object contains the following properties:
 
 - **[Speech Recognition](/AIUI/api/ai-speech-recognition)**: Learn how to pass user voice input to the model.
 - **[Speech Synthesis](/AIUI/api/ai-speech-synthesis)**: Learn how to speak model replies to the user.
+
+## API Reference
+
+### Entry Point
+
+`LanguageModel` can be used directly or imported from the built-in module:
+
+```javascript
+const status = await LanguageModel.availability();
+```
+
+```javascript
+import { LanguageModel } from 'language-model';
+```
+
+### Common Methods
+
+#### `availability()`
+- **Return value**: `Promise<'available' | 'unavailable'>`
+- **Description**: Checks whether the current runtime environment can provide large language model capabilities.
+
+#### `create(options?)`
+- **Return value**: `Promise<LanguageModelSession>`
+- **Description**: Creates a new model session.
+
+#### `prompt(input)`
+- **Return value**: `Promise<string>`
+- **Description**: Sends a single request and returns the final text after completion.
+
+#### `promptStreaming(input)`
+- **Return value**: `LanguageModelTextStream`
+- **Description**: Starts a streaming request and reads model output incrementally.
+
+#### `clone()`
+- **Description**: Clones the current session context and creates a new independent session.
+
+#### `destroy()`
+- **Description**: Destroys the current session and releases the session resources needed for later use.
+
+### `toolcall` Event Object
+
+The `toolcall` event object contains the following properties:
+
+- `callId`: A unique identifier for the tool call.
+- `functionName`: The function name to be called.
+- `arguments`: Parsed function arguments, typically a JavaScript object.
+- `toolType`: The tool type, currently always `"function"`.
+- `index`: The index of this tool call in the current request.
+- `isComplete`: Indicates whether this tool call is complete. It is currently always `true`.

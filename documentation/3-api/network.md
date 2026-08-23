@@ -14,7 +14,11 @@ AIUI 的网络能力主要分成三类：一次性请求响应、服务端持续
 
 例如，请求一个智能体服务接口：
 
-```javascript
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 const response = await fetch('/api/agent/chat', {
   method: 'POST',
   headers: {
@@ -24,10 +28,28 @@ const response = await fetch('/api/agent/chat', {
 });
 ```
 
+**wx**
+
+```javascript api-style=wx
+wx.request({
+  url: '/api/agent/chat',
+  method: 'POST',
+  header: {
+    'content-type': 'application/json',
+  },
+  data: { message: '你好' },
+  success(res) {
+    console.log(res.data);
+  },
+});
+```
+
+<!-- /aiui-api-style -->
+
 ## 继续阅读
 
 - **[HTTPS](/AIUI/api/network-https)**：了解普通请求响应场景在 AIUI 中该如何使用。
 - **[Event Source](/AIUI/api/network-event-source)**：了解服务端单向流式推送适合怎样的业务场景。
 - **[WebSocket](/AIUI/api/network-websocket)**：了解双向实时连接的典型使用方式、连接管理和重连建议。
 - **[设备](/AIUI/api/device)**：查看蓝牙连接和设备传感器能力，包括加速度、姿态和陀螺仪等接口。
-- **[网络请求 (networking)](/AIUI/api/weixin-compatible-apis-networking)**：查看 `wx.request`、`WebSocket`、`EventSource` 等兼容接口细节。
+- **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看 `wx.request`、`wx.connectSocket`、`wx.createEventSource` 等兼容接口。

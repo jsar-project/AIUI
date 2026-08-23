@@ -6,7 +6,7 @@
 
 此外，`Page` 继承事件目标能力，因此也可以使用标准事件方法，例如 `addEventListener()`、`removeEventListener()` 和 `dispatchEvent()`。
 
-## 示例代码
+## 定义页面并更新状态
 
 ```javascript
 export default {
@@ -45,11 +45,13 @@ export default {
 }
 ```
 
-## 实例属性与方法
+## API Reference
+
+### 实例属性与方法
 
 在页面逻辑中，可以通过 `this` 访问页面实例，并使用以下属性和方法。
 
-### `this.data`
+#### `this.data`
 
 `data` 表示当前页面的状态对象。
 
@@ -57,7 +59,7 @@ export default {
 - 如果没有提供 `data`，运行时会自动初始化成空对象 `{}`
 - 直接给 `this.data` 赋一个新对象时，会替换当前保存的状态对象
 
-### `this.setData(Object data, Function? callback)`
+#### `this.setData(Object data, Function? callback)`
 
 用于将数据从逻辑层发送到视图层（异步），同时改变对应的 `this.data` 的值。
 
@@ -72,7 +74,7 @@ export default {
 - 点路径 key 会在需要时自动创建中间对象
 - 如果传入 `callback`，会在数据更新并完成同步后执行
 
-### `this.postMessage(any data, Object? options)`
+#### `this.postMessage(any data, Object? options)`
 
 向承载当前页面的外部宿主发送一条 JSON 兼容消息。
 
@@ -95,7 +97,7 @@ this.postMessage(
 );
 ```
 
-### `this.querySelector(String selector)`
+#### `this.querySelector(String selector)`
 
 用于在当前页面实体树中查找第一个匹配的实体。
 
@@ -103,7 +105,7 @@ this.postMessage(
 - 如果没有命中，则返回 `null`
 - 非法 selector 会直接抛错
 
-### `this.querySelectorAll(String selector)`
+#### `this.querySelectorAll(String selector)`
 
 用于在当前页面实体树中查询所有匹配的实体。
 
@@ -111,7 +113,7 @@ this.postMessage(
 - 查询范围仅限当前页面
 - 非法 selector 会直接抛错
 
-## 环境感知
+### 环境感知
 
 `World Awareness` 是页面级的环境感知能力，用来让当前页面直接接入空间朝向、稳定性变化和头部手势等环境感知信息。
 
@@ -131,7 +133,7 @@ this.postMessage(
 
 如果你需要页面感知空间姿态或环境变化，通常应先启用 world awareness，再通过页面回调或 `this.orientationSensor` 读取相关信息。
 
-### `this.enableWorldAwareness(Object? options)`
+#### `this.enableWorldAwareness(Object? options)`
 
 将当前页面切换到页面级环境感知模式，用于启用环境感知相关能力。
 
@@ -144,13 +146,13 @@ this.postMessage(
   - `options`: 可选配置对象
     - `mode?: "normal" | "micro"`: 头部手势模式。默认是 `"normal"`；传入 `"micro"` 时，会降低手势阈值，更适合轻微头部动作；其他值当前按 `"normal"` 处理
 
-### `this.disableWorldAwareness()`
+#### `this.disableWorldAwareness()`
 
 停止当前页面级传感器会话，并关闭相关页面回调。
 
 - 运行时会在 `onUnload()` 完成前自动调用它，因此页面通常不需要在卸载清理里手动关闭 world awareness
 
-### `this.orientationSensor`
+#### `this.orientationSensor`
 
 当 world awareness 启用后，页面实例会通过 `this.orientationSensor` 暴露当前页面私有的 `AbsoluteOrientationSensor` 实例。
 
@@ -158,14 +160,14 @@ this.postMessage(
 - 可用于读取 `quaternion`、`timestamp`、`stable` 和 `stabilityThreshold`
 - 页面通常通过 `onOrientationStabilityChange(event)` 接收稳定性变化；如果需要，也可以直接给该传感器实例注册事件监听器
 
-### `this.finish()`
+#### `this.finish()`
 
 通知系统当前页面任务已完成。
 
 - 对于 **Cut (快切)** 智能体，调用此方法将主动交回焦点并退出当前展示状态
 - 对于 **Scene (场景)** 智能体，通常用于结束当前特定交互流程
 
-## 生命周期回调
+### 生命周期回调
 
 | 回调函数 | 说明 | 触发时机 |
 | :--- | :--- | :--- |

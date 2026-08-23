@@ -6,18 +6,14 @@
 
 AIUI 同时支持现代 Web 标准的 `fetch` API 以及微信小程序兼容的 `wx.request` API。
 
-### fetch API
+下面是同一个 POST 请求在两种 API 风格下的写法。推荐使用符合现代 Web 开发习惯的 Web API；迁移已有小程序代码时可以使用 `wx`。
 
-这是最推荐的使用方式，符合现代 Web 开发习惯：
+<!-- aiui-api-style default=web -->
 
-```javascript
-// 发起一个简单的 GET 请求
-const response = await fetch('https://api.rokid.com/v1/agent/config');
-const data = await response.json();
-console.log(data);
+**Web**
 
-// 发起 POST 请求
-const res = await fetch('https://api.rokid.com/v1/chat', {
+```javascript api-style=web
+const response = await fetch('https://api.rokid.com/v1/chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -26,24 +22,36 @@ const res = await fetch('https://api.rokid.com/v1/chat', {
     query: '你好'
   })
 });
+
+if (!response.ok) {
+  throw new Error(`Request failed: ${response.status}`);
+}
+
+console.log(await response.json());
 ```
 
-### wx.request
+**wx**
 
-为了兼容现有的小程序生态，AIUI 也提供了 `wx.request`：
-
-```javascript
+```javascript api-style=wx
 wx.request({
-  url: 'https://api.rokid.com/v1/weather',
-  method: 'GET',
+  url: 'https://api.rokid.com/v1/chat',
+  method: 'POST',
+  header: {
+    'Content-Type': 'application/json'
+  },
+  data: {
+    query: '你好'
+  },
   success(res) {
-    console.log('天气数据:', res.data);
+    console.log(res.data);
   },
   fail(err) {
     console.error('请求失败:', err);
   }
 });
 ```
+
+<!-- /aiui-api-style -->
 
 ## 2. AI 眼镜上的网络通信机制
 

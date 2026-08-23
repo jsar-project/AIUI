@@ -2,9 +2,112 @@
 
 AIUI 提供了一套遵循 Web 标准的 Canvas 2D 绘图接口。你可以通过 `canvas` 组件的 `getContext('2d')` 方法获取绘图上下文。
 
-## 接口说明
+## 绘制基本图形
 
-### CanvasRenderingContext2D
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+// 绘制红色矩形
+ctx.fillStyle = 'red';
+ctx.fillRect(10, 10, 100, 100);
+
+// 绘制蓝色描边圆形
+ctx.beginPath();
+ctx.arc(200, 60, 50, 0, Math.PI * 2);
+ctx.strokeStyle = 'blue';
+ctx.lineWidth = 5;
+ctx.stroke();
+
+// 绘制绿色半透明椭圆
+ctx.beginPath();
+ctx.ellipse(350, 60, 50, 30, Math.PI / 4, 0, Math.PI * 2);
+ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+ctx.fill();
+```
+
+**wx**
+
+```javascript api-style=wx
+const ctx = wx.createCanvasContext('myCanvas');
+
+ctx.fillStyle = 'red';
+ctx.fillRect(10, 10, 100, 100);
+
+ctx.beginPath();
+ctx.arc(200, 60, 50, 0, Math.PI * 2);
+ctx.strokeStyle = 'blue';
+ctx.lineWidth = 5;
+ctx.stroke();
+
+ctx.beginPath();
+ctx.ellipse(350, 60, 50, 30, Math.PI / 4, 0, Math.PI * 2);
+ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+ctx.fill();
+```
+
+<!-- /aiui-api-style -->
+
+## 使用渐变
+
+```javascript
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+// 创建线性渐变
+const gradient = ctx.createLinearGradient(0, 0, 300, 0);
+gradient.addColorStop(0, 'red');
+gradient.addColorStop(0.5, 'yellow');
+gradient.addColorStop(1, 'green');
+
+ctx.fillStyle = gradient;
+ctx.fillRect(10, 150, 300, 50);
+```
+
+## 绘制文本
+
+```javascript
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+ctx.font = '30px sans-serif';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+
+ctx.fillStyle = '#333';
+ctx.fillText('Hello AIUI Canvas', 200, 250);
+
+ctx.strokeStyle = '#40FF5E';
+ctx.strokeText('Hello AIUI Canvas', 200, 250);
+```
+
+## 图像变换与保存状态
+
+```javascript
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+ctx.save(); // 保存当前状态
+
+ctx.translate(100, 100); // 平移
+ctx.rotate(Math.PI / 4); // 旋转 45 度
+ctx.scale(1.5, 1.5);    // 缩放
+
+ctx.fillStyle = 'orange';
+ctx.fillRect(-25, -25, 50, 50);
+
+ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
+```
+
+## API Reference
+
+### 接口说明
+
+#### CanvasRenderingContext2D
 
 这是主要的绘图上下文接口，提供了丰富的属性和方法来绘制 2D 图形。
 
@@ -74,7 +177,7 @@ AIUI 提供了一套遵循 Web 标准的 Canvas 2D 绘图接口。你可以通�
 - **`createRadialGradient(x0, y0, r0, x1, y1, r1)`**: 创建径向渐变。
 - **`createPattern(image, repetition)`**: 创建图案填充。
 
-### ImageData
+#### ImageData
 
 用于存储 Canvas 像素数据的对象。
 
@@ -82,91 +185,14 @@ AIUI 提供了一套遵循 Web 标准的 Canvas 2D 绘图接口。你可以通�
 - **`height`**: 图像高度。
 - **`data`**: `Uint8ClampedArray` 类型的像素数据（RGBA）。
 
-### CanvasGradient
+#### CanvasGradient
 
 表示渐变的对象。
 
 - **`addColorStop(offset, color)`**: 向渐变添加颜色停止点（0.0 ~ 1.0）。
 
-### CanvasPattern
+#### CanvasPattern
 
 表示重复图案的对象。
 
 - **`setTransform(matrix)`**: 设置图案的变换矩阵。
-
-## 代码示例
-
-### 1. 绘制基本图形
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-// 绘制红色矩形
-ctx.fillStyle = 'red';
-ctx.fillRect(10, 10, 100, 100);
-
-// 绘制蓝色描边圆形
-ctx.beginPath();
-ctx.arc(200, 60, 50, 0, Math.PI * 2);
-ctx.strokeStyle = 'blue';
-ctx.lineWidth = 5;
-ctx.stroke();
-
-// 绘制绿色半透明椭圆
-ctx.beginPath();
-ctx.ellipse(350, 60, 50, 30, Math.PI / 4, 0, Math.PI * 2);
-ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-ctx.fill();
-```
-
-### 2. 使用渐变
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-// 创建线性渐变
-const gradient = ctx.createLinearGradient(0, 0, 300, 0);
-gradient.addColorStop(0, 'red');
-gradient.addColorStop(0.5, 'yellow');
-gradient.addColorStop(1, 'green');
-
-ctx.fillStyle = gradient;
-ctx.fillRect(10, 150, 300, 50);
-```
-
-### 3. 绘制文本
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-ctx.font = '30px sans-serif';
-ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
-
-ctx.fillStyle = '#333';
-ctx.fillText('Hello AIUI Canvas', 200, 250);
-
-ctx.strokeStyle = '#40FF5E';
-ctx.strokeText('Hello AIUI Canvas', 200, 250);
-```
-
-### 4. 图像变换与保存状态
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-ctx.save(); // 保存当前状态
-
-ctx.translate(100, 100); // 平移
-ctx.rotate(Math.PI / 4); // 旋转 45 度
-ctx.scale(1.5, 1.5);    // 缩放
-
-ctx.fillStyle = 'orange';
-ctx.fillRect(-25, -25, 50, 50);
-
-ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
-```

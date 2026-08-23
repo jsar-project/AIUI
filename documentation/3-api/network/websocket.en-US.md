@@ -4,16 +4,13 @@
 
 If your scenario only needs to request a result once, or only needs the server to keep pushing content, you usually do not need `WebSocket`. Prefer it only when the client also needs to keep sending messages actively and both sides need a long-lived online channel.
 
-## When to Use WebSocket
-
-- Chat, multi-user collaboration, and real-time synchronization
-- The client needs to continuously report status to the server
-- The server also needs to push messages to the client at any time
-- Lower latency and a more stable bidirectional channel are needed compared with polling
-
 ## Example
 
-```javascript
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 const socket = new WebSocket('wss://example.com/realtime');
 
 socket.addEventListener('open', () => {
@@ -31,6 +28,38 @@ socket.addEventListener('close', () => {
   console.log('连接已关闭');
 });
 ```
+
+**wx**
+
+```javascript api-style=wx
+const socket = wx.connectSocket({
+  url: 'wss://example.com/realtime',
+});
+
+socket.onOpen(() => {
+  socket.send(JSON.stringify({
+    type: 'hello',
+    sessionId: 'demo-session',
+  }));
+});
+
+socket.onMessage(({ data }) => {
+  console.log('Message received:', data);
+});
+
+socket.onClose(() => {
+  console.log('Connection closed');
+});
+```
+
+<!-- /aiui-api-style -->
+
+## When to Use WebSocket
+
+- Chat, multi-user collaboration, and real-time synchronization
+- The client needs to continuously report status to the server
+- The server also needs to push messages to the client at any time
+- Lower latency and a more stable bidirectional channel are needed compared with polling
 
 ## Recommendations
 
@@ -58,4 +87,36 @@ For these scenarios, [HTTPS](/AIUI/api/network-https) or [Event Source](/AIUI/ap
 
 - **[HTTPS](/AIUI/api/network-https)**: Learn which business scenarios are better suited to request-response.
 - **[Event Source](/AIUI/api/network-event-source)**: Learn which business scenarios are better suited to one-way streaming pushes from the server.
-- **[Networking](/AIUI/api/weixin-compatible-apis-networking)**: Learn details of compatible APIs such as `wx.connectSocket`.
+- **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See the wx APIs supported by AIUI.
+
+## API Reference
+
+### `new WebSocket(url)`
+
+Creates a Web-standard WebSocket connection. `url` must use the `ws` or `wss` protocol.
+
+### `WebSocket` Events and Methods
+
+- `addEventListener('open', callback)`: Observes the connection opening.
+- `addEventListener('message', callback)`: Observes messages; event `data` contains the payload.
+- `addEventListener('close', callback)`: Observes connection closure.
+- `addEventListener('error', callback)`: Observes connection errors.
+- `send(data)`: Sends string or binary data.
+- `close()`: Closes the connection.
+
+### `wx.connectSocket(options)` / `wx.createSocket(options)`
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `options.url` | `string` | Yes | A `ws` or `wss` service URL. |
+| `options.header` | `object` | No | Connection request headers. `Referer` cannot be set. |
+
+**Returns:** `SocketTask`.
+
+### `SocketTask`
+
+- `onOpen(callback)`, `onMessage(callback)`, `onClose(callback)`, `onError(callback)`: Observe connection events.
+- `send(data)`: Sends a `String`, `ArrayBuffer`, or `Uint8Array`.
+- `close()`: Closes the connection.
+
+All methods return `undefined`; `send()` throws `TypeError` for other data types.

@@ -2,9 +2,49 @@
 
 AIUI allows developers to use `createOpenAPI` to call a variety of intelligent services provided by the Rokid cloud platform, extending the capabilities of an agent.
 
-## Basic API
+## Use the default Open Service
 
-### createOpenAPI
+```javascript
+import { createOpenAPI } from 'open';
+
+createOpenAPI().then((openapi) => {
+  // Use the SDK instance for the default Open Service
+}).catch((err) => {
+  console.error('Failed to create open service instance:', err);
+});
+```
+
+## Specify a service
+
+```javascript
+import { createOpenAPI } from 'open';
+
+createOpenAPI('my-service').then((openapi) => {
+  // Use the Open Service instance for the specified service
+}).catch((err) => {
+  console.error('Failed to create the specified Open Service instance:', err);
+});
+```
+
+## Each call returns a new instance
+
+```javascript
+import { createOpenAPI } from 'open';
+
+const defaultAPI = await createOpenAPI();
+const customAPI = await createOpenAPI('my-service');
+const anotherDefaultAPI = await createOpenAPI();
+
+console.log(defaultAPI === anotherDefaultAPI); // false
+console.log(defaultAPI === customAPI); // false
+```
+
+
+## API Reference
+
+### Basic API
+
+#### createOpenAPI
 
 Creates an open service instance. Through this instance, you can access Open Service capabilities exposed by the host.
 
@@ -44,42 +84,3 @@ Returns a Promise that resolves to a JavaScript SDK object. You can use this obj
 - `createOpenAPI()` connects to the default Open Service selected by the host
 - `createOpenAPI(service)` attempts to connect to the Open Service identified by that name
 - Because each call creates a new instance, you should store and reuse the returned object if you want to keep using the same Open Service instance
-
-#### Example
-
-##### 1. Use the default Open Service
-
-```javascript
-import { createOpenAPI } from 'open';
-
-createOpenAPI().then((openapi) => {
-  // Use the SDK instance for the default Open Service
-}).catch((err) => {
-  console.error('Failed to create open service instance:', err);
-});
-```
-
-##### 2. Specify a service
-
-```javascript
-import { createOpenAPI } from 'open';
-
-createOpenAPI('my-service').then((openapi) => {
-  // Use the Open Service instance for the specified service
-}).catch((err) => {
-  console.error('Failed to create the specified Open Service instance:', err);
-});
-```
-
-##### 3. Each call returns a new instance
-
-```javascript
-import { createOpenAPI } from 'open';
-
-const defaultAPI = await createOpenAPI();
-const customAPI = await createOpenAPI('my-service');
-const anotherDefaultAPI = await createOpenAPI();
-
-console.log(defaultAPI === anotherDefaultAPI); // false
-console.log(defaultAPI === customAPI); // false
-```

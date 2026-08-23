@@ -2,29 +2,13 @@
 
 AIUI provides a set of local storage APIs that follow the Web Storage API standard. The most commonly used one is `localStorage`, which you can use to persist data on the user's device.
 
-## API Description
+## Store And Read Data
 
-### localStorage
+<!-- aiui-api-style default=web -->
 
-`localStorage` lets you store key-value data in an agent. Data stored in `localStorage` does not expire.
+**Web**
 
-#### Methods
-
-- **`getItem(key)`**: Gets the value associated with the specified key.
-    - `key`: `String`, the key to retrieve.
-    - Return value: `String` or `null` if the key does not exist.
-- **`setItem(key, value)`**: Sets the value associated with the specified key. If the key already exists, its value is updated.
-    - `key`: `String`, the key to set.
-    - `value`: `String`, the value to store.
-- **`removeItem(key)`**: Removes the data item for the specified key.
-    - `key`: `String`, the key to remove.
-- **`clear()`**: Clears all data stored for the current agent.
-
-## Code Examples
-
-### 1. Store And Read Data
-
-```javascript
+```javascript api-style=web
 // Store data
 localStorage.setItem('username', 'Rokid Agent');
 localStorage.setItem('version', '1.0.0');
@@ -38,9 +22,28 @@ const theme = localStorage.getItem('theme');
 console.log(theme); // null
 ```
 
-### 2. Remove And Clear Data
+**wx**
 
-```javascript
+```javascript api-style=wx
+wx.setStorageSync('username', 'Rokid Agent');
+wx.setStorageSync('version', '1.0.0');
+
+const name = wx.getStorageSync('username');
+console.log(name); // "Rokid Agent"
+
+const theme = wx.getStorageSync('theme');
+console.log(theme); // undefined
+```
+
+<!-- /aiui-api-style -->
+
+## Remove And Clear Data
+
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 // Remove a specific item
 localStorage.removeItem('version');
 
@@ -48,7 +51,16 @@ localStorage.removeItem('version');
 localStorage.clear();
 ```
 
-### 3. Store Object Data
+**wx**
+
+```javascript api-style=wx
+wx.removeStorageSync('version');
+wx.clearStorageSync();
+```
+
+<!-- /aiui-api-style -->
+
+## Store Object Data
 
 Since `Storage` only supports storing strings, you need to serialize objects before storing them.
 
@@ -67,3 +79,25 @@ console.log(savedUser.name); // "Admin"
 
 - **Data type**: The `value` argument of `setItem` must be a string. If you pass another type, the system automatically converts it to a string. For complex objects, call `JSON.stringify()` manually before storing.
 - **Isolation**: Storage is isolated per agent. Different agents cannot access each other's stored data.
+
+See [WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis) for the complete wx compatibility list.
+
+## API Reference
+
+### API Description
+
+#### localStorage
+
+`localStorage` lets you store key-value data in an agent. Data stored in `localStorage` does not expire.
+
+#### Methods
+
+- **`getItem(key)`**: Gets the value associated with the specified key.
+    - `key`: `String`, the key to retrieve.
+    - Return value: `String` or `null` if the key does not exist.
+- **`setItem(key, value)`**: Sets the value associated with the specified key. If the key already exists, its value is updated.
+    - `key`: `String`, the key to set.
+    - `value`: `String`, the value to store.
+- **`removeItem(key)`**: Removes the data item for the specified key.
+    - `key`: `String`, the key to remove.
+- **`clear()`**: Clears all data stored for the current agent.

@@ -6,44 +6,52 @@ In AIUI, network capability is the foundation for building agents. Since agents 
 
 AIUI supports both the modern Web-standard `fetch` API and the WeChat Mini Program-compatible `wx.request` API.
 
-### fetch API
+The following example sends the same POST request in both API styles. The Web API is recommended for modern development; use `wx` when migrating existing mini-program code.
 
-This is the recommended approach and matches modern Web development practices:
+<!-- aiui-api-style default=web -->
 
-```javascript
-// 发起一个简单的 GET 请求
-const response = await fetch('https://api.rokid.com/v1/agent/config');
-const data = await response.json();
-console.log(data);
+**Web**
 
-// 发起 POST 请求
-const res = await fetch('https://api.rokid.com/v1/chat', {
+```javascript api-style=web
+const response = await fetch('https://api.rokid.com/v1/chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    query: '你好'
+    query: 'Hello'
   })
 });
+
+if (!response.ok) {
+  throw new Error(`Request failed: ${response.status}`);
+}
+
+console.log(await response.json());
 ```
 
-### wx.request
+**wx**
 
-To stay compatible with the existing mini-program ecosystem, AIUI also provides `wx.request`:
-
-```javascript
+```javascript api-style=wx
 wx.request({
-  url: 'https://api.rokid.com/v1/weather',
-  method: 'GET',
+  url: 'https://api.rokid.com/v1/chat',
+  method: 'POST',
+  header: {
+    'Content-Type': 'application/json'
+  },
+  data: {
+    query: 'Hello'
+  },
   success(res) {
-    console.log('天气数据:', res.data);
+    console.log(res.data);
   },
   fail(err) {
-    console.error('请求失败:', err);
+    console.error('Request failed:', err);
   }
 });
 ```
+
+<!-- /aiui-api-style -->
 
 ## 2. Network Communication on AI Glasses
 

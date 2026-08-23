@@ -6,12 +6,25 @@ AIUI storage capabilities are used to save local state, user preferences, busine
 
 For example, save a user setting:
 
-```javascript
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 localStorage.setItem('theme', 'green');
 const theme = localStorage.getItem('theme');
 ```
 
+**wx**
+
+```javascript api-style=wx
+wx.setStorageSync('theme', 'green');
+const theme = wx.getStorageSync('theme');
+```
+
+<!-- /aiui-api-style -->
+
 Continue reading:
 
 - **[Storage API](/AIUI/api/storage-api)**: See how to use `localStorage` and `sessionStorage`.
-- **[Storage](/AIUI/api/weixin-compatible-apis-storage)**: See `wx.setStorage`, `wx.getStorage`, and the synchronous variants.
+- **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See `wx.setStorage`, `wx.getStorage`, and the synchronous variants.

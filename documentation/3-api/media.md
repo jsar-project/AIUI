@@ -19,4 +19,4 @@ click.play();
 - **[相机](/AIUI/api/media-camera)**：查看相机上下文创建方式以及页面中的相机交互入口。
 - **[录音](/AIUI/api/media-recorder)**：查看录音管理器入口与录音流程管理方式。
 - **[音频 (Audio)](/AIUI/api/media-audio)**：查看 Web 标准的音频相关接口。
-- **[多媒体 (media)](/AIUI/api/weixin-compatible-apis-media)**：查看摄像头、录音等设备媒体接口。
+- **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看摄像头、录音等设备媒体接口。

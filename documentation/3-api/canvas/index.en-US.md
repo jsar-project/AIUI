@@ -2,9 +2,112 @@
 
 AIUI provides a set of Canvas 2D drawing interfaces that follow Web standards. You can obtain the drawing context through the `getContext('2d')` method of the `canvas` component.
 
-## Interface Description
+## Draw Basic Shapes
 
-### CanvasRenderingContext2D
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+// 绘制红色矩形
+ctx.fillStyle = 'red';
+ctx.fillRect(10, 10, 100, 100);
+
+// 绘制蓝色描边圆形
+ctx.beginPath();
+ctx.arc(200, 60, 50, 0, Math.PI * 2);
+ctx.strokeStyle = 'blue';
+ctx.lineWidth = 5;
+ctx.stroke();
+
+// 绘制绿色半透明椭圆
+ctx.beginPath();
+ctx.ellipse(350, 60, 50, 30, Math.PI / 4, 0, Math.PI * 2);
+ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+ctx.fill();
+```
+
+**wx**
+
+```javascript api-style=wx
+const ctx = wx.createCanvasContext('myCanvas');
+
+ctx.fillStyle = 'red';
+ctx.fillRect(10, 10, 100, 100);
+
+ctx.beginPath();
+ctx.arc(200, 60, 50, 0, Math.PI * 2);
+ctx.strokeStyle = 'blue';
+ctx.lineWidth = 5;
+ctx.stroke();
+
+ctx.beginPath();
+ctx.ellipse(350, 60, 50, 30, Math.PI / 4, 0, Math.PI * 2);
+ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+ctx.fill();
+```
+
+<!-- /aiui-api-style -->
+
+## Use Gradients
+
+```javascript
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+// 创建线性渐变
+const gradient = ctx.createLinearGradient(0, 0, 300, 0);
+gradient.addColorStop(0, 'red');
+gradient.addColorStop(0.5, 'yellow');
+gradient.addColorStop(1, 'green');
+
+ctx.fillStyle = gradient;
+ctx.fillRect(10, 150, 300, 50);
+```
+
+## Draw Text
+
+```javascript
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+ctx.font = '30px sans-serif';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+
+ctx.fillStyle = '#333';
+ctx.fillText('Hello AIUI Canvas', 200, 250);
+
+ctx.strokeStyle = '#40FF5E';
+ctx.strokeText('Hello AIUI Canvas', 200, 250);
+```
+
+## Image Transformations and Saved State
+
+```javascript
+const canvas = this.selectComponent('#myCanvas');
+const ctx = canvas.getContext('2d');
+
+ctx.save(); // 保存当前状态
+
+ctx.translate(100, 100); // 平移
+ctx.rotate(Math.PI / 4); // 旋转 45 度
+ctx.scale(1.5, 1.5);    // 缩放
+
+ctx.fillStyle = 'orange';
+ctx.fillRect(-25, -25, 50, 50);
+
+ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
+```
+
+## API Reference
+
+### Interface Description
+
+#### CanvasRenderingContext2D
 
 This is the primary drawing context interface, providing a rich set of properties and methods for drawing 2D graphics.
 
@@ -74,7 +177,7 @@ This is the primary drawing context interface, providing a rich set of propertie
 - **`createRadialGradient(x0, y0, r0, x1, y1, r1)`**: Creates a radial gradient.
 - **`createPattern(image, repetition)`**: Creates a pattern fill.
 
-### ImageData
+#### ImageData
 
 An object used to store canvas pixel data.
 
@@ -82,91 +185,14 @@ An object used to store canvas pixel data.
 - **`height`**: Image height.
 - **`data`**: Pixel data of type `Uint8ClampedArray` (RGBA).
 
-### CanvasGradient
+#### CanvasGradient
 
 An object representing a gradient.
 
 - **`addColorStop(offset, color)`**: Adds a color stop to the gradient (`0.0 ~ 1.0`).
 
-### CanvasPattern
+#### CanvasPattern
 
 An object representing a repeating pattern.
 
 - **`setTransform(matrix)`**: Sets the transformation matrix for the pattern.
-
-## Code Examples
-
-### 1. Draw Basic Shapes
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-// 绘制红色矩形
-ctx.fillStyle = 'red';
-ctx.fillRect(10, 10, 100, 100);
-
-// 绘制蓝色描边圆形
-ctx.beginPath();
-ctx.arc(200, 60, 50, 0, Math.PI * 2);
-ctx.strokeStyle = 'blue';
-ctx.lineWidth = 5;
-ctx.stroke();
-
-// 绘制绿色半透明椭圆
-ctx.beginPath();
-ctx.ellipse(350, 60, 50, 30, Math.PI / 4, 0, Math.PI * 2);
-ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-ctx.fill();
-```
-
-### 2. Use Gradients
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-// 创建线性渐变
-const gradient = ctx.createLinearGradient(0, 0, 300, 0);
-gradient.addColorStop(0, 'red');
-gradient.addColorStop(0.5, 'yellow');
-gradient.addColorStop(1, 'green');
-
-ctx.fillStyle = gradient;
-ctx.fillRect(10, 150, 300, 50);
-```
-
-### 3. Draw Text
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-ctx.font = '30px sans-serif';
-ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
-
-ctx.fillStyle = '#333';
-ctx.fillText('Hello AIUI Canvas', 200, 250);
-
-ctx.strokeStyle = '#40FF5E';
-ctx.strokeText('Hello AIUI Canvas', 200, 250);
-```
-
-### 4. Image Transformations and Saved State
-
-```javascript
-const canvas = this.selectComponent('#myCanvas');
-const ctx = canvas.getContext('2d');
-
-ctx.save(); // 保存当前状态
-
-ctx.translate(100, 100); // 平移
-ctx.rotate(Math.PI / 4); // 旋转 45 度
-ctx.scale(1.5, 1.5);    // 缩放
-
-ctx.fillStyle = 'orange';
-ctx.fillRect(-25, -25, 50, 50);
-
-ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
-```

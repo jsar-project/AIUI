@@ -4,26 +4,6 @@
 
 如果你的应用需要根据上下文生成回复，或者基于用户输入完成更复杂的语义处理，通常可以从 `LanguageModel` 开始。
 
-## 适用场景
-
-- 对话式问答
-- 内容总结与改写
-- 信息提取与结构化输出
-- 流式生成回复
-- 带上下文的多轮交互
-
-## 入口
-
-`LanguageModel` 可以直接使用，也可以从内置模块导入：
-
-```javascript
-const status = await LanguageModel.availability();
-```
-
-```javascript
-import { LanguageModel } from 'language-model';
-```
-
 ## 开始前先判断可用性
 
 ```javascript
@@ -109,46 +89,19 @@ session.addEventListener('toolcall', (event) => {
 const result = await session.prompt('帮我查询一下杭州今天天气');
 ```
 
-### toolcall 事件对象
-
-`toolcall` 事件对象包含以下属性：
-
-- `callId`: 工具调用的唯一标识符。
-- `functionName`: 要调用的函数名称。
-- `arguments`: 经过解析的函数参数（通常是一个 JavaScript 对象）。
-- `toolType`: 工具类型，当前固定为 `"function"`。
-- `index`: 该工具调用在当前请求中的索引。
-- `isComplete`: 标识该工具调用是否已完成，当前固定为 `true`。
-
-### 当前能力边界
+## 当前能力边界
 
 - [x] 向模型声明可用函数及其参数结构。
 - [x] 通过 `session.addEventListener('toolcall', ...)` 接收结构化的工具调用请求。
 - [x] 后端返回的普通文本或文本增量通过 `prompt()` 或 `promptStreaming()` 暴露给前端。
 
-## 常用方法
+## 适用场景
 
-### `availability()`
-- **返回值**：`Promise<'available' | 'unavailable'>`
-- **说明**：检查当前运行环境是否可提供大语言模型能力。
-
-### `create(options?)`
-- **返回值**：`Promise<LanguageModelSession>`
-- **说明**：创建一个新的模型会话。
-
-### `prompt(input)`
-- **返回值**：`Promise<string>`
-- **说明**：发送一次请求，并在完成后返回最终文本。
-
-### `promptStreaming(input)`
-- **返回值**：`LanguageModelTextStream`
-- **说明**：发起流式请求，逐步读取模型增量输出。
-
-### `clone()`
-- **说明**：复制当前会话上下文，创建一个新的独立会话。
-
-### `destroy()`
-- **说明**：销毁当前会话，释放后续使用所需的会话资源。
+- 对话式问答
+- 内容总结与改写
+- 信息提取与结构化输出
+- 流式生成回复
+- 带上下文的多轮交互
 
 ## 使用建议
 
@@ -168,3 +121,52 @@ const result = await session.prompt('帮我查询一下杭州今天天气');
 
 - **[语音识别](/AIUI/api/ai-speech-recognition)**：查看如何把用户语音输入交给模型处理。
 - **[语音播报](/AIUI/api/ai-speech-synthesis)**：查看如何把模型回复播报给用户。
+
+## API Reference
+
+### 入口
+
+`LanguageModel` 可以直接使用，也可以从内置模块导入：
+
+```javascript
+const status = await LanguageModel.availability();
+```
+
+```javascript
+import { LanguageModel } from 'language-model';
+```
+
+### 常用方法
+
+#### `availability()`
+- **返回值**：`Promise<'available' | 'unavailable'>`
+- **说明**：检查当前运行环境是否可提供大语言模型能力。
+
+#### `create(options?)`
+- **返回值**：`Promise<LanguageModelSession>`
+- **说明**：创建一个新的模型会话。
+
+#### `prompt(input)`
+- **返回值**：`Promise<string>`
+- **说明**：发送一次请求，并在完成后返回最终文本。
+
+#### `promptStreaming(input)`
+- **返回值**：`LanguageModelTextStream`
+- **说明**：发起流式请求，逐步读取模型增量输出。
+
+#### `clone()`
+- **说明**：复制当前会话上下文，创建一个新的独立会话。
+
+#### `destroy()`
+- **说明**：销毁当前会话，释放后续使用所需的会话资源。
+
+### toolcall 事件对象
+
+`toolcall` 事件对象包含以下属性：
+
+- `callId`: 工具调用的唯一标识符。
+- `functionName`: 要调用的函数名称。
+- `arguments`: 经过解析的函数参数（通常是一个 JavaScript 对象）。
+- `toolType`: 工具类型，当前固定为 `"function"`。
+- `index`: 该工具调用在当前请求中的索引。
+- `isComplete`: 标识该工具调用是否已完成，当前固定为 `true`。

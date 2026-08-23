@@ -4,20 +4,7 @@
 
 如果你的业务重点是“旋转得多快、往哪个方向转”，通常应该优先看陀螺仪，而不是加速度计。
 
-## 适用场景
-
-- 头动交互
-- 旋转检测
-- 转向速度判断
-- 与其他传感器组合做姿态估计
-
-## 入口
-
-```javascript
-const sensor = new Gyroscope({ frequency: 60 });
-```
-
-## 基本示例
+## 读取旋转速率
 
 ```javascript
 const sensor = new Gyroscope({ frequency: 60 });
@@ -37,31 +24,12 @@ sensor.addEventListener('error', (event) => {
 sensor.start();
 ```
 
-## 常用属性
+## 适用场景
 
-### `x` / `y` / `z`
-- **类型**：`number | null`
-- **说明**：三个轴向上的角速度读数。
-
-### `timestamp`
-- **类型**：`number | null`
-- **说明**：最近一次旋转读数时间戳。
-
-### `activated`
-- **类型**：`boolean`
-- **说明**：当前实例是否已经激活。
-
-### `hasReading`
-- **类型**：`boolean`
-- **说明**：是否已经拿到过有效读数。
-
-## 常用方法
-
-### `start()`
-- 开始陀螺仪采样。
-
-### `stop()`
-- 停止当前采样。
+- 头动交互
+- 旋转检测
+- 转向速度判断
+- 与其他传感器组合做姿态估计
 
 ## 使用建议
 
@@ -74,3 +42,37 @@ sensor.start();
 
 - **[绝对方向传感器](/AIUI/api/device-absolute-orientation-sensor)**：查看空间朝向与姿态能力。
 - **[加速度计](/AIUI/api/device-accelerometer)**：查看运动和加速度能力。
+
+## API Reference
+
+### 入口
+
+```javascript
+const sensor = new Gyroscope({ frequency: 60 });
+```
+
+### 常用属性
+
+#### `x` / `y` / `z`
+- **类型**：`number | null`
+- **说明**：三个轴向上的角速度读数。
+
+#### `timestamp`
+- **类型**：`number | null`
+- **说明**：最近一次旋转读数时间戳。
+
+#### `activated`
+- **类型**：`boolean`
+- **说明**：当前实例是否已经激活。
+
+#### `hasReading`
+- **类型**：`boolean`
+- **说明**：是否已经拿到过有效读数。
+
+### 常用方法
+
+#### `start()`
+- 开始陀螺仪采样。
+
+#### `stop()`
+- 停止当前采样。

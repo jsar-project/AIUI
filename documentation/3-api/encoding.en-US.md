@@ -6,9 +6,101 @@ AIUI provides text encoding and decoding APIs that follow Web standards. They ar
 - Decoding byte data returned by an API into readable text.
 - Clearly distinguishing between text and binary data when working with `ArrayBuffer`, `Uint8Array`, or streaming data.
 
-## API Description
+## Encode a String into a UTF-8 Byte Array
 
-### TextEncoder
+```javascript
+const encoder = new TextEncoder();
+const bytes = encoder.encode('你好，AIUI');
+
+console.log(bytes); // Uint8Array(...)
+console.log(bytes.length); // UTF-8 编码后的字节长度
+```
+
+## Decode a Byte Array into a String
+
+```javascript
+const bytes = new Uint8Array([72, 101, 108, 108, 111]);
+const decoder = new TextDecoder();
+
+const text = decoder.decode(bytes);
+console.log(text); // "Hello"
+```
+
+## Use encodeInto to Write into an Existing Buffer
+
+```javascript
+const encoder = new TextEncoder();
+const target = new Uint8Array(32);
+
+const result = encoder.encodeInto('AIUI', target);
+
+console.log(result.read);    // 已读取的字符数
+console.log(result.written); // 已写入的字节数
+console.log(target.slice(0, result.written)); // 编码后的有效内容
+```
+
+## Decode an ArrayBuffer Returned by an API
+
+```javascript
+async function loadText(url) {
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+
+  const decoder = new TextDecoder('utf-8');
+  return decoder.decode(buffer);
+}
+```
+
+## Handle Invalid Bytes in Strict Mode
+
+```javascript
+const invalidBytes = new Uint8Array([0xff, 0xfe, 0xfd]);
+const decoder = new TextDecoder('utf-8', { fatal: true });
+
+try {
+  const text = decoder.decode(invalidBytes);
+  console.log(text);
+} catch (error) {
+  console.error('解码失败:', error);
+}
+```
+
+## Decode Streaming Text in Chunks
+
+```javascript
+const response = await fetch('https://example.com/stream');
+const reader = response.body.getReader();
+const decoder = new TextDecoder('utf-8');
+
+let text = '';
+
+while (true) {
+  const { value, done } = await reader.read();
+  if (done) {
+    break;
+  }
+
+  text += decoder.decode(value, { stream: true });
+}
+
+text += decoder.decode(); // Finish streaming decode and flush remaining bytes
+
+console.log(text); // "Hello"
+```
+
+## Notes
+
+- **`TextEncoder` always outputs UTF-8**: If your target scenario is not UTF-8, you cannot switch encodings through `TextEncoder`.
+- **String length is not byte length**: Characters such as Chinese text and emojis usually take multiple bytes in UTF-8, so `string.length` cannot directly replace the byte length.
+- **Keep text and binary separate**: `TextEncoder` / `TextDecoder` are suitable for text content, not for forcing arbitrary binary data to round-trip through strings.
+- **Strict mode is better for validating input**: If you want to detect corrupted input immediately, prefer `new TextDecoder('utf-8', { fatal: true })`.
+- **BOM mainly matters in some text scenarios**: The `ignoreBOM` option is more meaningful when processing file headers or text exported from other tools.
+
+## API Reference
+
+### API Description
+
+#### TextEncoder
 
 `TextEncoder` is used to encode JavaScript strings into UTF-8 byte arrays. It is suitable for scenarios that require raw byte content, such as computing digests, generating signatures, or writing into binary buffers.
 
@@ -34,7 +126,7 @@ It is important to note that `TextEncoder` always outputs UTF-8 encoded results.
 
 ---
 
-### TextDecoder
+#### TextDecoder
 
 `TextDecoder` is used to decode byte data into strings. It is suitable for reading binary text returned by APIs, parsing file byte streams, or restoring `ArrayBuffer` / `Uint8Array` into readable text.
 
@@ -74,95 +166,3 @@ text += decoder.decode(chunk1, { stream: true });
 text += decoder.decode(chunk2, { stream: true });
 text += decoder.decode(); // Finish streaming decode and flush remaining bytes
 ```
-
-## Code Examples
-
-### 1. Encode a String into a UTF-8 Byte Array
-
-```javascript
-const encoder = new TextEncoder();
-const bytes = encoder.encode('你好，AIUI');
-
-console.log(bytes); // Uint8Array(...)
-console.log(bytes.length); // UTF-8 编码后的字节长度
-```
-
-### 2. Decode a Byte Array into a String
-
-```javascript
-const bytes = new Uint8Array([72, 101, 108, 108, 111]);
-const decoder = new TextDecoder();
-
-const text = decoder.decode(bytes);
-console.log(text); // "Hello"
-```
-
-### 3. Use encodeInto to Write into an Existing Buffer
-
-```javascript
-const encoder = new TextEncoder();
-const target = new Uint8Array(32);
-
-const result = encoder.encodeInto('AIUI', target);
-
-console.log(result.read);    // 已读取的字符数
-console.log(result.written); // 已写入的字节数
-console.log(target.slice(0, result.written)); // 编码后的有效内容
-```
-
-### 4. Decode an ArrayBuffer Returned by an API
-
-```javascript
-async function loadText(url) {
-  const response = await fetch(url);
-  const buffer = await response.arrayBuffer();
-
-  const decoder = new TextDecoder('utf-8');
-  return decoder.decode(buffer);
-}
-```
-
-### 5. Handle Invalid Bytes in Strict Mode
-
-```javascript
-const invalidBytes = new Uint8Array([0xff, 0xfe, 0xfd]);
-const decoder = new TextDecoder('utf-8', { fatal: true });
-
-try {
-  const text = decoder.decode(invalidBytes);
-  console.log(text);
-} catch (error) {
-  console.error('解码失败:', error);
-}
-```
-
-### 6. Decode Streaming Text in Chunks
-
-```javascript
-const response = await fetch('https://example.com/stream');
-const reader = response.body.getReader();
-const decoder = new TextDecoder('utf-8');
-
-let text = '';
-
-while (true) {
-  const { value, done } = await reader.read();
-  if (done) {
-    break;
-  }
-
-  text += decoder.decode(value, { stream: true });
-}
-
-text += decoder.decode(); // Finish streaming decode and flush remaining bytes
-
-console.log(text); // "Hello"
-```
-
-## Notes
-
-- **`TextEncoder` always outputs UTF-8**: If your target scenario is not UTF-8, you cannot switch encodings through `TextEncoder`.
-- **String length is not byte length**: Characters such as Chinese text and emojis usually take multiple bytes in UTF-8, so `string.length` cannot directly replace the byte length.
-- **Keep text and binary separate**: `TextEncoder` / `TextDecoder` are suitable for text content, not for forcing arbitrary binary data to round-trip through strings.
-- **Strict mode is better for validating input**: If you want to detect corrupted input immediately, prefer `new TextDecoder('utf-8', { fatal: true })`.
-- **BOM mainly matters in some text scenarios**: The `ignoreBOM` option is more meaningful when processing file headers or text exported from other tools.

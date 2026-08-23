@@ -4,20 +4,7 @@
 
 在 AIUI 中，`Accelerometer` 采用接近 Generic Sensor 的使用方式：创建实例、监听事件、开始采样、停止采样。
 
-## 适用场景
-
-- 运动检测
-- 晃动交互
-- 设备状态感知
-- 结合其他传感器做空间交互判断
-
-## 入口
-
-```javascript
-const sensor = new Accelerometer({ frequency: 60 });
-```
-
-## 基本示例
+## 读取加速度数据
 
 ```javascript
 const sensor = new Accelerometer({ frequency: 60 });
@@ -37,31 +24,12 @@ sensor.addEventListener('error', (event) => {
 sensor.start();
 ```
 
-## 常用属性
+## 适用场景
 
-### `x` / `y` / `z`
-- **类型**：`number | null`
-- **说明**：三个轴向的加速度读数；首个有效读数到来前为 `null`。
-
-### `timestamp`
-- **类型**：`number | null`
-- **说明**：最近一次读数的时间戳。
-
-### `activated`
-- **类型**：`boolean`
-- **说明**：当前传感器是否处于激活状态。
-
-### `hasReading`
-- **类型**：`boolean`
-- **说明**：是否已经收到过至少一次有效读数。
-
-## 常用方法
-
-### `start()`
-- 开始一轮新的采样会话。
-
-### `stop()`
-- 停止当前采样；如果当前已经停止，则为 no-op。
+- 运动检测
+- 晃动交互
+- 设备状态感知
+- 结合其他传感器做空间交互判断
 
 ## 使用建议
 
@@ -74,3 +42,37 @@ sensor.start();
 
 - **[绝对方向传感器](/AIUI/api/device-absolute-orientation-sensor)**：查看如何获取空间姿态。
 - **[陀螺仪](/AIUI/api/device-gyroscope)**：查看如何获取旋转速度。
+
+## API Reference
+
+### 入口
+
+```javascript
+const sensor = new Accelerometer({ frequency: 60 });
+```
+
+### 常用属性
+
+#### `x` / `y` / `z`
+- **类型**：`number | null`
+- **说明**：三个轴向的加速度读数；首个有效读数到来前为 `null`。
+
+#### `timestamp`
+- **类型**：`number | null`
+- **说明**：最近一次读数的时间戳。
+
+#### `activated`
+- **类型**：`boolean`
+- **说明**：当前传感器是否处于激活状态。
+
+#### `hasReading`
+- **类型**：`boolean`
+- **说明**：是否已经收到过至少一次有效读数。
+
+### 常用方法
+
+#### `start()`
+- 开始一轮新的采样会话。
+
+#### `stop()`
+- 停止当前采样；如果当前已经停止，则为 no-op。

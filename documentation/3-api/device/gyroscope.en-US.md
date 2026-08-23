@@ -4,20 +4,7 @@ The gyroscope is used to obtain the device's rotational velocity along three axe
 
 If your primary concern is how fast the device rotates and in which direction, you should usually prefer the gyroscope over the accelerometer.
 
-## Use Cases
-
-- Head-motion interaction
-- Rotation detection
-- Turning speed estimation
-- Pose estimation combined with other sensors
-
-## Entry
-
-```javascript
-const sensor = new Gyroscope({ frequency: 60 });
-```
-
-## Basic Example
+## Read Rotation Rate
 
 ```javascript
 const sensor = new Gyroscope({ frequency: 60 });
@@ -37,31 +24,12 @@ sensor.addEventListener('error', (event) => {
 sensor.start();
 ```
 
-## Common Properties
+## Use Cases
 
-### `x` / `y` / `z`
-- **Type**: `number | null`
-- **Description**: Angular velocity readings on the three axes.
-
-### `timestamp`
-- **Type**: `number | null`
-- **Description**: The timestamp of the most recent rotation reading.
-
-### `activated`
-- **Type**: `boolean`
-- **Description**: Whether the current instance has been activated.
-
-### `hasReading`
-- **Type**: `boolean`
-- **Description**: Whether a valid reading has been obtained.
-
-## Common Methods
-
-### `start()`
-- Starts gyroscope sampling.
-
-### `stop()`
-- Stops the current sampling session.
+- Head-motion interaction
+- Rotation detection
+- Turning speed estimation
+- Pose estimation combined with other sensors
 
 ## Recommendations
 
@@ -74,3 +42,37 @@ sensor.start();
 
 - **[Absolute Orientation Sensor](/AIUI/api/device-absolute-orientation-sensor)**: Learn about spatial heading and pose capabilities.
 - **[Accelerometer](/AIUI/api/device-accelerometer)**: Learn about motion and acceleration capabilities.
+
+## API Reference
+
+### Entry
+
+```javascript
+const sensor = new Gyroscope({ frequency: 60 });
+```
+
+### Common Properties
+
+#### `x` / `y` / `z`
+- **Type**: `number | null`
+- **Description**: Angular velocity readings on the three axes.
+
+#### `timestamp`
+- **Type**: `number | null`
+- **Description**: The timestamp of the most recent rotation reading.
+
+#### `activated`
+- **Type**: `boolean`
+- **Description**: Whether the current instance has been activated.
+
+#### `hasReading`
+- **Type**: `boolean`
+- **Description**: Whether a valid reading has been obtained.
+
+### Common Methods
+
+#### `start()`
+- Starts gyroscope sampling.
+
+#### `stop()`
+- Stops the current sampling session.

@@ -4,7 +4,7 @@
 
 当你在组件的 `methods`、`lifetimes` 或事件处理函数里通过 `this` 访问组件实例时，拿到的就是 `Component` 能力表面。
 
-## 示例代码
+## 定义并使用组件
 
 ```javascript
 export default {
@@ -33,7 +33,30 @@ export default {
 }
 ```
 
-## 实例成员
+## 生命周期中的 `this`
+
+组件生命周期回调同样以当前组件实例作为 `this` 执行。
+
+当前常见生命周期包括：
+
+- `created`
+- `attached`
+- `ready`
+- `detached`
+
+```javascript
+export default {
+  lifetimes: {
+    ready() {
+      console.log(this.data);
+    }
+  }
+}
+```
+
+## API Reference
+
+### 实例成员
 
 | 成员 | 类型 | 说明 |
 | :--- | :--- | :--- |
@@ -44,7 +67,7 @@ export default {
 
 写在 `methods` 里的方法会被直接挂到组件实例上，并以当前组件实例作为 `this` 执行。
 
-## `this.data`
+### `this.data`
 
 `data` 用来保存组件自己的可变状态。
 
@@ -52,7 +75,7 @@ export default {
 - `setData()` 更新后，`this.data` 会同步反映最新状态
 - 支持路径式更新，例如 `'profile.name': 'AIUI'`
 
-## `this.properties`
+### `this.properties`
 
 `properties` 保存组件当前的输入属性值。
 
@@ -76,7 +99,7 @@ export default {
 }
 ```
 
-## `this.setData(Object data, Function? callback)`
+### `this.setData(Object data, Function? callback)`
 
 `setData()` 用于把逻辑层的数据补丁合并到当前组件状态中。
 
@@ -104,7 +127,7 @@ export default {
 }
 ```
 
-## `this.triggerEvent(String name, Object? detail)`
+### `this.triggerEvent(String name, Object? detail)`
 
 `triggerEvent()` 用于从当前组件向父级派发自定义事件。
 
@@ -119,27 +142,6 @@ export default {
       this.triggerEvent('select', {
         id: this.properties.itemId
       });
-    }
-  }
-}
-```
-
-## 生命周期中的 `this`
-
-组件生命周期回调同样以当前组件实例作为 `this` 执行。
-
-当前常见生命周期包括：
-
-- `created`
-- `attached`
-- `ready`
-- `detached`
-
-```javascript
-export default {
-  lifetimes: {
-    ready() {
-      console.log(this.data);
     }
   }
 }

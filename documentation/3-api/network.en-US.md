@@ -14,7 +14,11 @@ In the AI glasses scenario, networking also needs to balance battery life and po
 
 For example, request an agent service API:
 
-```javascript
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 const response = await fetch('/api/agent/chat', {
   method: 'POST',
   headers: {
@@ -24,10 +28,28 @@ const response = await fetch('/api/agent/chat', {
 });
 ```
 
+**wx**
+
+```javascript api-style=wx
+wx.request({
+  url: '/api/agent/chat',
+  method: 'POST',
+  header: {
+    'content-type': 'application/json',
+  },
+  data: { message: 'Hello' },
+  success(res) {
+    console.log(res.data);
+  },
+});
+```
+
+<!-- /aiui-api-style -->
+
 ## Continue Reading
 
 - **[HTTPS](/AIUI/api/network-https)**: Learn how ordinary request-response scenarios work in AIUI.
 - **[Event Source](/AIUI/api/network-event-source)**: Learn which business scenarios fit one-way streaming pushes from the server.
 - **[WebSocket](/AIUI/api/network-websocket)**: Learn the typical usage patterns for bidirectional real-time connections, plus connection management and reconnection recommendations.
 - **[Device](/AIUI/api/device)**: See Bluetooth connectivity and device sensor capabilities, including accelerometer, orientation, and gyroscope APIs.
-- **[Networking](/AIUI/api/weixin-compatible-apis-networking)**: See compatible API details for `wx.request`, `WebSocket`, `EventSource`, and more.
+- **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See compatible APIs such as `wx.request`, `wx.connectSocket`, and `wx.createEventSource`.

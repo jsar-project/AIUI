@@ -6,12 +6,25 @@ AIUI 的数据存储能力用于保存本地状态、用户偏好、业务缓存
 
 例如，保存一个用户设置项：
 
-```javascript
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 localStorage.setItem('theme', 'green');
 const theme = localStorage.getItem('theme');
 ```
 
+**wx**
+
+```javascript api-style=wx
+wx.setStorageSync('theme', 'green');
+const theme = wx.getStorageSync('theme');
+```
+
+<!-- /aiui-api-style -->
+
 继续阅读：
 
 - **[Storage API](/AIUI/api/storage-api)**：查看 `localStorage` 与 `sessionStorage` 的使用方式。
-- **[存储 (storage)](/AIUI/api/weixin-compatible-apis-storage)**：查看 `wx.setStorage`、`wx.getStorage` 及同步版本接口。
+- **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看 `wx.setStorage`、`wx.getStorage` 及同步版本接口。

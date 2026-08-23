@@ -2,6 +2,41 @@
 
 Provides Web-standard interfaces for barcode recognition. The Barcode Detection API can detect linear and two-dimensional barcodes in images.
 
+## Get Supported Formats
+
+```javascript
+BarcodeDetector.getSupportedFormats().then((supportedFormats) => {
+  console.log('支持的条码格式:', supportedFormats);
+});
+```
+
+## Create a Detector and Detect Barcodes
+
+```javascript
+// Create a detector that only detects QR codes and Code 128
+const barcodeDetector = new BarcodeDetector({
+  formats: ['qr_code', 'code_128']
+});
+
+// Get image data (ImageData) and detect
+// Assume we obtained imageData from a Canvas
+const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+barcodeDetector
+  .detect(imageData)
+  .then((barcodes) => {
+    barcodes.forEach((barcode) => {
+      console.log('检测到格式:', barcode.format);
+      console.log('解码数据:', barcode.rawValue);
+      console.log('边界框:', barcode.boundingBox);
+      console.log('角点坐标:', barcode.cornerPoints);
+    });
+  })
+  .catch((err) => {
+    console.error('条码检测失败:', err);
+  });
+```
+
 ## Concepts and Usage
 
 Through supported barcode formats, barcode recognition in Web applications unlocks a wide range of use cases. For example, QR codes can be used for online payments, Web navigation, or establishing social media connections; Aztec codes can be used to scan boarding passes; shopping applications can use EAN or UPC barcodes to compare prices of physical goods.
@@ -41,9 +76,11 @@ The Barcode Detection API supports the following barcode formats:
 
 You can check which formats are supported by the user agent (browser/runtime) through `getSupportedFormats()`.
 
-## Interface
+## API Reference
 
-### BarcodeDetector
+### Interface
+
+#### BarcodeDetector
 
 The `BarcodeDetector` interface allows detecting linear and two-dimensional barcodes in images.
 
@@ -68,40 +105,3 @@ new BarcodeDetector(barcodeDetectorOptions)
   - `cornerPoints`: An array of four objects, each containing `x` and `y` properties that represent the polygon vertex coordinates of the four barcode corners.
   - `format`: A string representing the detected barcode format.
   - `rawValue`: The decoded string data extracted from the barcode.
-
-## Examples
-
-### 1. Get Supported Formats
-
-```javascript
-BarcodeDetector.getSupportedFormats().then((supportedFormats) => {
-  console.log('支持的条码格式:', supportedFormats);
-});
-```
-
-### 2. Create a Detector and Detect Barcodes
-
-```javascript
-// Create a detector that only detects QR codes and Code 128
-const barcodeDetector = new BarcodeDetector({ 
-  formats: ['qr_code', 'code_128'] 
-});
-
-// Get image data (ImageData) and detect
-// Assume we obtained imageData from a Canvas
-const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-barcodeDetector
-  .detect(imageData)
-  .then((barcodes) => {
-    barcodes.forEach((barcode) => {
-      console.log('检测到格式:', barcode.format);
-      console.log('解码数据:', barcode.rawValue);
-      console.log('边界框:', barcode.boundingBox);
-      console.log('角点坐标:', barcode.cornerPoints);
-    });
-  })
-  .catch((err) => {
-    console.error('条码检测失败:', err);
-  });
-```

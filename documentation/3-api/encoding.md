@@ -6,9 +6,101 @@ AIUI 提供了一套遵循 Web 标准的文本编码与解码接口，主要用�
 - 把接口返回的字节数据解码为可读文本。
 - 在处理 `ArrayBuffer`、`Uint8Array`、流式数据时，明确区分“文本”和“二进制”。
 
-## 接口说明
+## 把字符串编码为 UTF-8 字节数组
 
-### TextEncoder
+```javascript
+const encoder = new TextEncoder();
+const bytes = encoder.encode('你好，AIUI');
+
+console.log(bytes); // Uint8Array(...)
+console.log(bytes.length); // UTF-8 编码后的字节长度
+```
+
+## 把字节数组解码为字符串
+
+```javascript
+const bytes = new Uint8Array([72, 101, 108, 108, 111]);
+const decoder = new TextDecoder();
+
+const text = decoder.decode(bytes);
+console.log(text); // "Hello"
+```
+
+## 使用 encodeInto 写入已有缓冲区
+
+```javascript
+const encoder = new TextEncoder();
+const target = new Uint8Array(32);
+
+const result = encoder.encodeInto('AIUI', target);
+
+console.log(result.read);    // 已读取的字符数
+console.log(result.written); // 已写入的字节数
+console.log(target.slice(0, result.written)); // 编码后的有效内容
+```
+
+## 解码接口返回的 ArrayBuffer
+
+```javascript
+async function loadText(url) {
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+
+  const decoder = new TextDecoder('utf-8');
+  return decoder.decode(buffer);
+}
+```
+
+## 严格模式下处理非法字节
+
+```javascript
+const invalidBytes = new Uint8Array([0xff, 0xfe, 0xfd]);
+const decoder = new TextDecoder('utf-8', { fatal: true });
+
+try {
+  const text = decoder.decode(invalidBytes);
+  console.log(text);
+} catch (error) {
+  console.error('解码失败:', error);
+}
+```
+
+## 分段解码流式文本
+
+```javascript
+const response = await fetch('https://example.com/stream');
+const reader = response.body.getReader();
+const decoder = new TextDecoder('utf-8');
+
+let text = '';
+
+while (true) {
+  const { value, done } = await reader.read();
+  if (done) {
+    break;
+  }
+
+  text += decoder.decode(value, { stream: true });
+}
+
+text += decoder.decode(); // 结束流式解码并刷新剩余字节
+
+console.log(text); // "Hello"
+```
+
+## 注意事项
+
+- **`TextEncoder` 始终输出 UTF-8**: 如果你的目标场景不是 UTF-8，就不能通过 `TextEncoder` 切换到其他编码。
+- **字符串长度不等于字节长度**: 中文、表情符号等字符在 UTF-8 下通常会占用多个字节，不能用 `string.length` 直接代替字节数。
+- **文本和二进制要分清**: `TextEncoder` / `TextDecoder` 适合处理“文本内容”，不适合把任意二进制数据强行当作字符串来回转换。
+- **严格模式更适合校验输入**: 如果你希望在输入数据损坏时立即发现问题，可以优先使用 `new TextDecoder('utf-8', { fatal: true })`。
+- **BOM 只影响部分文本场景**: 当你在处理文件头或跨工具导出的文本内容时，`ignoreBOM` 选项会更有意义。
+
+## API Reference
+
+### 接口说明
+
+#### TextEncoder
 
 `TextEncoder` 用于把 JavaScript 字符串编码成 UTF-8 字节数组。它适合在需要原始字节内容的场景中使用，例如计算摘要、生成签名、写入二进制缓冲区等。
 
@@ -34,7 +126,7 @@ AIUI 提供了一套遵循 Web 标准的文本编码与解码接口，主要用�
 
 ---
 
-### TextDecoder
+#### TextDecoder
 
 `TextDecoder` 用于把字节数据解码成字符串。它适合读取接口返回的二进制文本内容、解析文件字节流，或把 `ArrayBuffer` / `Uint8Array` 还原为可读文本。
 
@@ -74,95 +166,3 @@ text += decoder.decode(chunk1, { stream: true });
 text += decoder.decode(chunk2, { stream: true });
 text += decoder.decode(); // 结束流式解码并刷新剩余字节
 ```
-
-## 代码示例
-
-### 1. 把字符串编码为 UTF-8 字节数组
-
-```javascript
-const encoder = new TextEncoder();
-const bytes = encoder.encode('你好，AIUI');
-
-console.log(bytes); // Uint8Array(...)
-console.log(bytes.length); // UTF-8 编码后的字节长度
-```
-
-### 2. 把字节数组解码为字符串
-
-```javascript
-const bytes = new Uint8Array([72, 101, 108, 108, 111]);
-const decoder = new TextDecoder();
-
-const text = decoder.decode(bytes);
-console.log(text); // "Hello"
-```
-
-### 3. 使用 encodeInto 写入已有缓冲区
-
-```javascript
-const encoder = new TextEncoder();
-const target = new Uint8Array(32);
-
-const result = encoder.encodeInto('AIUI', target);
-
-console.log(result.read);    // 已读取的字符数
-console.log(result.written); // 已写入的字节数
-console.log(target.slice(0, result.written)); // 编码后的有效内容
-```
-
-### 4. 解码接口返回的 ArrayBuffer
-
-```javascript
-async function loadText(url) {
-  const response = await fetch(url);
-  const buffer = await response.arrayBuffer();
-
-  const decoder = new TextDecoder('utf-8');
-  return decoder.decode(buffer);
-}
-```
-
-### 5. 严格模式下处理非法字节
-
-```javascript
-const invalidBytes = new Uint8Array([0xff, 0xfe, 0xfd]);
-const decoder = new TextDecoder('utf-8', { fatal: true });
-
-try {
-  const text = decoder.decode(invalidBytes);
-  console.log(text);
-} catch (error) {
-  console.error('解码失败:', error);
-}
-```
-
-### 6. 分段解码流式文本
-
-```javascript
-const response = await fetch('https://example.com/stream');
-const reader = response.body.getReader();
-const decoder = new TextDecoder('utf-8');
-
-let text = '';
-
-while (true) {
-  const { value, done } = await reader.read();
-  if (done) {
-    break;
-  }
-
-  text += decoder.decode(value, { stream: true });
-}
-
-text += decoder.decode(); // 结束流式解码并刷新剩余字节
-
-console.log(text); // "Hello"
-```
-
-## 注意事项
-
-- **`TextEncoder` 始终输出 UTF-8**: 如果你的目标场景不是 UTF-8，就不能通过 `TextEncoder` 切换到其他编码。
-- **字符串长度不等于字节长度**: 中文、表情符号等字符在 UTF-8 下通常会占用多个字节，不能用 `string.length` 直接代替字节数。
-- **文本和二进制要分清**: `TextEncoder` / `TextDecoder` 适合处理“文本内容”，不适合把任意二进制数据强行当作字符串来回转换。
-- **严格模式更适合校验输入**: 如果你希望在输入数据损坏时立即发现问题，可以优先使用 `new TextDecoder('utf-8', { fatal: true })`。
-- **BOM 只影响部分文本场景**: 当你在处理文件头或跨工具导出的文本内容时，`ignoreBOM` 选项会更有意义。

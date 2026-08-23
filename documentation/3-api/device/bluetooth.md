@@ -4,34 +4,7 @@ AIUI 提供基于 `navigator.bluetooth` 的蓝牙能力，适合发现附近 BLE
 
 如果你的应用需要连接心率带、控制器、外设传感器或其他低功耗蓝牙设备，可以从这里开始。
 
-## 适用场景
-
-- 搜索并连接 BLE 外设
-- 读取设备状态或实时数据
-- 向设备发送控制命令
-- 订阅特征值通知并接收持续更新
-
-## 入口
-
-```javascript
-const bluetooth = navigator.bluetooth;
-```
-
-## 常用能力
-
-### `getAvailability()`
-- 检查当前运行环境是否可用蓝牙能力。
-
-### `getDevices()`
-- 获取当前运行时已经记住的设备列表。
-
-### `requestDevice(options?)`
-- 请求用户选择一个设备，并返回对应 `BluetoothDevice`。
-
-### `scanDevices(options?)`
-- 启动持续扫描并返回 `BluetoothScan`，适合长时间发现设备的场景。
-
-## 基本示例
+## 请求并连接设备
 
 ```javascript
 const device = await navigator.bluetooth.requestDevice({
@@ -64,6 +37,13 @@ scan.onDeviceFound((event) => {
 scan.stop();
 ```
 
+## 适用场景
+
+- 搜索并连接 BLE 外设
+- 读取设备状态或实时数据
+- 向设备发送控制命令
+- 订阅特征值通知并接收持续更新
+
 ## 使用建议
 
 - 优先根据服务 UUID 或设备名称过滤，减少无关扫描结果。
@@ -81,3 +61,25 @@ scan.stop();
 
 - **[加速度计](/AIUI/api/device-accelerometer)**：查看设备运动传感器能力。
 - **[设备](/AIUI/api/device)**：返回设备能力总览。
+
+## API Reference
+
+### 入口
+
+```javascript
+const bluetooth = navigator.bluetooth;
+```
+
+### 常用能力
+
+#### `getAvailability()`
+- 检查当前运行环境是否可用蓝牙能力。
+
+#### `getDevices()`
+- 获取当前运行时已经记住的设备列表。
+
+#### `requestDevice(options?)`
+- 请求用户选择一个设备，并返回对应 `BluetoothDevice`。
+
+#### `scanDevices(options?)`
+- 启动持续扫描并返回 `BluetoothScan`，适合长时间发现设备的场景。

@@ -4,16 +4,13 @@
 
 如果你的场景只是请求一个结果，或者只是让服务端持续推送内容，通常不需要上 `WebSocket`。只有在客户端也要持续主动发消息，并且双方都需要长期保持在线通道时，再优先考虑它。
 
-## 什么时候用 WebSocket
-
-- 聊天、多人协作、实时同步
-- 客户端需要持续向服务端上报状态
-- 服务端也要随时向客户端推送消息
-- 需要比轮询更低的延迟和更稳定的双向通道
-
 ## 示例
 
-```javascript
+<!-- aiui-api-style default=web -->
+
+**Web**
+
+```javascript api-style=web
 const socket = new WebSocket('wss://example.com/realtime');
 
 socket.addEventListener('open', () => {
@@ -31,6 +28,38 @@ socket.addEventListener('close', () => {
   console.log('连接已关闭');
 });
 ```
+
+**wx**
+
+```javascript api-style=wx
+const socket = wx.connectSocket({
+  url: 'wss://example.com/realtime',
+});
+
+socket.onOpen(() => {
+  socket.send(JSON.stringify({
+    type: 'hello',
+    sessionId: 'demo-session',
+  }));
+});
+
+socket.onMessage(({ data }) => {
+  console.log('收到消息:', data);
+});
+
+socket.onClose(() => {
+  console.log('连接已关闭');
+});
+```
+
+<!-- /aiui-api-style -->
+
+## 什么时候用 WebSocket
+
+- 聊天、多人协作、实时同步
+- 客户端需要持续向服务端上报状态
+- 服务端也要随时向客户端推送消息
+- 需要比轮询更低的延迟和更稳定的双向通道
 
 ## 使用建议
 
@@ -58,4 +87,36 @@ socket.addEventListener('close', () => {
 
 - **[HTTPS](/AIUI/api/network-https)**：查看普通请求响应更适合怎样的业务。
 - **[Event Source](/AIUI/api/network-event-source)**：查看服务端单向流式推送更适合怎样的业务。
-- **[网络请求 (networking)](/AIUI/api/weixin-compatible-apis-networking)**：查看 `wx.connectSocket` 等兼容接口细节。
+- **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看 AIUI 支持的 wx API 列表。
+
+## API Reference
+
+### `new WebSocket(url)`
+
+创建 Web 标准的 WebSocket 连接。`url` 必须使用 `ws` 或 `wss` 协议。
+
+### `WebSocket` 事件与方法
+
+- `addEventListener('open', callback)`：监听连接打开。
+- `addEventListener('message', callback)`：监听消息，事件的 `data` 为消息内容。
+- `addEventListener('close', callback)`：监听连接关闭。
+- `addEventListener('error', callback)`：监听连接错误。
+- `send(data)`：发送字符串或二进制数据。
+- `close()`：关闭连接。
+
+### `wx.connectSocket(options)` / `wx.createSocket(options)`
+
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `options.url` | `string` | 是 | `ws` 或 `wss` 服务地址。 |
+| `options.header` | `object` | 否 | 建连请求头，不能设置 `Referer`。 |
+
+**返回值：** `SocketTask`。
+
+### `SocketTask`
+
+- `onOpen(callback)`、`onMessage(callback)`、`onClose(callback)`、`onError(callback)`：监听连接事件。
+- `send(data)`：发送 `String`、`ArrayBuffer` 或 `Uint8Array`。
+- `close()`：关闭连接。
+
+以上方法均返回 `undefined`；`send()` 收到其他数据类型时抛出 `TypeError`。

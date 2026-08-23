@@ -6,7 +6,7 @@ At runtime, enumerable properties from the default export are mounted onto the p
 
 `Page` also inherits event-target behavior, so standard event methods such as `addEventListener()`, `removeEventListener()`, and `dispatchEvent()` are available.
 
-## Example Code
+## Define a Page and Update State
 
 ```javascript
 export default {
@@ -45,11 +45,14 @@ export default {
 }
 ```
 
-## Instance Properties and Methods
+
+## API Reference
+
+### Instance Properties and Methods
 
 In page logic, you can access the page instance through `this` and use the following properties and methods.
 
-### `this.data`
+#### `this.data`
 
 `data` is the current state object of the page.
 
@@ -57,7 +60,7 @@ In page logic, you can access the page instance through `this` and use the follo
 - If `data` is omitted, the runtime initializes it to an empty object `{}`
 - Assigning a new object to `this.data` replaces the currently stored state object
 
-### `this.setData(Object data, Function? callback)`
+#### `this.setData(Object data, Function? callback)`
 
 Used to send data from the logic layer to the view layer asynchronously, while also updating the corresponding values in `this.data`.
 
@@ -72,7 +75,7 @@ Current runtime behavior:
 - Dotted keys create intermediate objects automatically when needed
 - If provided, `callback` runs after the data update and sync complete
 
-### `this.postMessage(any data, Object? options)`
+#### `this.postMessage(any data, Object? options)`
 
 Sends one JSON-compatible message from the current page to the embedding host.
 
@@ -95,7 +98,7 @@ this.postMessage(
 );
 ```
 
-### `this.querySelector(String selector)`
+#### `this.querySelector(String selector)`
 
 Finds the first matching entity in the current page entity tree.
 
@@ -103,7 +106,7 @@ Finds the first matching entity in the current page entity tree.
 - Returns `null` when nothing matches
 - Throws immediately for an invalid selector
 
-### `this.querySelectorAll(String selector)`
+#### `this.querySelectorAll(String selector)`
 
 Queries all matching entities in the current page entity tree.
 
@@ -111,7 +114,19 @@ Queries all matching entities in the current page entity tree.
 - The query scope is limited to the current page
 - Throws immediately for an invalid selector
 
-## World Awareness
+### Lifecycle Callbacks
+
+| Callback | Description | Trigger Timing |
+| :--- | :--- | :--- |
+| `onLoad` | Listens for page loading | Triggered when the page loads, only once globally |
+| `onShow` | Listens for the page being shown | Triggered when the page is shown or brought to the foreground |
+| `onReady` | Listens for the initial page render to complete | Triggered when the initial render completes, only once globally |
+| `onHide` | Listens for the page being hidden | Triggered when the page is hidden or moved to the background |
+| `onUnload` | Listens for page unload | Triggered when the page is unloaded. The runtime automatically disables world awareness before this stage finishes. |
+| `onHeadGesture` | Listens for page-scoped head gestures | Triggered after `enableWorldAwareness()` when the page receives `headgesture` |
+| `onOrientationStabilityChange` | Listens for page-scoped orientation stability changes | Triggered after `enableWorldAwareness()` when the page receives `orientationstabilitychange` |
+
+### World Awareness
 
 `World Awareness` is the page-scoped environment-awareness capability set. It allows the current page to receive spatial orientation, stability changes, and head-gesture signals directly.
 
@@ -131,7 +146,7 @@ Current runtime behavior:
 
 If your page needs spatial pose or environment-aware signals, the usual pattern is to enable world awareness first, then consume the related data through page callbacks or `this.orientationSensor`.
 
-### `this.enableWorldAwareness(Object? options)`
+#### `this.enableWorldAwareness(Object? options)`
 
 Switches the current page into a page-scoped sensing mode for environment-aware features.
 
@@ -144,13 +159,13 @@ Switches the current page into a page-scoped sensing mode for environment-aware 
   - `options`: Optional configuration object
     - `mode?: "normal" | "micro"`: Head-gesture mode. The default is `"normal"`. When set to `"micro"`, gesture thresholds are lowered for smaller head movements. Other values currently fall back to `"normal"`
 
-### `this.disableWorldAwareness()`
+#### `this.disableWorldAwareness()`
 
 Stops the page-scoped sensor session and disables related page callbacks.
 
 - The runtime also calls it automatically before `onUnload()` completes, so pages usually do not need to stop world awareness manually during unload cleanup
 
-### `this.orientationSensor`
+#### `this.orientationSensor`
 
 When world awareness is enabled, the page instance exposes `this.orientationSensor` as the page-private `AbsoluteOrientationSensor` instance used by the runtime.
 
@@ -158,21 +173,9 @@ When world awareness is enabled, the page instance exposes `this.orientationSens
 - It can be used to inspect `quaternion`, `timestamp`, `stable`, and `stabilityThreshold`
 - Pages typically receive stability changes through `onOrientationStabilityChange(event)`, while direct sensor listeners remain available when needed
 
-### `this.finish()`
+#### `this.finish()`
 
 Notifies the system that the current page task has been completed.
 
 - For **Cut** agents, calling this method proactively returns focus and exits the current presentation state
 - For **Scene** agents, it is typically used to end the current specific interaction flow
-
-## Lifecycle Callbacks
-
-| Callback | Description | Trigger Timing |
-| :--- | :--- | :--- |
-| `onLoad` | Listens for page loading | Triggered when the page loads, only once globally |
-| `onShow` | Listens for the page being shown | Triggered when the page is shown or brought to the foreground |
-| `onReady` | Listens for the initial page render to complete | Triggered when the initial render completes, only once globally |
-| `onHide` | Listens for the page being hidden | Triggered when the page is hidden or moved to the background |
-| `onUnload` | Listens for page unload | Triggered when the page is unloaded. The runtime automatically disables world awareness before this stage finishes. |
-| `onHeadGesture` | Listens for page-scoped head gestures | Triggered after `enableWorldAwareness()` when the page receives `headgesture` |
-| `onOrientationStabilityChange` | Listens for page-scoped orientation stability changes | Triggered after `enableWorldAwareness()` when the page receives `orientationstabilitychange` |

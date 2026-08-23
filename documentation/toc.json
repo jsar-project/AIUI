@@ -710,45 +710,7 @@
       {
         "id": "weixin-compatible-apis",
         "label": "微信小程序兼容 API",
-        "expanded": false,
-        "children": [
-          {
-            "id": "base",
-            "label": "基础"
-          },
-          {
-            "id": "canvas",
-            "label": "画布"
-          },
-          {
-            "id": "media",
-            "label": "多媒体"
-          },
-          {
-            "id": "networking",
-            "label": "网络请求"
-          },
-          {
-            "id": "router",
-            "label": "路由"
-          },
-          {
-            "id": "speech",
-            "label": "语音"
-          },
-          {
-            "id": "storage",
-            "label": "存储"
-          },
-          {
-            "id": "system",
-            "label": "系统"
-          },
-          {
-            "id": "ui",
-            "label": "界面"
-          }
-        ]
+        "children": []
       }
     ],
     "slug": "api"

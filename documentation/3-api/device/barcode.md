@@ -2,6 +2,41 @@
 
 提供基于 Web 标准的条码识别相关接口。条码检测 API（Barcode Detection API）能够在图像中检测线性和二维条形码。
 
+## 获取支持的格式
+
+```javascript
+BarcodeDetector.getSupportedFormats().then((supportedFormats) => {
+  console.log('支持的条码格式:', supportedFormats);
+});
+```
+
+## 创建检测器并检测条码
+
+```javascript
+// 创建一个仅检测二维码 (QR Code) 和 Code 128 的检测器
+const barcodeDetector = new BarcodeDetector({
+  formats: ['qr_code', 'code_128']
+});
+
+// 获取图像数据 (ImageData) 并检测
+// 假设我们在 Canvas 中获取了 imageData
+const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+barcodeDetector
+  .detect(imageData)
+  .then((barcodes) => {
+    barcodes.forEach((barcode) => {
+      console.log('检测到格式:', barcode.format);
+      console.log('解码数据:', barcode.rawValue);
+      console.log('边界框:', barcode.boundingBox);
+      console.log('角点坐标:', barcode.cornerPoints);
+    });
+  })
+  .catch((err) => {
+    console.error('条码检测失败:', err);
+  });
+```
+
 ## 概念和用法
 
 通过支持的条形码格式，Web 应用中的条形码识别可以解锁各种用例。例如：二维码可用于在线支付、Web 导航或建立社交媒体连接；Aztec 码可用于扫描登机牌；购物应用可以使用 EAN 或 UPC 条形码比较实体物品的价格。
@@ -41,9 +76,11 @@
 
 可以通过 `getSupportedFormats()` 方法检查用户代理（浏览器/运行环境）支持的格式。
 
-## 接口
+## API Reference
 
-### BarcodeDetector
+### 接口
+
+#### BarcodeDetector
 
 `BarcodeDetector` 接口允许在图像中检测线性和二维条形码。
 
@@ -68,40 +105,3 @@ new BarcodeDetector(barcodeDetectorOptions)
   - `cornerPoints`: 一个包含四个对象的数组，每个对象有 `x` 和 `y` 属性，代表条形码四个角的多边形顶点坐标。
   - `format`: 检测到的条形码格式的字符串。
   - `rawValue`: 从条形码中解码出的字符串数据。
-
-## 示例
-
-### 1. 获取支持的格式
-
-```javascript
-BarcodeDetector.getSupportedFormats().then((supportedFormats) => {
-  console.log('支持的条码格式:', supportedFormats);
-});
-```
-
-### 2. 创建检测器并检测条码
-
-```javascript
-// 创建一个仅检测二维码 (QR Code) 和 Code 128 的检测器
-const barcodeDetector = new BarcodeDetector({ 
-  formats: ['qr_code', 'code_128'] 
-});
-
-// 获取图像数据 (ImageData) 并检测
-// 假设我们在 Canvas 中获取了 imageData
-const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-barcodeDetector
-  .detect(imageData)
-  .then((barcodes) => {
-    barcodes.forEach((barcode) => {
-      console.log('检测到格式:', barcode.format);
-      console.log('解码数据:', barcode.rawValue);
-      console.log('边界框:', barcode.boundingBox);
-      console.log('角点坐标:', barcode.cornerPoints);
-    });
-  })
-  .catch((err) => {
-    console.error('条码检测失败:', err);
-  });
-```

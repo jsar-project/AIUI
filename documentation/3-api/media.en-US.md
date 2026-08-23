@@ -19,4 +19,4 @@ click.play();
 - **[Camera](/AIUI/api/media-camera)**: See how to create a camera context and interact with the camera on a page.
 - **[Recorder](/AIUI/api/media-recorder)**: See the recorder manager entry point and how to manage the recording flow.
 - **[Audio](/AIUI/api/media-audio)**: See Web-standard audio-related APIs.
-- **[Media](/AIUI/api/weixin-compatible-apis-media)**: See device media APIs such as camera and recording.
+- **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See device media APIs such as camera and recording.

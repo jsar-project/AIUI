@@ -4,7 +4,7 @@
 
 When you access `this` inside component `methods`, `lifetimes`, or event handlers, you are working with the `Component` capability surface.
 
-## Example Code
+## Define and Use a Component
 
 ```javascript
 export default {
@@ -33,7 +33,9 @@ export default {
 }
 ```
 
-## Instance Members
+## API Reference
+
+### Instance Members
 
 | Member | Type | Description |
 | :--- | :--- | :--- |
@@ -44,7 +46,7 @@ export default {
 
 Methods declared in `methods` are attached directly to the component instance and run with the current component instance as `this`.
 
-## `this.data`
+### `this.data`
 
 `data` stores the component's own mutable state.
 
@@ -52,7 +54,7 @@ Methods declared in `methods` are attached directly to the component instance an
 - After `setData()` runs, `this.data` reflects the latest state
 - Path-style updates are supported, such as `'profile.name': 'AIUI'`
 
-## `this.properties`
+### `this.properties`
 
 `properties` stores the current input property values of the component.
 
@@ -76,7 +78,7 @@ export default {
 }
 ```
 
-## `this.setData(Object data, Function? callback)`
+### `this.setData(Object data, Function? callback)`
 
 `setData()` merges a data patch from the logic layer into the current component state.
 
@@ -104,7 +106,7 @@ export default {
 }
 ```
 
-## `this.triggerEvent(String name, Object? detail)`
+### `this.triggerEvent(String name, Object? detail)`
 
 `triggerEvent()` dispatches a custom event from the current component to its parent.
 
@@ -124,7 +126,7 @@ export default {
 }
 ```
 
-## `this` In Lifetimes
+### `this` In Lifetimes
 
 Component lifecycle callbacks also run with the current component instance as `this`.
 

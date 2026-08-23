@@ -2,7 +2,7 @@
 
 `App` is used to register an agent application.
 
-## Example Code
+## Define the App Lifecycle
 
 ```javascript
 export default {
@@ -21,7 +21,9 @@ export default {
 }
 ```
 
-## Lifecycle Callbacks
+## API Reference
+
+### Lifecycle Callbacks
 
 | Callback | Description | Trigger Timing |
 | :--- | :--- | :--- |

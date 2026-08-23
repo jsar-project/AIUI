@@ -2,9 +2,49 @@
 
 AIUI 允许开发者通过 `createOpenAPI` 调用 Rokid 云平台提供的多种智能服务，以增强智能体的能力。
 
-## 基础接口
+## 使用默认 Open Service
 
-### createOpenAPI
+```javascript
+import { createOpenAPI } from 'open';
+
+createOpenAPI().then((openapi) => {
+  // 使用默认 Open Service 对应的 SDK 实例
+}).catch((err) => {
+  console.error('创建开放服务实例失败：', err);
+});
+```
+
+## 指定 service
+
+```javascript
+import { createOpenAPI } from 'open';
+
+createOpenAPI('my-service').then((openapi) => {
+  // 使用指定 service 对应的 Open Service 实例
+}).catch((err) => {
+  console.error('创建指定 Open Service 实例失败：', err);
+});
+```
+
+## 每次调用都会返回新实例
+
+```javascript
+import { createOpenAPI } from 'open';
+
+const defaultAPI = await createOpenAPI();
+const customAPI = await createOpenAPI('my-service');
+const anotherDefaultAPI = await createOpenAPI();
+
+console.log(defaultAPI === anotherDefaultAPI); // false
+console.log(defaultAPI === customAPI); // false
+```
+
+
+## API Reference
+
+### 基础接口
+
+#### createOpenAPI
 
 创建一个开放服务实例。通过此实例，你可以访问宿主暴露的 Open Service 能力。
 
@@ -44,42 +84,3 @@ import { createOpenAPI } from 'open';
 - `createOpenAPI()` 默认连接宿主选择的默认 Open Service
 - `createOpenAPI(service)` 会尝试连接指定名称的 Open Service
 - 每次调用都会重新创建实例，因此如果你需要复用某个 Open Service 实例，应该把返回值保存下来并在后续重复使用
-
-#### 示例代码
-
-##### 1. 使用默认 Open Service
-
-```javascript
-import { createOpenAPI } from 'open';
-
-createOpenAPI().then((openapi) => {
-  // 使用默认 Open Service 对应的 SDK 实例
-}).catch((err) => {
-  console.error('创建开放服务实例失败：', err);
-});
-```
-
-##### 2. 指定 service
-
-```javascript
-import { createOpenAPI } from 'open';
-
-createOpenAPI('my-service').then((openapi) => {
-  // 使用指定 service 对应的 Open Service 实例
-}).catch((err) => {
-  console.error('创建指定 Open Service 实例失败：', err);
-});
-```
-
-##### 3. 每次调用都会返回新实例
-
-```javascript
-import { createOpenAPI } from 'open';
-
-const defaultAPI = await createOpenAPI();
-const customAPI = await createOpenAPI('my-service');
-const anotherDefaultAPI = await createOpenAPI();
-
-console.log(defaultAPI === anotherDefaultAPI); // false
-console.log(defaultAPI === customAPI); // false
-```

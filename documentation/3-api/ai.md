@@ -34,4 +34,4 @@ if (status === 'available') {
 - **[语音识别](/AIUI/api/ai-speech-recognition)**：查看如何采集用户语音并接收识别结果。
 - **[语音播报](/AIUI/api/ai-speech-synthesis)**：查看如何把文本合成为播报语音。
 - **[大语言模型](/AIUI/api/ai-language-model)**：查看如何创建模型会话、请求回复和读取流式输出。
-- **[语音 (speech)](/AIUI/api/weixin-compatible-apis-speech)**：查看微信小程序兼容语音接口。
+- **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看微信小程序兼容语音接口。
