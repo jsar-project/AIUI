@@ -13,7 +13,7 @@
 你可以使用官方 CLI 工具快速创建一个新的 AIUI Agent 项目。运行下面的命令并按提示操作：
 
 ```bash
-npm create @yodaos-pkg/aiui-agent my-agent
+npm create @yodaos-pkg/aiui-agent@latest my-agent
 ```
 
 该命令会生成一个开箱即用的 AIUI 项目模板，其中包括：
@@ -36,7 +36,7 @@ npm create @yodaos-pkg/aiui-agent my-agent
 - `assets/`：示例中使用的静态资源，例如图片、SVG 和音频文件
 - `lib/`：供示例页面复用的辅助模块
 
-`samples/capabilities/pages/` 中具有代表性的示例包括：
+[`samples/capabilities/pages/`](./samples/capabilities/pages/) 中具有代表性的示例包括：
 - `layout`、`grid`、`position`：布局与定位相关示例
 - `image`、`list`、`input_textarea`：常见 UI 基础能力示例
 - `canvas`、`canvas_api`、`chart`、`lottie`：绘制与视觉内容示例

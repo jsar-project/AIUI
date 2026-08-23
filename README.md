@@ -13,7 +13,7 @@ Explore the broader AIUI ecosystem through [Awesome AIUI](https://github.com/jsa
 You can quickly scaffold a new AIUI Agent project using our official CLI tool. Run the following command and follow the prompts:
 
 ```bash
-npm create @yodaos-pkg/aiui-agent my-agent
+npm create @yodaos-pkg/aiui-agent@latest my-agent
 ```
 
 This will generate a ready-to-use AIUI project template including:
@@ -36,7 +36,7 @@ The main directories in the `capabilities` sample are:
 - `assets/`: Static resources used by the demos, such as images, SVGs, and audio files.
 - `lib/`: Helper modules shared by sample pages.
 
-Representative demos inside `samples/capabilities/pages/` include:
+Representative demos inside[`samples/capabilities/pages/`](./samples/capabilities/pages/)  include:
 - `layout`, `grid`, `position`: Layout and positioning patterns.
 - `image`, `list`, `input_textarea`: Common UI building blocks.
 - `canvas`, `canvas_api`, `chart`, `lottie`: Rendering and visual content examples.
