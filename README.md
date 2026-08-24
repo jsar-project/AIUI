@@ -13,13 +13,15 @@ Explore the broader AIUI ecosystem through [Awesome AIUI](https://github.com/jsa
 You can quickly scaffold a new AIUI Agent project using our official CLI tool. Run the following command and follow the prompts:
 
 ```bash
-npm create @yodaos-pkg/aiui-agent my-agent
+npm create @yodaos-pkg/aiui-agent@latest my-agent
 ```
 
 This will generate a ready-to-use AIUI project template including:
 - `app.js` and `app.json` for global configuration.
 - `AGENTS.md` for agent capability manifestation.
 - A modern Single File Component (SFC) `index.ink` page setup.
+
+For the complete workflow, including Craft development, uploading to AIUI Studio, and debugging on glasses, see the [`Quick Start guide`](./documentation/0-guide/quickstart/quickstart.en-US.md).
 
 ## 🧪 Samples
 
@@ -30,13 +32,13 @@ The repository currently provides these samples:
 - [`samples/capabilities/`](./samples/capabilities/): A complete capability showcase covering page structure, static assets, helper modules, and feature demos.
 - [`samples/gyroscope-test/`](./samples/gyroscope-test/): A device diagnostic named “Gyroscope Test” that uses `AbsoluteOrientationSensor` to validate pose quaternions, sampling frequency, axis mapping, and recentering error.
 
-The main directories in the `capabilities` sample are:
+The main directories in the [`samples/capabilities/`](./samples/capabilities/) sample are:
 
 - `pages/`: Example pages covering a range of AIUI capabilities and UI patterns.
 - `assets/`: Static resources used by the demos, such as images, SVGs, and audio files.
 - `lib/`: Helper modules shared by sample pages.
 
-Representative demos inside `samples/capabilities/pages/` include:
+Representative demos inside [`samples/capabilities/pages/`](./samples/capabilities/pages/) include:
 - `layout`, `grid`, `position`: Layout and positioning patterns.
 - `image`, `list`, `input_textarea`: Common UI building blocks.
 - `canvas`, `canvas_api`, `chart`, `lottie`: Rendering and visual content examples.

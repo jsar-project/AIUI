@@ -13,13 +13,15 @@
 你可以使用官方 CLI 工具快速创建一个新的 AIUI Agent 项目。运行下面的命令并按提示操作：
 
 ```bash
-npm create @yodaos-pkg/aiui-agent my-agent
+npm create @yodaos-pkg/aiui-agent@latest my-agent
 ```
 
 该命令会生成一个开箱即用的 AIUI 项目模板，其中包括：
 - 用于全局配置的 `app.js` 和 `app.json`
 - 用于声明 Agent 能力的 `AGENTS.md`
 - 一个现代化的单文件组件（SFC）页面 `index.ink`
+
+完整的 Craft 开发、上传 AIUI Studio 与眼镜真机调试流程，请参阅 [`快速入门指南`](./documentation/0-guide/quickstart/quickstart.md)。
 
 ## 🧪 示例
 
@@ -30,13 +32,13 @@ npm create @yodaos-pkg/aiui-agent my-agent
 - [`samples/capabilities/`](./samples/capabilities/)：完整的能力演示应用，可集中了解页面结构、静态资源、辅助模块和多个功能演示。
 - [`samples/gyroscope-test/`](./samples/gyroscope-test/)：陀螺仪测试真机诊断示例，基于 `AbsoluteOrientationSensor` 验证姿态四元数、采样频率、轴向映射和回中误差。
 
-`capabilities` 示例的主要目录如下：
+[`samples/capabilities/`](./samples/capabilities/) 示例的主要目录如下：
 
 - `pages/`：包含多种 AIUI 能力与 UI 模式的页面示例
 - `assets/`：示例中使用的静态资源，例如图片、SVG 和音频文件
 - `lib/`：供示例页面复用的辅助模块
 
-`samples/capabilities/pages/` 中具有代表性的示例包括：
+[`samples/capabilities/pages/`](./samples/capabilities/pages/) 中具有代表性的示例包括：
 - `layout`、`grid`、`position`：布局与定位相关示例
 - `image`、`list`、`input_textarea`：常见 UI 基础能力示例
 - `canvas`、`canvas_api`、`chart`、`lottie`：绘制与视觉内容示例

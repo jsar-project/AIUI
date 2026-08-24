@@ -274,13 +274,13 @@
                 "id": "lifecycle",
                 "label": "生命周期",
                 "docId": "open-agent-format-page-lifecycle",
-                "docPath": "1-framework/open-agent-format/lifecycle.md"
+                "docPath": "1-framework/open-agent-format/page-lifecycle.md"
               },
               {
                 "id": "events",
                 "label": "事件",
                 "docId": "open-agent-format-page-events",
-                "docPath": "1-framework/open-agent-format/events.md"
+                "docPath": "1-framework/open-agent-format/page-events.md"
               },
               {
                 "id": "focus",
