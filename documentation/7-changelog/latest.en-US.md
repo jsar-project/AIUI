@@ -43,8 +43,8 @@
   ```
 
 - **Refreshed Audio Example**: Refreshed the built-in audio example to better demonstrate local playback flows, short cues, and looping ambience with packaged assets.
-- **Environment Awareness Sample Pages**: Added dedicated [head gesture sample](../../samples/capabilities/pages/head-gesture/index.ink) and [orientation stability sample](../../samples/capabilities/pages/orientation-stability-change/index.ink) pages so developers can quickly validate environment awareness flows and see how sensor-driven state is surfaced in UI.
-- **Richer Streaming HTTPS Example**: Added a more complete [streaming HTTPS sample page](../../samples/capabilities/pages/network_https/index.ink) that demonstrates remote content loading, streamed text assembly with `TextDecoder({ stream: true })`, and compatibility checks in one place.
+- **Environment Awareness Sample Pages**: Added dedicated [head gesture sample](./samples/capabilities/pages/head-gesture/index.ink) and [orientation stability sample](./samples/capabilities/pages/orientation-stability-change/index.ink) pages so developers can quickly validate environment awareness flows and see how sensor-driven state is surfaced in UI.
+- **Richer Streaming HTTPS Example**: Added a more complete [streaming HTTPS sample page](./samples/capabilities/pages/network_https/index.ink) that demonstrates remote content loading, streamed text assembly with `TextDecoder({ stream: true })`, and compatibility checks in one place.
 
 # v0.15.0
 
