@@ -21,6 +21,8 @@ npm create @yodaos-pkg/aiui-agent@latest my-agent
 - 用于声明 Agent 能力的 `AGENTS.md`
 - 一个现代化的单文件组件（SFC）页面 `index.ink`
 
+完整的 Craft 开发、上传 AIUI Studio 与眼镜真机调试流程，请参阅 [`快速入门指南`](./documentation/0-guide/quickstart/quickstart.md)。
+
 ## 🧪 示例
 
 [`samples/`](./samples/) 目录包含可运行的示例项目，用于展示 AIUI 的功能特性，并为常见 UI 模式提供参考实现。
@@ -30,7 +32,7 @@ npm create @yodaos-pkg/aiui-agent@latest my-agent
 - [`samples/capabilities/`](./samples/capabilities/)：完整的能力演示应用，可集中了解页面结构、静态资源、辅助模块和多个功能演示。
 - [`samples/gyroscope-test/`](./samples/gyroscope-test/)：陀螺仪测试真机诊断示例，基于 `AbsoluteOrientationSensor` 验证姿态四元数、采样频率、轴向映射和回中误差。
 
-[`capabilities`](./samples/capabilities/)  示例的主要目录如下：
+[`samples/capabilities/`](./samples/capabilities/)  示例的主要目录如下：
 
 - `pages/`：包含多种 AIUI 能力与 UI 模式的页面示例
 - `assets/`：示例中使用的静态资源，例如图片、SVG 和音频文件

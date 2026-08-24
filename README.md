@@ -21,6 +21,8 @@ This will generate a ready-to-use AIUI project template including:
 - `AGENTS.md` for agent capability manifestation.
 - A modern Single File Component (SFC) `index.ink` page setup.
 
+For the complete workflow, including Craft development, uploading to AIUI Studio, and debugging on glasses, see the [`Quick Start guide`](./documentation/0-guide/quickstart/quickstart.en-US.md).
+
 ## 🧪 Samples
 
 The [`samples/`](./samples/) directory contains runnable example projects that demonstrate AIUI features and provide reference implementations for common UI patterns.
@@ -30,7 +32,7 @@ The repository currently provides these samples:
 - [`samples/capabilities/`](./samples/capabilities/): A complete capability showcase covering page structure, static assets, helper modules, and feature demos.
 - [`samples/gyroscope-test/`](./samples/gyroscope-test/): A device diagnostic named “Gyroscope Test” that uses `AbsoluteOrientationSensor` to validate pose quaternions, sampling frequency, axis mapping, and recentering error.
 
-The main directories in the [`capabilities`](./samples/capabilities/) sample are:
+The main directories in the [`samples/capabilities/`](./samples/capabilities/) sample are:
 
 - `pages/`: Example pages covering a range of AIUI capabilities and UI patterns.
 - `assets/`: Static resources used by the demos, such as images, SVGs, and audio files.
