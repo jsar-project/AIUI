@@ -403,54 +403,27 @@
         "children": [
           {
             "id": "view",
-            "label": "view",
-            "docId": "view"
+            "label": "<view>",
+            "docId": "view",
+            "docPath": "2-components/view.md"
           },
           {
             "id": "scroll-view",
-            "label": "scroll-view",
-            "docId": "scroll-view"
-          }
-        ]
-      },
-      {
-        "id": "basic-content",
-        "label": "基础内容",
-        "expanded": true,
-        "children": [
-          {
-            "id": "text",
-            "label": "text",
-            "docId": "text"
+            "label": "<scroll-view>",
+            "docId": "scroll-view",
+            "docPath": "2-components/scroll-view.md"
           },
           {
-            "id": "icon",
-            "label": "icon",
-            "docId": "icon",
-            "status": "unsupported"
+            "id": "swiper",
+            "label": "<swiper>",
+            "docId": "swiper",
+            "docPath": "2-components/swiper.md"
           },
           {
-            "id": "error-state",
-            "label": "error-state",
-            "docId": "error-state"
-          },
-          {
-            "id": "streamdown",
-            "label": "streamdown",
-            "docId": "streamdown",
-            "status": "unsupported"
-          }
-        ]
-      },
-      {
-        "id": "form-components",
-        "label": "表单组件",
-        "expanded": true,
-        "children": [
-          {
-            "id": "button",
-            "label": "button",
-            "docId": "button"
+            "id": "card",
+            "label": "<card>",
+            "docId": "card",
+            "docPath": "2-components/card.md"
           }
         ]
       },
@@ -461,8 +434,144 @@
         "children": [
           {
             "id": "calendar",
-            "label": "calendar",
-            "docId": "calendar"
+            "label": "<calendar>",
+            "docId": "calendar",
+            "docPath": "2-components/calendar.md"
+          }
+        ]
+      },
+      {
+        "id": "basic-content",
+        "label": "基础内容",
+        "expanded": true,
+        "children": [
+          {
+            "id": "text",
+            "label": "<text>",
+            "docId": "text",
+            "docPath": "2-components/text.md"
+          },
+          {
+            "id": "icon",
+            "label": "<icon>",
+            "docId": "icon",
+            "docPath": "2-components/icon.md"
+          },
+          {
+            "id": "error-state",
+            "label": "<error-state>",
+            "docId": "error-state",
+            "docPath": "2-components/error-state.md"
+          },
+          {
+            "id": "streamdown",
+            "label": "<streamdown>",
+            "docId": "streamdown",
+            "docPath": "2-components/streamdown.md"
+          },
+          {
+            "id": "table",
+            "label": "<table>",
+            "docId": "table",
+            "docPath": "2-components/table.md"
+          },
+          {
+            "id": "timed-text",
+            "label": "<timed-text>",
+            "docId": "timed-text",
+            "docPath": "2-components/timed-text.md"
+          }
+        ]
+      },
+      {
+        "id": "semantic-content",
+        "label": "语义内容",
+        "expanded": true,
+        "children": [
+          {
+            "id": "p",
+            "label": "<p>",
+            "docId": "p",
+            "docPath": "2-components/p.md"
+          },
+          {
+            "id": "header",
+            "label": "<header>",
+            "docId": "header",
+            "docPath": "2-components/header.md"
+          },
+          {
+            "id": "blockquote",
+            "label": "<blockquote>",
+            "docId": "blockquote",
+            "docPath": "2-components/blockquote.md"
+          },
+          {
+            "id": "list",
+            "label": "<list>",
+            "docId": "list",
+            "docPath": "2-components/list.md"
+          },
+          {
+            "id": "list-item",
+            "label": "<list-item>",
+            "docId": "list-item",
+            "docPath": "2-components/list-item.md"
+          },
+          {
+            "id": "b",
+            "label": "<b>",
+            "docId": "b",
+            "docPath": "2-components/b.md"
+          },
+          {
+            "id": "i",
+            "label": "<i>",
+            "docId": "i",
+            "docPath": "2-components/i.md"
+          },
+          {
+            "id": "snippet",
+            "label": "<snippet>",
+            "docId": "snippet",
+            "docPath": "2-components/snippet.md"
+          },
+          {
+            "id": "formula",
+            "label": "<formula>",
+            "docId": "formula",
+            "docPath": "2-components/formula.md"
+          }
+        ]
+      },
+      {
+        "id": "form-components",
+        "label": "表单组件",
+        "expanded": true,
+        "children": [
+          {
+            "id": "button",
+            "label": "<button>",
+            "docId": "button",
+            "docPath": "2-components/button.md"
+          },
+          {
+            "id": "input",
+            "label": "<input>",
+            "docId": "input",
+            "docPath": "2-components/input.md"
+          },
+          {
+            "id": "textarea",
+            "label": "<textarea>",
+            "docId": "textarea",
+            "docPath": "2-components/textarea.md"
+          },
+          {
+            "id": "switch",
+            "label": "<switch>",
+            "docId": "switch",
+            "docPath": "2-components/switch.md"
           }
         ]
       },
@@ -473,13 +582,34 @@
         "children": [
           {
             "id": "image",
-            "label": "image",
-            "docId": "image"
+            "label": "<image>",
+            "docId": "image",
+            "docPath": "2-components/image.md"
+          },
+          {
+            "id": "video",
+            "label": "<video>",
+            "docId": "video",
+            "docPath": "2-components/video.md"
           },
           {
             "id": "lottie-view",
-            "label": "lottie-view",
-            "docId": "lottie-view"
+            "label": "<lottie-view>",
+            "docId": "lottie-view",
+            "docPath": "2-components/lottie-view.md"
+          }
+        ]
+      },
+      {
+        "id": "location-components",
+        "label": "位置组件",
+        "expanded": true,
+        "children": [
+          {
+            "id": "map",
+            "label": "<map>",
+            "docId": "map",
+            "docPath": "2-components/map.md"
           }
         ]
       },
@@ -490,13 +620,15 @@
         "children": [
           {
             "id": "canvas",
-            "label": "canvas",
-            "docId": "canvas"
+            "label": "<canvas>",
+            "docId": "canvas",
+            "docPath": "2-components/canvas.md"
           },
           {
             "id": "chart",
-            "label": "chart",
-            "docId": "chart"
+            "label": "<chart>",
+            "docId": "chart",
+            "docPath": "2-components/chart.md"
           }
         ]
       },
@@ -507,8 +639,9 @@
         "children": [
           {
             "id": "a2ui",
-            "label": "a2ui",
-            "docId": "a2ui"
+            "label": "<a2ui>",
+            "docId": "a2ui",
+            "docPath": "2-components/a2ui.md"
           }
         ]
       }
@@ -573,14 +706,16 @@
             "label": "Audio Player"
           },
           {
-            "id": "camera",
-            "label": "Camera",
-            "docId": "media-camera"
+            "id": "media-capture",
+            "label": "媒体采集",
+            "docId": "media-media-capture",
+            "docPath": "3-api/media/media-capture.md"
           },
           {
-            "id": "recorder",
-            "label": "录音",
-            "docId": "media-recorder"
+            "id": "video",
+            "label": "视频播放",
+            "docId": "media-video",
+            "docPath": "3-api/media/video.md"
           }
         ]
       },
@@ -637,6 +772,12 @@
           {
             "id": "gyroscope",
             "label": "陀螺仪"
+          },
+          {
+            "id": "battery-manager",
+            "label": "电池状态",
+            "docId": "device-battery-manager",
+            "docPath": "3-api/device/battery-manager.md"
           }
         ]
       },
@@ -668,6 +809,12 @@
             "id": "storage-api",
             "label": "localStorage",
             "docId": "storage-api"
+          },
+          {
+            "id": "opfs",
+            "label": "OPFS",
+            "docId": "storage-opfs",
+            "docPath": "3-api/storage/opfs.md"
           }
         ]
       },

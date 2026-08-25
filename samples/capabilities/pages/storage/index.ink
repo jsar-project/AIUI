@@ -2,6 +2,9 @@
   import wx from 'wx';
 
   const DRAFT_KEY = 'storage-demo.daily-brief';
+  const OPFS_DIRECTORY = 'drafts';
+  const OPFS_FILE_NAME = 'daily-brief.txt';
+  const OPFS_FILE_PATH = `${OPFS_DIRECTORY}/${OPFS_FILE_NAME}`;
 
   export default {
     data: {
@@ -10,6 +13,11 @@
       savedAt: 'Not saved yet',
       result: '草稿会保存在本地存储中，适合离线恢复最近一次编辑内容。',
       resultType: 'info',
+      opfsPath: OPFS_FILE_PATH,
+      opfsSavedAt: 'Not saved yet',
+      opfsResult: 'OPFS 适合把草稿当成文件保存，便于后续扩展成多文件或附件工作流。',
+      opfsResultType: 'info',
+      opfsPreview: 'No file loaded yet.',
     },
 
     onTitleInput(e) {
@@ -18,6 +26,49 @@
 
     onBodyInput(e) {
       this.setData({ draftBody: e.currentTarget.value });
+    },
+
+    onLoad() {
+      this.loadDraft();
+      this.loadOpfsDraft();
+    },
+
+    buildOpfsDraftText() {
+      return `${this.data.draftTitle}\n\n${this.data.draftBody}`;
+    },
+
+    parseOpfsDraftText(text) {
+      const separator = '\n\n';
+      const index = text.indexOf(separator);
+      if (index === -1) {
+        return {
+          title: text.trim() || 'Untitled draft',
+          body: '',
+        };
+      }
+      return {
+        title: text.slice(0, index).trim() || 'Untitled draft',
+        body: text.slice(index + separator.length),
+      };
+    },
+
+    async getOpfsDirectoryHandle(create) {
+      const root = await navigator.storage.getDirectory();
+      return root.getDirectoryHandle(OPFS_DIRECTORY, { create });
+    },
+
+    async getOpfsFileHandle(create) {
+      const directory = await this.getOpfsDirectoryHandle(create);
+      return directory.getFileHandle(OPFS_FILE_NAME, { create });
+    },
+
+    isNotFoundError(error) {
+      return Boolean(
+        error &&
+          (error.name === 'NotFoundError' ||
+            String(error).includes('NotFoundError') ||
+            String(error).includes('not found'))
+      );
     },
 
     saveDraft() {
@@ -81,14 +132,92 @@
         });
       }
     },
+
+    async saveOpfsDraft() {
+      try {
+        const fileHandle = await this.getOpfsFileHandle(true);
+        const writable = await fileHandle.createWritable();
+        await writable.write(this.buildOpfsDraftText());
+        await writable.close();
+        const file = await fileHandle.getFile();
+        this.setData({
+          opfsSavedAt: new Date(file.lastModified).toISOString(),
+          opfsPreview: this.buildOpfsDraftText(),
+          opfsResultType: 'success',
+          opfsResult: 'OPFS 文件草稿已保存，适合后续扩展成多文件工作区。',
+        });
+      } catch (error) {
+        this.setData({
+          opfsResultType: 'error',
+          opfsResult: `OPFS 保存失败：${String(error)}`,
+        });
+      }
+    },
+
+    async loadOpfsDraft() {
+      try {
+        const fileHandle = await this.getOpfsFileHandle(false);
+        const file = await fileHandle.getFile();
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        const text = new TextDecoder().decode(bytes);
+        const payload = this.parseOpfsDraftText(text);
+        this.setData({
+          draftTitle: payload.title,
+          draftBody: payload.body,
+          opfsSavedAt: new Date(file.lastModified).toISOString(),
+          opfsPreview: text,
+          opfsResultType: 'success',
+          opfsResult: '已从 OPFS 文件恢复草稿内容。',
+        });
+      } catch (error) {
+        if (this.isNotFoundError(error)) {
+          this.setData({
+            opfsResultType: 'info',
+            opfsResult: '当前还没有 OPFS 草稿文件。',
+            opfsPreview: 'No file loaded yet.',
+          });
+          return;
+        }
+        this.setData({
+          opfsResultType: 'error',
+          opfsResult: `OPFS 读取失败：${String(error)}`,
+        });
+      }
+    },
+
+    async deleteOpfsDraft() {
+      try {
+        const directory = await this.getOpfsDirectoryHandle(false);
+        await directory.removeEntry(OPFS_FILE_NAME, {});
+        this.setData({
+          opfsSavedAt: 'Not saved yet',
+          opfsPreview: 'No file loaded yet.',
+          opfsResultType: 'success',
+          opfsResult: 'OPFS 草稿文件已删除。',
+        });
+      } catch (error) {
+        if (this.isNotFoundError(error)) {
+          this.setData({
+            opfsResultType: 'info',
+            opfsResult: '当前没有可删除的 OPFS 草稿文件。',
+            opfsPreview: 'No file loaded yet.',
+          });
+          return;
+        }
+        this.setData({
+          opfsResultType: 'error',
+          opfsResult: `OPFS 删除失败：${String(error)}`,
+        });
+      }
+    },
   };
 </script>
 
 <page>
   <view class="container">
-    <view class="page-title">Local Draft Saver</view>
+    <view class="page-title">Draft Storage Showcase</view>
     <text class="page-description">
-      把本地存储能力放进真实的草稿保存流程中，而不是只展示一组 CRUD 按钮。
+      用同一份草稿内容对照展示 KV Storage 和 OPFS：前者适合结构化小数据，后者适合文件化持久化。
     </text>
 
     <view class="card section">
@@ -110,7 +239,7 @@
     </view>
 
     <view class="card section">
-      <view class="title">Actions</view>
+      <view class="title">KV Storage Actions</view>
       <view class="btn-row" role="navigation">
         <button class="btn btn-primary" bindtap="saveDraft">Save Draft</button>
         <button class="btn btn-secondary" bindtap="loadDraft">Load Draft</button>
@@ -122,6 +251,26 @@
       <text class="hint">Last Saved At: {{savedAt}}</text>
       <view class="result-box result-{{resultType}}">
         <text class="result-text">{{result}}</text>
+      </view>
+    </view>
+
+    <view class="card section">
+      <view class="title">OPFS File Draft</view>
+      <text class="hint">File Path: {{opfsPath}}</text>
+      <text class="hint">Last Saved At: {{opfsSavedAt}}</text>
+      <view class="btn-row" role="navigation">
+        <button class="btn btn-primary" bindtap="saveOpfsDraft">Save File</button>
+        <button class="btn btn-secondary" bindtap="loadOpfsDraft">Load File</button>
+      </view>
+      <view class="btn-row" role="navigation">
+        <button class="btn btn-secondary" bindtap="deleteOpfsDraft">Delete File</button>
+      </view>
+      <view class="result-box result-{{opfsResultType}}">
+        <text class="result-text">{{opfsResult}}</text>
+      </view>
+      <text class="label preview-label">File Preview</text>
+      <view class="preview-box">
+        <text class="preview-text">{{opfsPreview}}</text>
       </view>
     </view>
   </view>
@@ -228,6 +377,22 @@
 
   .result-text {
     font-size: 14px;
+  }
+
+  .preview-label {
+    margin-top: 12px;
+  }
+
+  .preview-box {
+    border: var(--input-border-width, var(--border-width-thin, 1px)) solid var(--input-border-color, var(--border-color-default, #d0d0d0));
+    border-radius: var(--input-radius, 8px);
+    padding: var(--theme-padding, 12px);
+    min-height: 72px;
+  }
+
+  .preview-text {
+    font-size: 13px;
+    white-space: pre-wrap;
   }
 
 </style>

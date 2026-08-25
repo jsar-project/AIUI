@@ -104,7 +104,9 @@ socket.onClose(() => {
 - `send(data)`：发送字符串或二进制数据。
 - `close()`：关闭连接。
 
-### `wx.connectSocket(options)` / `wx.createSocket(options)`
+### wx APIs
+
+#### `wx.connectSocket(options)` / `wx.createSocket(options)`
 
 | 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
@@ -113,7 +115,7 @@ socket.onClose(() => {
 
 **返回值：** `SocketTask`。
 
-### `SocketTask`
+#### `SocketTask`
 
 - `onOpen(callback)`、`onMessage(callback)`、`onClose(callback)`、`onError(callback)`：监听连接事件。
 - `send(data)`：发送 `String`、`ArrayBuffer` 或 `Uint8Array`。

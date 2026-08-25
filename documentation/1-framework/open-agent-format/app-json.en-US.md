@@ -33,7 +33,7 @@ A typical example looks like this:
 }
 ```
 
-The two most important parts here are:
+The most important parts here are:
 
 - `pages`: Declares the list of page paths
 - `window`: Declares the global window configuration

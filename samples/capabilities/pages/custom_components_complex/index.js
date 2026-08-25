@@ -53,6 +53,31 @@ function buildVisiblePanels(variant, showArchived) {
   return allPanels.filter((panel) => showArchived || !panel.archived);
 }
 
+const gpxData = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Ink Capabilities Demo">
+  <wpt lat="47.2690" lon="11.4036">
+    <name>Start</name>
+  </wpt>
+  <wpt lat="47.2704" lon="11.4092">
+    <name>Summit View</name>
+  </wpt>
+  <trk>
+    <name>Custom Component Overlay</name>
+    <trkseg>
+      <trkpt lat="47.2690" lon="11.4036" />
+      <trkpt lat="47.2692" lon="11.4044" />
+      <trkpt lat="47.2695" lon="11.4058" />
+      <trkpt lat="47.2699" lon="11.4071" />
+      <trkpt lat="47.2704" lon="11.4092" />
+      <trkpt lat="47.2698" lon="11.4099" />
+      <trkpt lat="47.2689" lon="11.4087" />
+      <trkpt lat="47.2685" lon="11.4068" />
+      <trkpt lat="47.2686" lon="11.4052" />
+      <trkpt lat="47.2690" lon="11.4036" />
+    </trkseg>
+  </trk>
+</gpx>`;
+
 export default {
   data: {
     variant: 'Alpha',
@@ -65,6 +90,10 @@ export default {
     lastEvent: 'none',
     selectedPath: 'none',
     lastMutation: 'boot',
+    gpxData,
+    slotPanelTitle: 'Daily Summary',
+    slotSummary: '12 devices online across 3 rooms.',
+    slotActionEvent: 'none',
   },
 
   toggleVariant() {
@@ -135,6 +164,13 @@ export default {
     this.setData({
       lastEvent: `promote:${detail.panelId}:${detail.promoteCount || 0}`,
       selectedPath: `${detail.title || 'panel'} -> ${detail.itemId || 'item'}`,
+    });
+  },
+
+  handleSlotActionPress(event) {
+    const detail = event.detail || {};
+    this.setData({
+      slotActionEvent: `${detail.source || 'panel-action'}:${detail.label || 'unknown'}`,
     });
   },
 };

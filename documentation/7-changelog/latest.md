@@ -1,3 +1,94 @@
+# v0.17.0
+
+AIUI 0.17.0 带来了更丰富的智能体界面、媒体能力、持久化文件存储与更完善的渲染诊断。此次发布尤其适合结合可穿戴交互、流式内容与原生宿主能力的智能体。
+
+## 框架
+- **宿主消息通信**：App/Page 与宿主之间新增 `postMessage` 支持，使智能体能够与嵌入它的应用交换结构化消息。
+
+  ```js
+  export default {
+    onLoad() {
+      this.postMessage({
+        type: 'open-settings',
+        source: 'focus-agent',
+      });
+    },
+  };
+  ```
+
+- **组件组合能力增强**：新增具名插槽，并扩展组件组合能力，使内置组件与自定义组件的布局更加灵活。
+- **OPFS 持久化存储**：新增 OPFS 支持并重新组织存储 API，提供兼容浏览器的文件与可写流接口，用于持久化智能体数据。
+
+  ```js
+  const root = await navigator.storage.getDirectory();
+  const file = await root.getFileHandle('session.json', { create: true });
+  const writer = await file.createWritable();
+  await writer.write(JSON.stringify({ completed: true }));
+  await writer.close();
+  ```
+
+- **XML 解析改进**：改进 XML 解析，包括属性与文本中的实体解码，并在解码 XML 实体时保留逻辑运算符。
+
+## 组件
+- **video**：新增 `<video>` 组件，支持播放控制与线框渲染。
+- **table**：新增原生 `<table>` 组件，用于呈现结构化结果。
+- **streamdown**：正式支持 `<streamdown>` 渲染，当前支持以下 Markdown 语法：
+  - 段落
+  - 标题
+  - 引用块
+  - 有序列表与无序列表
+  - 粗体与斜体文本
+  - 代码片段
+  - 公式
+- **timed-text**：新增 `<timed-text>` 组件，适用于同步语音转写文本与生成式 TTS 音频体验。
+- **Markdown 基础组件**：新增 `<p>`、`<header>`、`<blockquote>`、`<list>`、`<list-item>`、`<b>`、`<i>`、`<snippet>` 与 `<formula>` 组件，分别用于段落、标题、引用、列表、列表项、粗体、斜体、代码片段与公式内容。
+- **地图轨迹与布局**：`<map>` 组件新增 GPX 覆盖层支持，可展示位置轨迹与路线数据；同时新增具名插槽，以支持更丰富的自定义布局。
+
+  ```xml
+  <view class="briefing">
+    <video id="briefing" src="{{videoUrl}}" controls />
+    <timed-text text="{{transcript}}" active-index="{{activeWord}}" />
+  </view>
+  ```
+
+## API
+- **媒体采集与录制**：新增媒体采集与录制 API，支持拍照、音视频录制、Opus 输出、`header` 回调与语义化采集模式。
+
+  ```js
+  const media = await navigator.mediaDevices.getUserMedia({
+    audio: true,
+    video: true,
+  });
+  const recorder = new MediaRecorder(media, { mimeType: 'audio/opus' });
+  recorder.start();
+  ```
+
+- **视频播放**：新增视频播放支持，包括线框渲染与原生视频渲染性能优化。
+
+  ```js
+  const video = wx.createVideoContext('briefing');
+  video.play();
+  ```
+
+- **电池状态**：新增完整的 W3C Battery Status API 支持。
+- **头部手势事件**：新增内置头部手势事件与状态跟踪，支持点头、摇头与手势状态变化等免手交互。
+
+  ```js
+  export default {
+    onLoad() {
+      this.enableWorldAwareness();
+    },
+    onHeadGesture(event) {
+      if (event.gesture === 'nod') this.confirm();
+    },
+  };
+  ```
+
+## 性能与兼容性
+- **渲染诊断增强**：新增仅绘制阶段的脏区跟踪与 Canvas 性能指标，并补充渲染路径基准测试，帮助诊断渲染成本。
+- **AIX 运行时版本检查**：新增 AIX 引擎兼容性运行时版本检查，使不兼容的智能体包能够返回更明确的版本信息。
+- **音频优化**：改进音频路径解析与媒体播放行为，包括 MP3 支持和首选音频格式提示。
+
 # v0.16.0
 
 ## 框架
@@ -25,7 +116,7 @@
   ```
 
 - **响应体读取语义优化**：改进了挂起读取与 body locking 相关的响应体消费语义，使基于 `response.body` 的增量读取行为更加稳定和可预期。
-- **Web API 兼容性增强**：增强 `fetch`、`Headers`、`ReadableStream` 与 `TextDecoder` 等 Web API 兼容性，进一步缩小 Ink 智能体与浏览器式网络代码之间的差异。
+- **Web API 兼容性增强**：增强 `fetch`、`Headers`、`ReadableStream` 与 `TextDecoder` 等 Web API 兼容性，进一步缩小 AIUI 智能体与浏览器式网络代码之间的差异。
 - **TextDecoder 流式解码**：为 `TextDecoder` 增加 `{ stream: true }` 流式模式，支持跨 chunk 边界的增量 UTF-8 解码，避免流式文本处理中出现中间乱码。
 
   ```js

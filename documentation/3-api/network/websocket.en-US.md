@@ -104,7 +104,9 @@ Creates a Web-standard WebSocket connection. `url` must use the `ws` or `wss` pr
 - `send(data)`: Sends string or binary data.
 - `close()`: Closes the connection.
 
-### `wx.connectSocket(options)` / `wx.createSocket(options)`
+### wx APIs
+
+#### `wx.connectSocket(options)` / `wx.createSocket(options)`
 
 | Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -113,7 +115,7 @@ Creates a Web-standard WebSocket connection. `url` must use the `ws` or `wss` pr
 
 **Returns:** `SocketTask`.
 
-### `SocketTask`
+#### `SocketTask`
 
 - `onOpen(callback)`, `onMessage(callback)`, `onClose(callback)`, `onError(callback)`: Observe connection events.
 - `send(data)`: Sends a `String`, `ArrayBuffer`, or `Uint8Array`.

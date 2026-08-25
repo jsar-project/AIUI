@@ -1,6 +1,6 @@
 # Chart Data Visualization
 
-The `chart` component is used to render common data visualization charts, including line charts, area charts, pie charts, and radar charts. It is suitable for displaying trends, proportion analysis, and multi-dimensional metric comparison, and supports dynamic data binding through templates.
+The `chart` component renders line, area, bar, scatter, pie, radar, and funnel charts with dynamically bound data.
 
 ## Usage
 
@@ -55,7 +55,7 @@ When the component is set to `series="value"`, the chart reads the `value` field
 
 | Property | Type | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `type` | String | Chart type: `line`, `area`, `pie`, `radar`. | `line` |
+| `type` | String | Chart type: `line`, `area`, `bar`, `scatter`, `pie`, `radar`, or `funnel`. | `line` |
 | `series` | String | The key in the data object that represents the numeric value. | `value` |
 | `data` | Array | The array of data points to render. | `[]` |
 | `width` | Number | The pixel width of the chart. | `300` |
@@ -75,6 +75,14 @@ Line charts are suitable for showing trends over time or across a set of continu
 
 Area charts are suitable for further emphasizing magnitude on top of trend presentation, and are commonly used to show cumulative effects or the overall fluctuation range.
 
+### bar
+
+Bar charts compare categories and support horizontal and vertical orientations.
+
+### scatter
+
+Scatter charts reveal distributions between two continuous variables.
+
 ### pie
 
 Pie charts are suitable for showing the proportional relationship of parts within a whole, such as traffic source distribution or feature usage share.
@@ -82,6 +90,10 @@ Pie charts are suitable for showing the proportional relationship of parts withi
 ### radar
 
 Radar charts are suitable for side-by-side comparison of multiple dimensions, such as evaluation results across several capability dimensions.
+
+### funnel
+
+Funnel charts show quantities and conversions across process stages.
 
 ## Features
 

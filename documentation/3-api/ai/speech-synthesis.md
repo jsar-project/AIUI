@@ -23,12 +23,28 @@ wx.speech.playTTS('欢迎使用 AIUI');
 
 <!-- /aiui-api-style -->
 
-## 适用场景
+## 生成音频与同步字幕
 
-- 智能体回复播报
-- 系统提示音后的文字播报
-- 导航与状态提醒
-- 免手查看场景下的语音输出
+如果需要把生成与播放分开，使用 `synthesize()` 创建任务，再交给 `SpeechAudioPlayer` 播放：
+
+```javascript
+const utterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
+const task = await speechSynthesis.synthesize(utterance, {
+  subtitles: 'word',
+  audio: { preferredFormat: 'mp3' },
+});
+
+console.log('actual format:', task.audioConfig.format);
+
+const player = new SpeechAudioPlayer(task);
+player.textTrack.addEventListener('cuechange', () => {
+  const cue = player.textTrack.activeCues.item(0);
+  console.log(cue?.text ?? '');
+});
+player.play();
+```
+
+`preferredFormat` 只是偏好提示，实际格式始终以 `task.audioConfig.format` 为准。
 
 ## 使用建议
 
@@ -39,6 +55,7 @@ wx.speech.playTTS('欢迎使用 AIUI');
 ## 当前能力范围
 
 - [x] 通过 `speechSynthesis.speak()` 发起播报，并支持通过 `mode` 控制排队或立即播放。
+- [x] 通过 `speechSynthesis.synthesize()` 生成音频分片与字幕 cue，并使用 `SpeechAudioPlayer` 播放。
 - [ ] `SpeechSynthesisUtterance` 上的 `lang`、`pitch`、`rate`、`volume`、`voice` 等参数（当前暂未生效）。
 - [ ] `cancel()`、`pause()`、`resume()`、`getVoices()` 以及完整的 utterance 生命周期事件（当前未暴露）。
 
@@ -74,3 +91,46 @@ speechSynthesis.speak(utterance, 'immediate');
   - `'immediate'`：请求宿主立即播放当前播报。
 
 如果省略 `mode`，默认按 `'enqueue'` 处理，也就是尽量不打断当前正在进行的播报，最终行为仍以宿主实现为准。
+
+#### `speechSynthesis.synthesize(utterance, options?)`
+
+创建流式语音生成任务，但不会自动开始播放。返回 `Promise<SpeechSynthesisTask>`。
+
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `utterance` | `SpeechSynthesisUtterance` | 是 | 要合成的语音请求。 |
+| `options.subtitles` | `'none' \| 'sentence' \| 'word'` | 否 | 字幕 cue 的粒度。 |
+| `options.audio.preferredFormat` | `'pcm' \| 'mp3' \| 'ogg_opus'` | 否 | 目标音频格式偏好。 |
+| `options.audio.sampleRate` | `number` | 否 | 期望采样率。 |
+| `options.audio.channels` | `1 \| 2` | 否 | 期望声道数。 |
+| `options.audio.bitrate` | `number` | 否 | 期望比特率。 |
+| `options.signal` | `AbortSignal` | 否 | 用于取消生成任务。 |
+
+### `SpeechSynthesisTask`
+
+| 成员 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | `string` | 任务标识。 |
+| `state` | `'running' \| 'completed' \| 'aborted' \| 'errored'` | 当前任务状态。 |
+| `audioConfig` | `SpeechSynthesisAudioConfig` | 宿主实际返回的格式、采样率、声道、采样格式与 MIME type。 |
+| `language` | `string` | 实际语言。 |
+| `granularity` | `'none' \| 'sentence' \| 'word'` | 实际字幕粒度。 |
+| `finished` | `Promise<{ duration: number }>` | 任务结束后解析。 |
+| `abort()` | `void` | 中止生成任务。 |
+
+任务会分发 `chunk`、`end`、`error` 与 `abort` 事件，也可以使用对应的 `onchunk`、`onend`、`onerror` 与 `onabort` 属性。`chunk` 事件包含 `audio: Uint8Array` 和 `cues: readonly SpeechSynthesisCue[]`。
+
+### `new SpeechAudioPlayer(task, options?)`
+
+创建一个消费 `SpeechSynthesisTask` 的播放器。`options.trackMode` 可设为 `'hidden'` 或 `'showing'`。
+
+| 成员 | 类型 | 说明 |
+| --- | --- | --- |
+| `audioPlayer` | `AudioPlayer` | 底层音频播放器。 |
+| `textTrack` | `TextTrack` | 根据生成 cue 更新的字幕轨道。 |
+| `activeCue` | `VTTCue \| null` | 当前激活字幕。 |
+| `currentTime` / `duration` | `number` | 当前播放时间与时长。 |
+| `paused` | `boolean` | 当前是否暂停。 |
+| `play()` / `pause()` / `stop()` | `void` | 控制播放状态。 |
+| `seek(position)` | `void` | 跳转到指定秒数。 |
+| `destroy()` | `void` | 释放播放器资源。 |

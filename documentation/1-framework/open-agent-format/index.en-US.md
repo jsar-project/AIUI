@@ -20,7 +20,7 @@ In other words, OAF is not a single config file. It is an engineering-oriented o
 
 - `AGENTS.md` expresses the agent description layer
 - `app.json` and the application entry express the runtime layer
-- `pages/` expresses the page and interaction layer
+- `pages/` expresses pages and interaction
 - Components, modules, and packages express the reuse layer
 
 ## What AIUI Extends

@@ -48,6 +48,7 @@ AIUI 提供以下微信小程序风格的兼容接口，便于迁移或复用已
 
 - `wx.media.createCameraContext`：获取相机上下文。
 - `wx.media.getRecorderManager`：获取录音管理器。
+- `wx.createVideoContext`：获取当前页面 `<video>` 组件的播放控制上下文。
 
 具体用法见[多媒体](/AIUI/api/media)。
 

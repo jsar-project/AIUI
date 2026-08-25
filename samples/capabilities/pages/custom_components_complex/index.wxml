@@ -67,4 +67,62 @@
       <text class="placeholder-text">Component region is hidden. Re-enable it to verify remount with the latest props.</text>
     </view>
   </view>
+
+  <view class="section">
+    <text class="section-title">Named Slot Demo</text>
+    <text class="line">
+      This map consumes overlay content from the overlays slot, while the actual
+      map-gpx node is produced by a custom component.
+    </text>
+    <map class="slot-map">
+      <template slot="overlays">
+        <route-layer
+          gpxData="{{gpxData}}"
+          strokeColor="#2563eb"
+          strokeWidth="4"
+          pointRadius="4"
+          waypointColor="#0f172a"
+          startColor="#16a34a"
+          endColor="#dc2626"
+          labelVisible="{{true}}"
+        />
+      </template>
+    </map>
+    <view class="slot-meta">
+      <text class="line">slot source: route-layer custom component</text>
+      <text class="line">expected result: GPX track stays visible after custom-component expansion</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <text class="section-title">Custom Component Named Slot Consumer</text>
+    <text class="line">
+      This example mounts a custom component that defines
+      &lt;slot name="title" /&gt;, &lt;slot name="actions" /&gt;, and
+      &lt;slot name="content" /&gt; inside its own template.
+    </text>
+    <dashboard-panel class="named-slot-panel">
+      <template slot="title">
+        <text class="slot-panel-title">{{slotPanelTitle}}</text>
+      </template>
+
+      <template slot="actions">
+        <panel-action
+          label="Refresh Summary"
+          bindpress="handleSlotActionPress"
+        />
+      </template>
+
+      <template slot="content">
+        <view class="slot-panel-content">
+          <text class="line">summary: {{slotSummary}}</text>
+          <text class="line">last slot event: {{slotActionEvent}}</text>
+        </view>
+      </template>
+    </dashboard-panel>
+    <view class="slot-meta">
+      <text class="line">slot consumer: dashboard-panel custom component</text>
+      <text class="line">slot provider: template slot + panel-action custom component</text>
+    </view>
+  </view>
 </view>

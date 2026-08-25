@@ -1,6 +1,9 @@
 {
   "navigationBarTitleText": "Complex Custom Components",
   "usingComponents": {
-    "workflow-panel": "components/workflow-panel"
+    "dashboard-panel": "components/dashboard-panel",
+    "panel-action": "components/panel-action",
+    "workflow-panel": "components/workflow-panel",
+    "route-layer": "components/route-layer"
   }
 }

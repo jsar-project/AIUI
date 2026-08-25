@@ -20,19 +20,21 @@ wx.navigateTo({
 
 ## API Reference
 
-### `wx.navigateTo(options)`
+### wx APIs
+
+#### `wx.navigateTo(options)`
 
 保留当前页面并跳转到应用内的普通页面，不能跳转到 tabBar 页面。
 
-### `wx.redirectTo(options)`
+#### `wx.redirectTo(options)`
 
 关闭当前页面并跳转到应用内的普通页面，不能跳转到 tabBar 页面。
 
-### `wx.navigateBack(options?)`
+#### `wx.navigateBack(options?)`
 
 关闭当前页面并返回上一页面或多级页面。
 
-### 路由参数
+#### 路由参数
 
 | 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |

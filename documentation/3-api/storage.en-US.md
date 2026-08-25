@@ -26,5 +26,6 @@ const theme = wx.getStorageSync('theme');
 
 Continue reading:
 
-- **[Storage API](/AIUI/api/storage-api)**: See how to use `localStorage` and `sessionStorage`.
+- **[Storage API](/AIUI/api/storage-api)**: See how to use `localStorage`.
+- **[OPFS](/AIUI/api/storage-opfs)**: See Agent-private directories, files, Blobs, and writable streams.
 - **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See `wx.setStorage`, `wx.getStorage`, and the synchronous variants.

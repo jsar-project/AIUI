@@ -1,11 +1,61 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/head-gesture/index",
-    "pages/orientation-stability-change/index"
+    "pages/index/index"
+  ],
+  "widgets": [
+    {
+      "path": "widgets/counter/index",
+      "family": "1x1"
+    },
+    {
+      "path": "widgets/runtime-status/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/clock/index",
+      "family": "1x1"
+    },
+    {
+      "path": "widgets/battery/index",
+      "family": "1x1"
+    },
+    {
+      "path": "widgets/weather/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/now-playing/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/image/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/canvas/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/component-case/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/video-context-case/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/a2ui-context-case/index",
+      "family": "1x2"
+    },
+    {
+      "path": "widgets/media-relative-case/index",
+      "family": "1x2"
+    }
   ],
   "permissions": [
-    "GEOLOCATION"
+    "GEOLOCATION",
+    "CAMERA",
+    "RECORD_AUDIO"
   ],
   "usingComponents": {
     "workflow-panel": "components/workflow-panel",

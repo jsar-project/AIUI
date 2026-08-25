@@ -21,7 +21,36 @@ export default {
 }
 ```
 
+## Send a Message to the Host
+
+The App instance can send structured data to the embedding AIUI host with `postMessage()`:
+
+```javascript
+export default {
+  onLaunch() {
+    this.postMessage(
+      { type: 'app.ready' },
+      { origin: 'aiui-agent', lastEventId: 'launch-1' },
+    );
+  },
+};
+```
+
 ## API Reference
+
+### `getApp()`
+
+Returns the current `App` instance so pages or components can access app-level state and methods.
+
+### `app.postMessage(data, options?)`
+
+Sends a JSON-compatible structured message to the host.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `data` | `any` | Yes | JSON-compatible data to send. |
+| `options.origin` | `string` | No | Sender identifier. Defaults to `'ink-js'`. |
+| `options.lastEventId` | `string` | No | Correlation identifier forwarded with the message. |
 
 ### Lifecycle Callbacks
 

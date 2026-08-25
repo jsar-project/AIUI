@@ -401,57 +401,10 @@
         "label": "View Containers",
         "expanded": true,
         "children": [
-          {
-            "id": "view",
-            "label": "view",
-            "docId": "view"
-          },
-          {
-            "id": "scroll-view",
-            "label": "scroll-view",
-            "docId": "scroll-view"
-          }
-        ]
-      },
-      {
-        "id": "basic-content",
-        "label": "Basic Content",
-        "expanded": true,
-        "children": [
-          {
-            "id": "text",
-            "label": "text",
-            "docId": "text"
-          },
-          {
-            "id": "icon",
-            "label": "icon",
-            "docId": "icon",
-            "status": "unsupported"
-          },
-          {
-            "id": "error-state",
-            "label": "error-state",
-            "docId": "error-state"
-          },
-          {
-            "id": "streamdown",
-            "label": "streamdown",
-            "docId": "streamdown",
-            "status": "unsupported"
-          }
-        ]
-      },
-      {
-        "id": "form-components",
-        "label": "Form Components",
-        "expanded": true,
-        "children": [
-          {
-            "id": "button",
-            "label": "button",
-            "docId": "button"
-          }
+          { "id": "view", "label": "<view>", "docId": "view", "docPath": "2-components/view.en-US.md" },
+          { "id": "scroll-view", "label": "<scroll-view>", "docId": "scroll-view", "docPath": "2-components/scroll-view.en-US.md" },
+          { "id": "swiper", "label": "<swiper>", "docId": "swiper", "docPath": "2-components/swiper.en-US.md" },
+          { "id": "card", "label": "<card>", "docId": "card", "docPath": "2-components/card.en-US.md" }
         ]
       },
       {
@@ -459,11 +412,47 @@
         "label": "Date Components",
         "expanded": true,
         "children": [
-          {
-            "id": "calendar",
-            "label": "calendar",
-            "docId": "calendar"
-          }
+          { "id": "calendar", "label": "<calendar>", "docId": "calendar", "docPath": "2-components/calendar.en-US.md" }
+        ]
+      },
+      {
+        "id": "basic-content",
+        "label": "Basic Content",
+        "expanded": true,
+        "children": [
+          { "id": "text", "label": "<text>", "docId": "text", "docPath": "2-components/text.en-US.md" },
+          { "id": "icon", "label": "<icon>", "docId": "icon", "docPath": "2-components/icon.en-US.md" },
+          { "id": "error-state", "label": "<error-state>", "docId": "error-state", "docPath": "2-components/error-state.en-US.md" },
+          { "id": "streamdown", "label": "<streamdown>", "docId": "streamdown", "docPath": "2-components/streamdown.en-US.md" },
+          { "id": "table", "label": "<table>", "docId": "table", "docPath": "2-components/table.en-US.md" },
+          { "id": "timed-text", "label": "<timed-text>", "docId": "timed-text", "docPath": "2-components/timed-text.en-US.md" }
+        ]
+      },
+      {
+        "id": "semantic-content",
+        "label": "Semantic Content",
+        "expanded": true,
+        "children": [
+          { "id": "p", "label": "<p>", "docId": "p", "docPath": "2-components/p.en-US.md" },
+          { "id": "header", "label": "<header>", "docId": "header", "docPath": "2-components/header.en-US.md" },
+          { "id": "blockquote", "label": "<blockquote>", "docId": "blockquote", "docPath": "2-components/blockquote.en-US.md" },
+          { "id": "list", "label": "<list>", "docId": "list", "docPath": "2-components/list.en-US.md" },
+          { "id": "list-item", "label": "<list-item>", "docId": "list-item", "docPath": "2-components/list-item.en-US.md" },
+          { "id": "b", "label": "<b>", "docId": "b", "docPath": "2-components/b.en-US.md" },
+          { "id": "i", "label": "<i>", "docId": "i", "docPath": "2-components/i.en-US.md" },
+          { "id": "snippet", "label": "<snippet>", "docId": "snippet", "docPath": "2-components/snippet.en-US.md" },
+          { "id": "formula", "label": "<formula>", "docId": "formula", "docPath": "2-components/formula.en-US.md" }
+        ]
+      },
+      {
+        "id": "form-components",
+        "label": "Form Components",
+        "expanded": true,
+        "children": [
+          { "id": "button", "label": "<button>", "docId": "button", "docPath": "2-components/button.en-US.md" },
+          { "id": "input", "label": "<input>", "docId": "input", "docPath": "2-components/input.en-US.md" },
+          { "id": "textarea", "label": "<textarea>", "docId": "textarea", "docPath": "2-components/textarea.en-US.md" },
+          { "id": "switch", "label": "<switch>", "docId": "switch", "docPath": "2-components/switch.en-US.md" }
         ]
       },
       {
@@ -471,33 +460,26 @@
         "label": "Media Components",
         "expanded": true,
         "children": [
-          {
-            "id": "image",
-            "label": "image",
-            "docId": "image"
-          },
-          {
-            "id": "lottie-view",
-            "label": "lottie-view",
-            "docId": "lottie-view"
-          }
+          { "id": "image", "label": "<image>", "docId": "image", "docPath": "2-components/image.en-US.md" },
+          { "id": "video", "label": "<video>", "docId": "video", "docPath": "2-components/video.en-US.md" },
+          { "id": "lottie-view", "label": "<lottie-view>", "docId": "lottie-view", "docPath": "2-components/lottie-view.en-US.md" }
+        ]
+      },
+      {
+        "id": "location-components",
+        "label": "Location Components",
+        "expanded": true,
+        "children": [
+          { "id": "map", "label": "<map>", "docId": "map", "docPath": "2-components/map.en-US.md" }
         ]
       },
       {
         "id": "canvas-chart",
-        "label": "Canvas & Charts",
+        "label": "Canvas & Chart",
         "expanded": true,
         "children": [
-          {
-            "id": "canvas",
-            "label": "canvas",
-            "docId": "canvas"
-          },
-          {
-            "id": "chart",
-            "label": "chart",
-            "docId": "chart"
-          }
+          { "id": "canvas", "label": "<canvas>", "docId": "canvas", "docPath": "2-components/canvas.en-US.md" },
+          { "id": "chart", "label": "<chart>", "docId": "chart", "docPath": "2-components/chart.en-US.md" }
         ]
       },
       {
@@ -505,11 +487,7 @@
         "label": "AI Components",
         "expanded": true,
         "children": [
-          {
-            "id": "a2ui",
-            "label": "a2ui",
-            "docId": "a2ui"
-          }
+          { "id": "a2ui", "label": "<a2ui>", "docId": "a2ui", "docPath": "2-components/a2ui.en-US.md" }
         ]
       }
     ],
@@ -573,14 +551,16 @@
             "label": "Audio Player"
           },
           {
-            "id": "camera",
-            "label": "Camera",
-            "docId": "media-camera"
+            "id": "media-capture",
+            "label": "Media Capture",
+            "docId": "media-media-capture",
+            "docPath": "3-api/media/media-capture.en-US.md"
           },
           {
-            "id": "recorder",
-            "label": "Recorder",
-            "docId": "media-recorder"
+            "id": "video",
+            "label": "Video Playback",
+            "docId": "media-video",
+            "docPath": "3-api/media/video.en-US.md"
           }
         ]
       },
@@ -637,6 +617,12 @@
           {
             "id": "gyroscope",
             "label": "Gyroscope"
+          },
+          {
+            "id": "battery-manager",
+            "label": "Battery Status",
+            "docId": "device-battery-manager",
+            "docPath": "3-api/device/battery-manager.en-US.md"
           }
         ]
       },
@@ -668,6 +654,12 @@
             "id": "storage-api",
             "label": "localStorage",
             "docId": "storage-api"
+          },
+          {
+            "id": "opfs",
+            "label": "OPFS",
+            "docId": "storage-opfs",
+            "docPath": "3-api/storage/opfs.en-US.md"
           }
         ]
       },
@@ -710,45 +702,7 @@
       {
         "id": "weixin-compatible-apis",
         "label": "WeChat Mini Program Compatible APIs",
-        "expanded": false,
-        "children": [
-          {
-            "id": "base",
-            "label": "Base"
-          },
-          {
-            "id": "canvas",
-            "label": "Canvas"
-          },
-          {
-            "id": "media",
-            "label": "Media"
-          },
-          {
-            "id": "networking",
-            "label": "Networking"
-          },
-          {
-            "id": "router",
-            "label": "Router"
-          },
-          {
-            "id": "speech",
-            "label": "Speech"
-          },
-          {
-            "id": "storage",
-            "label": "Storage"
-          },
-          {
-            "id": "system",
-            "label": "System"
-          },
-          {
-            "id": "ui",
-            "label": "UI"
-          }
-        ]
+        "children": []
       }
     ],
     "slug": "api"

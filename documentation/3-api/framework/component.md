@@ -42,6 +42,7 @@ export default {
 - `created`
 - `attached`
 - `ready`
+- `moved`
 - `detached`
 
 ```javascript
@@ -54,6 +55,22 @@ export default {
 }
 ```
 
+## 检查具名插槽
+
+运行时会把宿主提供的具名插槽快照放在 `this.$slots` 中，也可以用 `hasSlot()` 判断某个插槽是否有内容：
+
+```javascript
+export default {
+  lifetimes: {
+    ready() {
+      if (this.hasSlot('actions')) {
+        console.log(this.$slots.actions);
+      }
+    },
+  },
+};
+```
+
 ## API Reference
 
 ### 实例成员
@@ -64,6 +81,8 @@ export default {
 | `this.properties` | `Object` | 当前组件已解析的输入属性 |
 | `this.setData(data, callback?)` | `Function` | 更新组件状态并触发视图刷新 |
 | `this.triggerEvent(name, detail?)` | `Function` | 向父级派发自定义事件 |
+| `this.$slots` | `Readonly<Record<string, readonly ComponentSlotEntry[]>>` | 宿主提供的具名插槽快照 |
+| `this.hasSlot(name)` | `Function` | 判断指定具名插槽是否包含内容 |
 
 写在 `methods` 里的方法会被直接挂到组件实例上，并以当前组件实例作为 `this` 执行。
 
@@ -98,6 +117,19 @@ export default {
   }
 }
 ```
+
+### `this.$slots` 与 `this.hasSlot(name)`
+
+`this.$slots[name]` 中的条目包含以下字段：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `tagName` | `string` | 解析后的具体标签名。 |
+| `attributes` | `Record<string, string>` | 来源节点的渲染属性。 |
+| `textContent` | `string` | 可选的文本内容。 |
+| `sourceComponentId` | `string` | 可选的来源自定义组件标识。 |
+
+`this.hasSlot(name)` 返回 `boolean`，用于判断宿主是否向该具名插槽提供了内容。
 
 ### `this.setData(Object data, Function? callback)`
 

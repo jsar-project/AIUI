@@ -1,400 +1,286 @@
 <script type="application/json" def>
 {
-  "navigationBarTitleText": "Recorder Test"
+  "navigationBarTitleText": "Recorder"
 }
 </script>
 
 <script setup>
 import wx from 'wx';
-const LOG_LIMIT = 80;
+import { AudioPlayer } from 'audio';
 
-function formatBytes(value) {
-  if (typeof value !== 'number' || !Number.isFinite(value)) {
-    return '0 B';
-  }
-  if (value < 1024) {
-    return `${value} B`;
-  }
-  if (value < 1024 * 1024) {
-    return `${(value / 1024).toFixed(2)} KB`;
-  }
-  return `${(value / (1024 * 1024)).toFixed(2)} MB`;
-}
-
-function nowLabel() {
-  return new Date().toISOString().slice(11, 19);
+function formatTime(value) {
+  const seconds = Math.max(0, Math.floor(Number(value) || 0));
+  return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
 export default {
   data: {
-    available: false,
     currentFormat: 'pcm',
     state: 'idle',
-    headerCount: 0,
-    frameCount: 0,
-    lastHeaderSize: '0 B',
-    lastFrameSize: '0 B',
-    lastStopPath: '',
-    lastError: '',
-    logs: ['Recorder test page ready'],
+    actionLabel: 'Start',
+    elapsed: '00:00',
+    playbackSrc: '',
+    playbackState: 'idle',
+    error: '',
   },
 
   onLoad() {
     this.recorder = null;
+    this.player = null;
+    this.recordingStartedAt = 0;
+    this.elapsedTimer = null;
+    this.playbackTimer = null;
+    this.recordingDurationSeconds = 0;
+    this.header = null;
+    this.frames = [];
     this.bindRecorder();
   },
 
   onUnload() {
     this.stopRecordingSilently();
-  },
-
-  log(message) {
-    const nextLogs = [`${nowLabel()} ${message}`, ...(this.data.logs || [])].slice(0, LOG_LIMIT);
-    this.setData({ logs: nextLogs });
-  },
-
-  setError(message) {
-    this.setData({ lastError: message, state: 'error' });
-    this.log(`Error: ${message}`);
-  },
-
-  clearError() {
-    if (this.data.lastError) {
-      this.setData({ lastError: '' });
-    }
+    this.destroyPlayer();
+    this.revokePlaybackUrl();
   },
 
   bindRecorder() {
     try {
-      const recorder = wx.media.getRecorderManager();
-      if (!recorder) {
-        this.setData({ available: false });
-        this.setError('wx.media.getRecorderManager() returned undefined');
-        return;
-      }
-
-      this.recorder = recorder;
-      this.setData({ available: true });
-      this.log('RecorderManager acquired');
-
-      recorder.onStart(() => {
-        this.clearError();
-        this.setData({ state: 'recording' });
-        this.log(`Recording started (${this.data.currentFormat})`);
+      this.recorder = wx.media.getRecorderManager();
+      if (!this.recorder) throw new Error('RecorderManager is unavailable');
+      this.recorder.onStart(() => {
+        this.recordingStartedAt = Date.now();
+        this.startClock();
+        this.setData({ state: 'recording', actionLabel: 'Pause', error: '' });
       });
-
-      recorder.onPause(() => {
-        this.setData({ state: 'paused' });
-        this.log('Recording paused');
+      this.recorder.onPause(() => this.setData({ state: 'paused', actionLabel: 'Resume' }));
+      this.recorder.onResume(() => {
+        this.recordingStartedAt = Date.now() - this.elapsedSeconds * 1000;
+        this.startClock();
+        this.setData({ state: 'recording', actionLabel: 'Pause' });
       });
-
-      recorder.onResume(() => {
-        this.setData({ state: 'recording' });
-        this.log('Recording resumed');
+      this.recorder.onHeader((_format, buffer) => {
+        this.header = buffer;
       });
-
-      recorder.onStop((payload) => {
-        const tempFilePath = payload && payload.tempFilePath ? payload.tempFilePath : '';
-        this.setData({
-          state: 'idle',
-          lastStopPath: tempFilePath,
-        });
-        this.log(`Recording stopped${tempFilePath ? `: ${tempFilePath}` : ''}`);
+      this.recorder.onFrameRecorded(({ frameBuffer } = {}) => {
+        if (frameBuffer) this.frames.push(frameBuffer);
       });
-
-      recorder.onHeader((format, buffer) => {
-        const size = buffer && typeof buffer.byteLength === 'number' ? buffer.byteLength : 0;
-        this.setData({
-          headerCount: this.data.headerCount + 1,
-          lastHeaderSize: formatBytes(size),
-        });
-        this.log(`Header received format=${format} size=${formatBytes(size)}`);
+      this.recorder.onStop(async () => {
+        this.stopClock();
+        this.recordingDurationSeconds = this.elapsedSeconds;
+        await this.buildPlayback();
+        this.setData({ state: 'idle', actionLabel: 'Start' });
       });
-
-      recorder.onFrameRecorded((payload) => {
-        const frameBuffer = payload && payload.frameBuffer ? payload.frameBuffer : null;
-        const size =
-          frameBuffer && typeof frameBuffer.byteLength === 'number' ? frameBuffer.byteLength : 0;
-        this.setData({
-          frameCount: this.data.frameCount + 1,
-          lastFrameSize: formatBytes(size),
-        });
-        if ((this.data.frameCount + 1) <= 5 || (this.data.frameCount + 1) % 20 === 0) {
-          this.log(
-            `Frame #${this.data.frameCount + 1} recorded size=${formatBytes(size)}`
-          );
-        }
-      });
-
-      recorder.onError((payload) => {
-        const message = payload && payload.errMsg ? payload.errMsg : 'Unknown recorder error';
-        this.setError(message);
-      });
-
-      recorder.onInterruptionBegin(() => {
-        this.log('Recording interruption begin');
-      });
-
-      recorder.onInterruptionEnd(() => {
-        this.log('Recording interruption end');
+      this.recorder.onError(({ errMsg } = {}) => {
+        this.stopClock();
+        this.setData({ state: 'idle', actionLabel: 'Start', error: errMsg || 'Recording failed' });
       });
     } catch (error) {
-      this.setData({ available: false });
-      this.setError(String(error));
+      this.setData({ error: String(error) });
     }
   },
 
   setFormat(format) {
-    if (this.data.state === 'recording' || this.data.state === 'paused') {
-      this.log('Format switch ignored while recording is active');
-      return;
-    }
-    this.setData({ currentFormat: format });
-    this.clearError();
-    this.log(`Format set to ${format}`);
+    if (this.data.state !== 'idle') return;
+    this.setData({ currentFormat: format, error: '' });
   },
 
-  usePCM() {
-    this.setFormat('pcm');
-  },
+  usePCM() { this.setFormat('pcm'); },
+  useOpus() { this.setFormat('opus'); },
 
-  useOpus() {
-    this.setFormat('opus');
-  },
-
-  resetCounters() {
-    this.setData({
-      headerCount: 0,
-      frameCount: 0,
-      lastHeaderSize: '0 B',
-      lastFrameSize: '0 B',
-      lastStopPath: '',
-      lastError: '',
-    });
-    this.log('Counters reset');
+  toggleRecording() {
+    if (!this.recorder) return;
+    if (this.data.state === 'idle') return this.startRecording();
+    if (this.data.state === 'paused') return this.resumeRecording();
+    return this.pauseRecording();
   },
 
   async startRecording() {
-    if (!this.recorder) {
-      this.setError('RecorderManager is unavailable');
-      return;
-    }
-    if (this.data.state === 'recording' || this.data.state === 'paused') {
-      this.log('Start ignored: recording already active');
-      return;
-    }
-
     try {
-      this.clearError();
-      this.setData({
-        state: 'starting',
-        headerCount: 0,
-        frameCount: 0,
-        lastHeaderSize: '0 B',
-        lastFrameSize: '0 B',
-        lastStopPath: '',
-      });
-      this.log(`Start requested with format=${this.data.currentFormat}`);
+      this.revokePlaybackUrl();
+      this.header = null;
+      this.frames = [];
+      this.elapsedSeconds = 0;
+      this.setData({ elapsed: '00:00', playbackState: 'idle', error: '', state: 'starting' });
       await this.recorder.start({
         sampleRate: 16000,
         numberOfChannels: 1,
         format: this.data.currentFormat,
       });
     } catch (error) {
-      this.setError(String(error));
+      this.setData({ state: 'idle', actionLabel: 'Start', error: String(error) });
     }
   },
 
   async pauseRecording() {
-    if (!this.recorder) {
-      this.setError('RecorderManager is unavailable');
-      return;
-    }
-    try {
-      this.log('Pause requested');
-      await this.recorder.pause();
-    } catch (error) {
-      this.setError(String(error));
-    }
+    try { await this.recorder.pause(); } catch (error) { this.setData({ error: String(error) }); }
   },
 
   async resumeRecording() {
-    if (!this.recorder) {
-      this.setError('RecorderManager is unavailable');
-      return;
-    }
-    try {
-      this.log('Resume requested');
-      await this.recorder.resume();
-    } catch (error) {
-      this.setError(String(error));
+    try { await this.recorder.resume(); } catch (error) { this.setData({ error: String(error) }); }
+  },
+
+  onKeyDown(event) {
+    if (event && event.code === 'Enter') {
+      if (this.data.state === 'idle') this.toggleRecording();
+      else this.stopRecording();
     }
   },
 
   async stopRecording() {
-    if (!this.recorder) {
-      this.setError('RecorderManager is unavailable');
-      return;
-    }
-    try {
-      this.log('Stop requested');
-      await this.recorder.stop();
-    } catch (error) {
-      this.setError(String(error));
-    }
+    try { await this.recorder.stop(); } catch (error) { this.setData({ error: String(error) }); }
   },
 
   stopRecordingSilently() {
-    if (!this.recorder) {
+    if (this.recorder && (this.data.state === 'recording' || this.data.state === 'paused')) {
+      this.recorder.stop().catch(() => {});
+    }
+    this.stopClock();
+  },
+
+  startClock() {
+    this.stopClock();
+    this.elapsedTimer = setInterval(() => {
+      this.elapsedSeconds = Math.floor((Date.now() - this.recordingStartedAt) / 1000);
+      this.setData({ elapsed: formatTime(this.elapsedSeconds) });
+    }, 250);
+  },
+
+  stopClock() {
+    if (this.elapsedTimer) clearInterval(this.elapsedTimer);
+    this.elapsedTimer = null;
+  },
+
+  startPlaybackClock() {
+    this.stopPlaybackClock();
+    const startedAt = Date.now();
+    this.setData({ elapsed: '00:00' });
+    this.playbackTimer = setInterval(() => {
+      this.setData({ elapsed: formatTime(Math.floor((Date.now() - startedAt) / 1000)) });
+    }, 250);
+  },
+
+  stopPlaybackClock() {
+    if (this.playbackTimer) clearInterval(this.playbackTimer);
+    this.playbackTimer = null;
+  },
+
+  async buildPlayback() {
+    const parts = [this.header, ...this.frames].filter(Boolean);
+    if (!parts.length || typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') return;
+    const mimeType = this.data.currentFormat === 'opus' ? 'audio/ogg;codecs=opus' : 'audio/wav';
+    this.revokePlaybackUrl();
+    let blob;
+    if (this.data.currentFormat === 'pcm') {
+      const payloads = [];
+      for (const part of parts) {
+        const buffer = part instanceof Blob ? await part.arrayBuffer() : part;
+        const bytes = new Uint8Array(buffer);
+        const offset = bytes.length >= 44 && String.fromCharCode(...bytes.subarray(0, 4)) === 'RIFF' ? 44 : 0;
+        payloads.push(bytes.subarray(offset));
+      }
+      const payloadSize = payloads.reduce((total, payload) => total + payload.byteLength, 0);
+      const wav = new Uint8Array(44 + payloadSize);
+      const view = new DataView(wav.buffer);
+      const writeText = (offset, value) => [...value].forEach((char, index) => wav[offset + index] = char.charCodeAt(0));
+      writeText(0, 'RIFF');
+      view.setUint32(4, 36 + payloadSize, true);
+      writeText(8, 'WAVEfmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, 16000, true);
+      view.setUint32(28, 32000, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeText(36, 'data');
+      view.setUint32(40, payloadSize, true);
+      let cursor = 44;
+      payloads.forEach((payload) => { wav.set(payload, cursor); cursor += payload.byteLength; });
+      blob = new Blob([wav], { type: mimeType });
+    } else {
+      blob = new Blob(parts, { type: mimeType });
+    }
+    this.playbackBlob = blob;
+    this.playbackMimeType = mimeType;
+    this.setData({ playbackSrc: URL.createObjectURL(blob) });
+  },
+
+  revokePlaybackUrl() {
+    if (this.data.playbackSrc && typeof URL !== 'undefined' && typeof URL.revokeObjectURL === 'function') {
+      URL.revokeObjectURL(this.data.playbackSrc);
+    }
+    this.setData({ playbackSrc: '' });
+  },
+
+  playRecording() {
+    if (!this.playbackBlob) {
+      this.setData({ error: 'Recording audio is unavailable' });
       return;
     }
-    if (this.data.state !== 'recording' && this.data.state !== 'paused') {
-      return;
+    this.destroyPlayer();
+    try {
+      const player = new AudioPlayer();
+      this.player = player;
+      player.onCanplay(() => this.setData({ playbackState: 'ready' }));
+      player.onPlay(() => {
+        this.startPlaybackClock();
+        this.setData({ playbackState: 'playing', error: '' });
+      });
+      player.onEnded(() => {
+        this.stopPlaybackClock();
+        this.setData({ playbackState: 'idle', elapsed: formatTime(this.recordingDurationSeconds) });
+      });
+      player.onError((error) => {
+        this.stopPlaybackClock();
+        this.setData({ playbackState: 'idle', elapsed: formatTime(this.recordingDurationSeconds), error: `Playback failed: ${String(error)}` });
+      });
+      this.playbackBlob.arrayBuffer().then((buffer) => {
+        if (this.player !== player) return;
+        player.setBuffer(buffer, this.playbackMimeType);
+        player.play();
+      }).catch((error) => {
+        this.setData({ playbackState: 'idle', error: `Playback failed: ${String(error)}` });
+      });
+    } catch (error) {
+      this.setData({ playbackState: 'idle', error: `Playback failed: ${String(error)}` });
     }
-    this.recorder.stop().catch(() => {});
+  },
+
+  destroyPlayer() {
+    this.stopPlaybackClock();
+    if (this.player) {
+      try { this.player.destroy(); } catch (_) {}
+    }
+    this.player = null;
   },
 };
 </script>
 
 <page>
-  <view class="container">
-    <view class="page-title">Recorder Test</view>
-    <view class="subtitle">Manual regression page for RecorderManager state transitions and pcm/opus events.</view>
-
-    <view class="card">
-      <text class="section-title">Summary</text>
-      <text class="meta-line">Available: {{available}}</text>
-      <text class="meta-line">Current Format: {{currentFormat}}</text>
-      <text class="meta-line">State: {{state}}</text>
-      <text class="meta-line">Header Count: {{headerCount}}</text>
-      <text class="meta-line">Frame Count: {{frameCount}}</text>
-      <text class="meta-line">Last Error: {{lastError || 'None'}}</text>
+  <view class="container" bindkeydown="onKeyDown">
+    <view class="format-row">
+      <button class="format-button {{currentFormat === 'pcm' ? 'selected' : ''}}" bindtap="usePCM">PCM</button>
+      <button class="format-button {{currentFormat === 'opus' ? 'selected' : ''}}" bindtap="useOpus">Opus</button>
     </view>
-
-    <view class="card">
-      <text class="section-title">Live Status</text>
-      <text class="meta-line">Last Header Size: {{lastHeaderSize}}</text>
-      <text class="meta-line">Last Frame Size: {{lastFrameSize}}</text>
-      <text class="meta-line">Last Stop Path: {{lastStopPath || 'N/A'}}</text>
+    <text class="timer">{{elapsed}}</text>
+    <view class="control-row">
+      <button class="control-button" bindtap="toggleRecording">{{actionLabel}}</button>
+      <button class="control-button end-button" bindtap="stopRecording">End</button>
     </view>
-
-    <view class="card">
-      <text class="section-title">Format</text>
-      <view class="button-grid" role="navigation">
-        <button class="btn" bindtap="usePCM">Use PCM</button>
-        <button class="btn btn-secondary" bindtap="useOpus">Use Opus</button>
-        <button class="btn btn-secondary" bindtap="resetCounters">Reset Counters</button>
-      </view>
-    </view>
-
-    <view class="card">
-      <text class="section-title">Core Controls</text>
-      <view class="button-grid" role="navigation">
-        <button class="btn" bindtap="startRecording">Start</button>
-        <button class="btn btn-secondary" bindtap="pauseRecording">Pause</button>
-        <button class="btn btn-secondary" bindtap="resumeRecording">Resume</button>
-        <button class="btn btn-danger" bindtap="stopRecording">Stop</button>
-      </view>
-    </view>
-
-    <view class="card log-card">
-      <text class="section-title">Event Log</text>
-      <view class="log-list">
-        <view class="log-item" ink:for="{{logs}}">
-          <text class="log-text">{{item}}</text>
-        </view>
-      </view>
-    </view>
+    <button class="play-button" ink:if="{{playbackSrc}}" bindtap="playRecording">
+      {{playbackState === 'playing' ? 'Playing' : 'Play recording'}}
+    </button>
+    <text class="error" ink:if="{{error}}">{{error}}</text>
   </view>
 </page>
 
 <style>
-  .container {
-    --recorder-page-background: var(--color-background);
-    --recorder-surface-background: var(--color-surface);
-    --recorder-surface-muted-background: var(--color-surface-highlight);
-    --recorder-text-color: var(--color-text-primary);
-    --recorder-muted-text-color: var(--color-text-secondary);
-    --recorder-primary-background: var(--color-primary);
-    --recorder-primary-text: #ffffff;
-    --recorder-secondary-background: var(--recorder-surface-muted-background, #edf2f7);
-    --recorder-secondary-text: var(--recorder-text-color);
-    --recorder-danger-background: var(--border-color-danger, #ff3b30);
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    gap: 16px;
-    background-color: var(--recorder-page-background);
-  }
-
-  .page-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: var(--recorder-text-color);
-  }
-
-  .subtitle {
-    font-size: 14px;
-    color: var(--recorder-muted-text-color);
-    margin-bottom: 4px;
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: var(--spacing-md, 16px);
-    border-radius: var(--radius-md, 12px);
-    background-color: var(--recorder-surface-background);
-    border: var(--border-width-thin, 1px) solid var(--border-color-default, #e5e7eb);
-  }
-
-  .section-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--recorder-text-color);
-    margin-bottom: 4px;
-  }
-
-  .meta-line {
-    font-size: 14px;
-    color: var(--recorder-text-color);
-    font-family: monospace;
-  }
-
-  .button-grid {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .btn {
-    min-width: 150px;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 12px 14px;
-  }
-
-  .log-card {
-    min-height: 280px;
-  }
-
-  .log-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .log-item {
-    padding: 8px 10px;
-    border-radius: var(--radius-sm, 8px);
-    background-color: var(--recorder-surface-muted-background, #f7fafc);
-  }
-
-  .log-text {
-    font-size: 12px;
-    color: var(--recorder-text-color);
-    font-family: monospace;
-  }
+  .container { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 32px 24px; background-color: var(--color-background, #f5f7fa); }
+  .format-row { display: flex; flex-direction: row; gap: 10px; }
+  .format-button, .play-button { min-width: 110px; min-height: 40px; color: var(--color-primary, #2563eb); background-color: transparent; border: 1px solid var(--color-primary, #2563eb); }
+  .format-button.selected { color: var(--color-primary, #2563eb); background-color: transparent; border-width: 2px; }
+  .timer { font-size: 48px; font-family: monospace; color: var(--color-text-primary, #0f172a); }
+  .control-row { display: flex; flex-direction: row; gap: 12px; width: 100%; justify-content: center; }
+  .control-button { flex: 1; max-width: 220px; min-height: 56px; font-size: 20px; font-weight: 700; color: var(--color-primary, #2563eb); background-color: transparent; border: 2px solid var(--color-primary, #2563eb); }
+  .end-button { color: var(--color-danger, #dc2626); border-color: var(--color-danger, #dc2626); }
+  .error { font-size: 13px; color: var(--color-danger, #dc2626); }
 </style>

@@ -20,19 +20,21 @@ Continue reading:
 
 ## API Reference
 
-### `wx.navigateTo(options)`
+### wx APIs
+
+#### `wx.navigateTo(options)`
 
 Keeps the current page and navigates to a regular page within the app. It cannot navigate to a tabBar page.
 
-### `wx.redirectTo(options)`
+#### `wx.redirectTo(options)`
 
 Closes the current page and navigates to a regular page within the app. It cannot navigate to a tabBar page.
 
-### `wx.navigateBack(options?)`
+#### `wx.navigateBack(options?)`
 
 Closes the current page and returns to the previous page or multiple previous pages.
 
-### Route Parameters
+#### Route Parameters
 
 | Parameter | Type | Required | Description |
 | --- | --- | --- | --- |

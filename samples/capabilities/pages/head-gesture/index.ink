@@ -5,8 +5,6 @@
 </script>
 
 <script setup>
-const MAX_LOGS = 10;
-
 function formatTimestamp(value) {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
     return 'N/A';
@@ -14,55 +12,63 @@ function formatTimestamp(value) {
   return `${Math.round(value)} ms`;
 }
 
-function createLogEntry(gesture, source, timestamp) {
-  return {
-    id: `${source}-${timestamp || Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
-    gesture,
-    source,
-    timestampText: formatTimestamp(timestamp),
-  };
-}
-
 function makeInitialData() {
   return {
     available: false,
     eventCount: 0,
-    lastGesture: '--',
+    lastGesture: 'Waiting',
+    lastState: '--',
     lastTimestampText: 'N/A',
     lastSource: 'page.onHeadGesture',
     statusChip: 'READY',
     statusText: 'World awareness is disabled until this page enables it.',
     lastError: '',
-    logs: [],
   };
 }
 
 export default {
   data: makeInitialData(),
+  gestureResetTimer: null,
 
   onLoad() {
     this.setData(makeInitialData());
-    this.enablePageWorldAwareness();
+    this.enableWorldAwarenessOnPage();
   },
 
-  onUnload() {},
+  onUnload() {
+    this.clearGestureResetTimer();
+  },
 
   onHeadGesture(event) {
     this.recordHeadGesture(event, 'page.onHeadGesture');
   },
 
-  enablePageWorldAwareness() {
+  onHeadGestureStateChange(event) {
+    const state = event && event.state ? event.state : 'unknown';
+    const gesture = event && event.gesture ? event.gesture : 'pending';
+    this.setData({
+      lastState: state,
+      lastSource: 'page.onHeadGestureStateChange',
+      statusChip: state === 'cancel' ? 'CANCELLED' : 'TRACKING',
+      statusText: `Detector ${state} for ${gesture}.`,
+    });
+  },
+
+  enableWorldAwarenessOnPage() {
     try {
       if (typeof this.enableWorldAwareness !== 'function') {
         this.setError('enableWorldAwareness is unavailable on this page instance.');
         return;
       }
-      this.enableWorldAwareness();
+      this.enableWorldAwareness({
+        mode: 'micro',
+      });
       this.clearError();
       this.setData({
         available: true,
         statusChip: 'WAITING',
-        statusText: 'World awareness is active. Waiting for host-triggered nod or shake events.',
+        statusText:
+          'World awareness is active in micro mode. Waiting for runtime-detected nod or shake events.',
       });
     } catch (error) {
       this.setError(String(error));
@@ -82,11 +88,6 @@ export default {
     }
   },
 
-  appendLog(entry) {
-    const logs = [entry, ...(this.data.logs || [])].slice(0, MAX_LOGS);
-    this.setData({ logs });
-  },
-
   recordHeadGesture(event, source) {
     const gesture = event && event.gesture ? event.gesture : 'unknown';
     const timestamp =
@@ -100,22 +101,21 @@ export default {
       available: true,
       eventCount,
       lastGesture: gesture,
+      lastState: 'end',
       lastTimestampText: formatTimestamp(timestamp),
       lastSource: source,
       statusChip: 'RECEIVED',
       statusText: `Received ${gesture} through ${source}.`,
     });
-    this.appendLog(createLogEntry(gesture, source, timestamp));
-  },
-
-  clearLogs() {
-    this.setData({ logs: [] });
+    this.scheduleGestureReset();
   },
 
   resetSnapshot() {
+    this.clearGestureResetTimer();
     this.setData({
       eventCount: 0,
-      lastGesture: '--',
+      lastGesture: 'Waiting',
+      lastState: '--',
       lastTimestampText: 'N/A',
       lastSource: 'page.onHeadGesture',
       statusChip: this.data.available ? 'WAITING' : 'READY',
@@ -123,6 +123,23 @@ export default {
         ? 'Snapshot cleared. Waiting for the next world-awareness head gesture.'
         : 'World awareness is disabled until this page enables it.',
     });
+  },
+
+  scheduleGestureReset() {
+    this.clearGestureResetTimer();
+    this.gestureResetTimer = setTimeout(() => {
+      this.gestureResetTimer = null;
+      this.setData({
+        lastGesture: 'Waiting',
+      });
+    }, 3000);
+  },
+
+  clearGestureResetTimer() {
+    if (this.gestureResetTimer) {
+      clearTimeout(this.gestureResetTimer);
+      this.gestureResetTimer = null;
+    }
   },
 };
 </script>
@@ -136,54 +153,42 @@ export default {
         <text class="hero-chip">{{statusChip}}</text>
       </view>
       <text class="subtitle">
-        Validate host-triggered <text class="inline-code">headgesture</text> delivery after this page enables <text class="inline-code">world awareness</text>.
+        Validate runtime-detected headgesture and headgesturestatechange delivery after this page enables world awareness.
       </text>
       <text class="status-text">{{statusText}}</text>
       <text class="error-text" ink:if="{{lastError}}">{{lastError}}</text>
     </view>
 
-    <view class="metrics-grid">
-      <view class="metric-card">
-        <text class="metric-label">Last Gesture</text>
-        <text class="metric-value">{{lastGesture}}</text>
+    <scroll-view class="metrics-scroll" scroll-x="true" show-scrollbar="false">
+      <view class="metrics-grid">
+        <view class="metric-card">
+          <text class="metric-label">Last Gesture</text>
+          <text class="metric-value">{{lastGesture}}</text>
+        </view>
+        <view class="metric-card">
+          <text class="metric-label">Event Count</text>
+          <text class="metric-value">{{eventCount}}</text>
+        </view>
+        <view class="metric-card">
+          <text class="metric-label">Last Timestamp</text>
+          <text class="metric-value metric-value-small">{{lastTimestampText}}</text>
+        </view>
+        <view class="metric-card">
+          <text class="metric-label">Last State</text>
+          <text class="metric-value metric-value-small">{{lastState}}</text>
+        </view>
+        <view class="metric-card">
+          <text class="metric-label">Last Source</text>
+          <text class="metric-value metric-value-small">{{lastSource}}</text>
+        </view>
       </view>
-      <view class="metric-card">
-        <text class="metric-label">Event Count</text>
-        <text class="metric-value">{{eventCount}}</text>
-      </view>
-      <view class="metric-card">
-        <text class="metric-label">Last Timestamp</text>
-        <text class="metric-value metric-value-small">{{lastTimestampText}}</text>
-      </view>
-      <view class="metric-card">
-        <text class="metric-label">Last Source</text>
-        <text class="metric-value metric-value-small">{{lastSource}}</text>
-      </view>
-    </view>
+    </scroll-view>
 
     <view class="action-card">
       <text class="section-title">Local Actions</text>
       <view class="button-row" role="navigation">
-        <button class="btn" bindtap="clearLogs">Clear Logs</button>
         <button class="btn btn-secondary" bindtap="resetSnapshot">Reset Snapshot</button>
       </view>
-    </view>
-
-    <view class="log-card">
-      <view class="log-header">
-        <text class="section-title">Recent Events</text>
-        <text class="section-meta">Bounded to the last {{logs.length}} entries</text>
-      </view>
-      <view ink:if="{{logs.length}}">
-        <view class="log-item" ink:for="{{logs}}" ink:key="id">
-          <view class="log-topline">
-            <text class="log-title">{{item.gesture}}</text>
-            <text class="log-chip">{{item.source}}</text>
-          </view>
-          <text class="log-meta">timeStamp: {{item.timestampText}}</text>
-        </view>
-      </view>
-      <text class="empty-text" ink:else>No head gesture events received yet.</text>
     </view>
   </view>
 </page>
@@ -207,8 +212,7 @@ export default {
 
 .hero-card,
 .metric-card,
-.action-card,
-.log-card {
+.action-card {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -240,8 +244,7 @@ export default {
   color: var(--text-color);
 }
 
-.hero-chip,
-.log-chip {
+.hero-chip {
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 11px;
@@ -252,32 +255,29 @@ export default {
 
 .subtitle,
 .status-text,
-.section-meta,
-.log-meta,
-.empty-text,
 .error-text {
   font-size: 14px;
   line-height: 20px;
   color: var(--muted-text-color);
 }
 
-.inline-code {
-  font-weight: 700;
-}
-
 .error-text {
   color: #d14343;
 }
 
+.metrics-scroll {
+  width: 100%;
+}
+
 .metrics-grid {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   gap: 12px;
 }
 
 .metric-card {
-  flex: 1;
-  min-width: 150px;
+  flex-shrink: 0;
+  width: 150px;
   background-color: var(--surface-muted-background);
 }
 
@@ -316,34 +316,5 @@ export default {
 .btn-secondary {
   color: var(--text-color);
   background-color: var(--surface-muted-background);
-}
-
-.log-header,
-.log-topline {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.log-card {
-  gap: 14px;
-}
-
-.log-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px;
-  border-radius: 12px;
-  background-color: var(--surface-muted-background);
-  margin-bottom: 10px;
-}
-
-.log-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-color);
 }
 </style>

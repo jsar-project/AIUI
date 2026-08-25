@@ -308,7 +308,9 @@ const buffer = await response.arrayBuffer();
 console.log(buffer.byteLength);
 ```
 
-### `wx.request(options)`
+### wx APIs
+
+#### `wx.request(options)`
 
 `wx.request()` provides a WeChat Mini Program compatible HTTPS request entry and is better suited for callback-based code or `RequestTask`-style control.
 
@@ -393,7 +395,7 @@ Failure callback. It typically receives an object containing `errMsg`.
 
 Completion callback. It runs whether the request succeeds or fails.
 
-### `RequestTask`
+#### `RequestTask`
 
 `wx.request(...)` returns a `RequestTask`, which can be used to abort the request or observe earlier response events.
 

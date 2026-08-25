@@ -26,5 +26,6 @@ const theme = wx.getStorageSync('theme');
 
 继续阅读：
 
-- **[Storage API](/AIUI/api/storage-api)**：查看 `localStorage` 与 `sessionStorage` 的使用方式。
+- **[Storage API](/AIUI/api/storage-api)**：查看 `localStorage` 的使用方式。
+- **[OPFS](/AIUI/api/storage-opfs)**：查看 Agent 私有目录、文件、Blob 与可写流。
 - **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看 `wx.setStorage`、`wx.getStorage` 及同步版本接口。

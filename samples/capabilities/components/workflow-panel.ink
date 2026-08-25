@@ -1,3 +1,5 @@
+<script def>{ "component": true, "usingComponents": { "workflow-node": "components/workflow-node" } }</script>
+
 <template>
   <card class="panel">
     <view class="panel-header">

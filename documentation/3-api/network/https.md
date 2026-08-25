@@ -308,7 +308,9 @@ const buffer = await response.arrayBuffer();
 console.log(buffer.byteLength);
 ```
 
-### `wx.request(options)`
+### wx APIs
+
+#### `wx.request(options)`
 
 `wx.request()` 提供了微信小程序兼容风格的 HTTPS 请求入口，更适合基于回调或 `RequestTask` 的写法。
 
@@ -393,7 +395,7 @@ wx.request({
 
 请求结束回调。无论成功还是失败都会调用。
 
-### `RequestTask`
+#### `RequestTask`
 
 `wx.request(...)` 会返回一个 `RequestTask`，可用于中断请求或监听更早到达的响应事件。
 

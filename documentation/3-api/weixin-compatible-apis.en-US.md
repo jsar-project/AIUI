@@ -48,6 +48,7 @@ See [AI](/AIUI/api/ai) for usage.
 
 - `wx.media.createCameraContext`: Gets the camera context.
 - `wx.media.getRecorderManager`: Gets the recorder manager.
+- `wx.createVideoContext`: Gets the playback context for a `<video>` component on the current page.
 
 See [Media](/AIUI/api/media) for usage.
 

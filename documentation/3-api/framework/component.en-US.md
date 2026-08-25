@@ -33,6 +33,44 @@ export default {
 }
 ```
 
+## `this` in Lifecycles
+
+Component lifecycle callbacks also run with the current component instance as `this`.
+
+Common lifecycle callbacks currently include:
+
+- `created`
+- `attached`
+- `ready`
+- `moved`
+- `detached`
+
+```javascript
+export default {
+  lifetimes: {
+    ready() {
+      console.log(this.data);
+    }
+  }
+}
+```
+
+## Inspect Named Slots
+
+The runtime exposes a snapshot of host-provided named slots through `this.$slots`. Use `hasSlot()` to check whether a slot contains content:
+
+```javascript
+export default {
+  lifetimes: {
+    ready() {
+      if (this.hasSlot('actions')) {
+        console.log(this.$slots.actions);
+      }
+    },
+  },
+};
+```
+
 ## API Reference
 
 ### Instance Members
@@ -43,6 +81,8 @@ export default {
 | `this.properties` | `Object` | The resolved input properties of the current component |
 | `this.setData(data, callback?)` | `Function` | Updates component state and triggers a view refresh |
 | `this.triggerEvent(name, detail?)` | `Function` | Dispatches a custom event to the parent |
+| `this.$slots` | `Readonly<Record<string, readonly ComponentSlotEntry[]>>` | Snapshot of host-provided named slots |
+| `this.hasSlot(name)` | `Function` | Reports whether a named slot contains content |
 
 Methods declared in `methods` are attached directly to the component instance and run with the current component instance as `this`.
 
@@ -77,6 +117,19 @@ export default {
   }
 }
 ```
+
+### `this.$slots` and `this.hasSlot(name)`
+
+Each item in `this.$slots[name]` contains these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `tagName` | `string` | Resolved concrete tag name. |
+| `attributes` | `Record<string, string>` | Rendered attributes from the source node. |
+| `textContent` | `string` | Optional text content. |
+| `sourceComponentId` | `string` | Optional source custom-component identifier. |
+
+`this.hasSlot(name)` returns a `boolean` indicating whether the host provided content for that named slot.
 
 ### `this.setData(Object data, Function? callback)`
 
@@ -121,27 +174,6 @@ export default {
       this.triggerEvent('select', {
         id: this.properties.itemId
       });
-    }
-  }
-}
-```
-
-### `this` In Lifetimes
-
-Component lifecycle callbacks also run with the current component instance as `this`.
-
-Common lifecycle callbacks currently include:
-
-- `created`
-- `attached`
-- `ready`
-- `detached`
-
-```javascript
-export default {
-  lifetimes: {
-    ready() {
-      console.log(this.data);
     }
   }
 }

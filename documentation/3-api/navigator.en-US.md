@@ -18,19 +18,22 @@ const environment = {
 console.log(environment);
 ```
 
-## Use Cases
+## Read Battery and Persistent Storage
 
-- Report device identifiers to support device management and troubleshooting.
-- Read runtime version information for logging or compatibility checks.
-- Select default copy, formatting strategy, or service configuration from host language and region preferences.
-- Access host-mounted capabilities through `navigator.bluetooth` and `navigator.geolocation`.
+```javascript
+const battery = await navigator.getBattery();
+const root = await navigator.storage.getDirectory();
+
+console.log('battery:', battery.level);
+console.log('storage root:', root.name);
+```
 
 ## Notes
 
 - `navigator.getDeviceSerialNumber()` returns the serial number provided by the host. If the host does not implement it, the return value is `''`. Be mindful of privacy and data security when using it.
 - `navigator.userAgent` is suitable for identifying runtime and platform information. Avoid building tightly coupled logic that depends on string parsing.
 - `navigator.language`, `navigator.languages`, and `navigator.region` are all derived from the host environment, so their exact values may vary across platforms.
-- Whether `navigator.bluetooth` and `navigator.geolocation` are available depends on whether the host mounts those capabilities.
+- `navigator.bluetooth`, `navigator.geolocation`, `navigator.mediaDevices`, `navigator.storage`, and battery status depend on host capabilities and Agent permissions.
 
 ## API Reference
 
@@ -44,6 +47,10 @@ console.log(environment);
 const userAgent = navigator.userAgent;
 console.log('UA:', userAgent);
 ```
+
+#### `navigator.id`
+
+- **Description**: Returns the opaque content identifier for the current Agent on this device. It is an empty string when there is no current app instance.
 
 #### `navigator.language`
 
@@ -108,6 +115,14 @@ const geolocation = navigator.geolocation;
 console.log('Geolocation mounted:', !!geolocation);
 ```
 
+#### `navigator.mediaDevices`
+
+- **Description**: Media-capture entry point with `getUserMedia()`, `enumerateDevices()`, and `getSupportedConstraints()`. See [Media Capture](/AIUI/api/media-media-capture).
+
+#### `navigator.storage`
+
+- **Description**: `StorageManager` entry point for the Agent-private OPFS. See [OPFS](/AIUI/api/storage-opfs).
+
 ### Methods
 
 #### `navigator.getDeviceSerialNumber()`
@@ -118,3 +133,8 @@ console.log('Geolocation mounted:', !!geolocation);
 const serialNumber = navigator.getDeviceSerialNumber();
 console.log('SN:', serialNumber);
 ```
+
+#### `navigator.getBattery()`
+
+- **Description**: Returns `Promise<BatteryManager>` for reading and observing host battery status. The Promise rejects when the host provides no battery capability.
+- **Related documentation**: [BatteryManager](/AIUI/api/device-battery-manager).

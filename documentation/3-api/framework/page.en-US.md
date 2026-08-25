@@ -114,18 +114,6 @@ Queries all matching entities in the current page entity tree.
 - The query scope is limited to the current page
 - Throws immediately for an invalid selector
 
-### Lifecycle Callbacks
-
-| Callback | Description | Trigger Timing |
-| :--- | :--- | :--- |
-| `onLoad` | Listens for page loading | Triggered when the page loads, only once globally |
-| `onShow` | Listens for the page being shown | Triggered when the page is shown or brought to the foreground |
-| `onReady` | Listens for the initial page render to complete | Triggered when the initial render completes, only once globally |
-| `onHide` | Listens for the page being hidden | Triggered when the page is hidden or moved to the background |
-| `onUnload` | Listens for page unload | Triggered when the page is unloaded. The runtime automatically disables world awareness before this stage finishes. |
-| `onHeadGesture` | Listens for page-scoped head gestures | Triggered after `enableWorldAwareness()` when the page receives `headgesture` |
-| `onOrientationStabilityChange` | Listens for page-scoped orientation stability changes | Triggered after `enableWorldAwareness()` when the page receives `orientationstabilitychange` |
-
 ### World Awareness
 
 `World Awareness` is the page-scoped environment-awareness capability set. It allows the current page to receive spatial orientation, stability changes, and head-gesture signals directly.
@@ -179,3 +167,17 @@ Notifies the system that the current page task has been completed.
 
 - For **Cut** agents, calling this method proactively returns focus and exits the current presentation state
 - For **Scene** agents, it is typically used to end the current specific interaction flow
+
+### Lifecycle Callbacks
+
+| Callback | Description | Trigger Timing |
+| :--- | :--- | :--- |
+| `onLoad` | Listens for page loading | Triggered when the page loads, only once globally |
+| `onShow` | Listens for the page being shown | Triggered when the page is shown or brought to the foreground |
+| `onReady` | Listens for the initial page render to complete | Triggered when the initial render completes, only once globally |
+| `onHide` | Listens for the page being hidden | Triggered when the page is hidden or moved to the background |
+| `onUnload` | Listens for page unload | Triggered when the page is unloaded. The runtime automatically disables world awareness before this stage finishes. |
+| `onHeadGesture` | Listens for page-scoped head gestures | Triggered after `enableWorldAwareness()` when the page receives `headgesture` |
+| `onHeadGestureStateChange` | Listens for head-gesture state | Triggered after `enableWorldAwareness()` when a gesture enters `start`, `update`, `end`, or `cancel` |
+| `onOrientationStabilityChange` | Listens for page-scoped orientation stability changes | Triggered after `enableWorldAwareness()` when the page receives `orientationstabilitychange` |
+| `onMessage` | Receives host messages | Triggered when the host sends one-shot data or a streamed message to the current page; data is exposed as `event.data` |

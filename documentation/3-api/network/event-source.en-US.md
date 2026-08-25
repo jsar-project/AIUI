@@ -83,7 +83,9 @@ Creates a Web-standard SSE client that connects to the required `url` with a GET
 - `onerror`: Called when a connection error occurs.
 - `close()`: Closes the connection.
 
-### `wx.createEventSource(options)`
+### wx APIs
+
+#### `wx.createEventSource(options)`
 
 | Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -94,7 +96,7 @@ Creates a Web-standard SSE client that connects to the required `url` with a GET
 
 **Returns:** `EventSourceTask`.
 
-### `EventSourceTask`
+#### `EventSourceTask`
 
 - `onOpen(callback)`: Observes the connection-open event.
 - `onMessage(callback)`: Observes messages with `{ data, event, id }`.

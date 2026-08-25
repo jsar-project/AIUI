@@ -16,4 +16,14 @@
     <text class="section-title">Complex Elements</text>
     <streamdown class="markdown-box" content="{{complexContent}}"></streamdown>
   </view>
+
+  <view class="card section">
+    <text class="section-title">Markdown Tables</text>
+    <streamdown class="markdown-box" content="{{tableContent}}"></streamdown>
+  </view>
+
+  <view class="card section">
+    <text class="section-title">Math Formulas</text>
+    <streamdown class="markdown-box" content="{{formulaContent}}"></streamdown>
+  </view>
 </view>

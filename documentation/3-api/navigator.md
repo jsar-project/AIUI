@@ -18,19 +18,22 @@ const environment = {
 console.log(environment);
 ```
 
-## 适用场景
+## 读取电池并访问持久化文件
 
-- 上报设备标识信息，便于设备管理和问题排查。
-- 读取运行环境版本信息，用于日志记录或兼容性判断。
-- 根据宿主语言与区域偏好选择默认文案、格式化策略或服务配置。
-- 通过 `navigator.bluetooth`、`navigator.geolocation` 访问挂载到宿主上的设备能力。
+```javascript
+const battery = await navigator.getBattery();
+const root = await navigator.storage.getDirectory();
+
+console.log('battery:', battery.level);
+console.log('storage root:', root.name);
+```
 
 ## 注意事项
 
 - `navigator.getDeviceSerialNumber()` 返回的是宿主提供的设备序列号，若宿主未实现则返回空字符串；使用时应注意隐私与数据安全。
 - `navigator.userAgent` 适合用于识别运行时与平台信息，不建议依赖字符串解析实现强耦合逻辑。
 - `navigator.language`、`navigator.languages` 与 `navigator.region` 都来自宿主环境，不同平台的具体值格式可能不同。
-- `navigator.bluetooth` 与 `navigator.geolocation` 是否可用，取决于宿主是否挂载了对应能力。
+- `navigator.bluetooth`、`navigator.geolocation`、`navigator.mediaDevices`、`navigator.storage` 与电池状态都依赖宿主能力和 Agent 权限。
 
 ## API Reference
 
@@ -44,6 +47,10 @@ console.log(environment);
 const userAgent = navigator.userAgent;
 console.log('UA:', userAgent);
 ```
+
+#### `navigator.id`
+
+- **说明**：返回当前 Agent 在设备上的不透明内容标识。没有当前应用实例时返回空字符串。
 
 #### `navigator.language`
 
@@ -108,6 +115,14 @@ const geolocation = navigator.geolocation;
 console.log('Geolocation mounted:', !!geolocation);
 ```
 
+#### `navigator.mediaDevices`
+
+- **说明**：媒体采集入口，提供 `getUserMedia()`、`enumerateDevices()` 与 `getSupportedConstraints()`。完整用法见[媒体采集](/AIUI/api/media-media-capture)。
+
+#### `navigator.storage`
+
+- **说明**：Agent 私有 OPFS 的 `StorageManager` 入口。完整用法见 [OPFS](/AIUI/api/storage-opfs)。
+
 ### 方法
 
 #### `navigator.getDeviceSerialNumber()`
@@ -118,3 +133,8 @@ console.log('Geolocation mounted:', !!geolocation);
 const serialNumber = navigator.getDeviceSerialNumber();
 console.log('SN:', serialNumber);
 ```
+
+#### `navigator.getBattery()`
+
+- **说明**：返回 `Promise<BatteryManager>`，用于读取和监听宿主电池状态。宿主未提供电池能力时 Promise 会拒绝。
+- **相关文档**：[BatteryManager](/AIUI/api/device-battery-manager)。

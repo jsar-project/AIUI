@@ -1,3 +1,94 @@
+# v0.17.0
+
+AIUI 0.17.0 brings richer agent surfaces, media capabilities, persistent file storage, and improved rendering diagnostics. This release is especially useful for agents that combine wearable interaction, streaming content, and native host capabilities.
+
+## Framework
+- **Host Messaging**: Added `postMessage` support between App/Page and the host, enabling agents to exchange structured messages with their embedding application.
+
+  ```js
+  export default {
+    onLoad() {
+      this.postMessage({
+        type: 'open-settings',
+        source: 'focus-agent',
+      });
+    },
+  };
+  ```
+
+- **Expanded Component Composition**: Added named slots and expanded component composition capabilities for more flexible built-in and custom component layouts.
+- **Persistent Storage with OPFS**: Added OPFS support and reorganized storage APIs, including browser-compatible file and writable stream interfaces for persistent agent data.
+
+  ```js
+  const root = await navigator.storage.getDirectory();
+  const file = await root.getFileHandle('session.json', { create: true });
+  const writer = await file.createWritable();
+  await writer.write(JSON.stringify({ completed: true }));
+  await writer.close();
+  ```
+
+- **Improved XML Parsing**: Improved XML parsing, including entity decoding in attributes and text, and preserved logical operators when decoding XML entities.
+
+## Components
+- **video**: Added the `<video>` component with playback controls and wireframe rendering support.
+- **table**: Added the native `<table>` component for rendering structured results.
+- **streamdown**: Officially supported `<streamdown>` rendering. The currently supported Markdown syntax includes:
+  - Paragraphs
+  - Headings
+  - Blockquotes
+  - Ordered and unordered lists
+  - Bold and italic text
+  - Code snippets
+  - Formulas
+- **timed-text**: Added the `<timed-text>` component for synchronized speech transcripts and generated TTS audio experiences.
+- **Markdown Primitives**: Added the `<p>`, `<header>`, `<blockquote>`, `<list>`, `<list-item>`, `<b>`, `<i>`, `<snippet>`, and `<formula>` components for paragraphs, headings, quotes, lists, list entries, bold text, italic text, code snippets, and formulas.
+- **Map Traces and Layouts**: Added GPX overlay support to the `<map>` component for displaying location traces and route data, together with named slots for richer custom layouts.
+
+  ```xml
+  <view class="briefing">
+    <video id="briefing" src="{{videoUrl}}" controls />
+    <timed-text text="{{transcript}}" active-index="{{activeWord}}" />
+  </view>
+  ```
+
+## API
+- **Media Capture and Recording**: Added media capture and recording APIs, including photo capture, audio/video recording, Opus output, header callbacks, and semantic capture modes.
+
+  ```js
+  const media = await navigator.mediaDevices.getUserMedia({
+    audio: true,
+    video: true,
+  });
+  const recorder = new MediaRecorder(media, { mimeType: 'audio/opus' });
+  recorder.start();
+  ```
+
+- **Video Playback**: Added video playback support, including wireframe rendering and improved native video rendering performance.
+
+  ```js
+  const video = wx.createVideoContext('briefing');
+  video.play();
+  ```
+
+- **Battery Status**: Added full W3C Battery Status API support.
+- **Head Gesture Events**: Added built-in head gesture events and state tracking for hands-free interactions such as nod, shake, and gesture state changes.
+
+  ```js
+  export default {
+    onLoad() {
+      this.enableWorldAwareness();
+    },
+    onHeadGesture(event) {
+      if (event.gesture === 'nod') this.confirm();
+    },
+  };
+  ```
+
+## Performance and Compatibility
+- **Improved Rendering Diagnostics**: Added paint-only dirty tracking and Canvas performance metrics, together with render-path benchmarks to help diagnose rendering costs.
+- **AIX Runtime Version Checks**: Added runtime-version checks for AIX engine compatibility so incompatible agent bundles fail with clearer version information.
+- **Audio Improvements**: Improved audio path resolution and media playback behavior, including MP3 support and preferred audio format hints.
+
 # v0.16.0
 
 ## Framework
@@ -25,7 +116,7 @@
   ```
 
 - **Response Body Consumption Semantics**: Improved response body consumption behavior around pending reads and body locking, making incremental reads from `response.body` more predictable.
-- **Web API Compatibility Improvements**: Improved compatibility across `fetch`, `Headers`, `ReadableStream`, and `TextDecoder`, reducing the gap between Ink agents and browser-style networking code.
+- **Web API Compatibility Improvements**: Improved compatibility across `fetch`, `Headers`, `ReadableStream`, and `TextDecoder`, reducing the gap between AIUI agents and browser-style networking code.
 - **TextDecoder Streaming Mode**: Added `{ stream: true }` support to `TextDecoder` for incremental UTF-8 decoding across chunk boundaries, allowing agents to reconstruct streamed text without garbled intermediate output.
 
   ```js

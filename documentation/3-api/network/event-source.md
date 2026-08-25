@@ -83,7 +83,9 @@ eventSource.onError((error) => {
 - `onerror`：连接发生错误时调用。
 - `close()`：关闭连接。
 
-### `wx.createEventSource(options)`
+### wx APIs
+
+#### `wx.createEventSource(options)`
 
 | 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
@@ -94,7 +96,7 @@ eventSource.onError((error) => {
 
 **返回值：** `EventSourceTask`。
 
-### `EventSourceTask`
+#### `EventSourceTask`
 
 - `onOpen(callback)`：监听连接建立事件。
 - `onMessage(callback)`：监听消息，参数为 `{ data, event, id }`。

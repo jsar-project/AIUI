@@ -177,4 +177,6 @@ this.postMessage(
 | `onHide` | 监听页面隐藏 | 页面隐藏/切入后台时触发 |
 | `onUnload` | 监听页面卸载 | 页面卸载时触发。运行时会在该阶段结束前自动关闭 world awareness。 |
 | `onHeadGesture` | 监听页面级头部手势 | 启用 `enableWorldAwareness()` 后，在页面收到 `headgesture` 时触发 |
+| `onHeadGestureStateChange` | 监听头部手势状态 | 启用 `enableWorldAwareness()` 后，在手势进入 `start`、`update`、`end` 或 `cancel` 状态时触发 |
 | `onOrientationStabilityChange` | 监听页面级方向稳定性变化 | 启用 `enableWorldAwareness()` 后，在页面收到 `orientationstabilitychange` 时触发 |
+| `onMessage` | 接收宿主消息 | 宿主向当前页面发送一次性数据或流式消息时触发；数据位于 `event.data` |

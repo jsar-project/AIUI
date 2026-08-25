@@ -5,6 +5,10 @@ This is a demonstration of **streamdown** component's streaming capabilities.
 - **Smooth** animations with Caret
 - **Flexible** rendering of Markdown elements
 
+Inline math streams with the text: $E = mc^2$.
+
+$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$
+
 \`\`\`javascript
 function hello() {
   console.log("Hello, Streamdown!");
@@ -27,6 +31,28 @@ export default {
 
 ---
 Horizontal rule above.`,
+    tableContent: `### Shared Table Rendering
+The table below is parsed from standard Markdown syntax and rendered through the shared native \`table\` renderer.
+
+| Name | Role | Score |
+| :--- | :--: | ----: |
+| **Alice** | Lead | 98 |
+| Bob | \`QA\` | 87 |
+| Charlie | Ops | 91 |
+
+Aligned columns should stay intact, and inline formatting such as **bold** and \`code\` should remain visible inside table cells.`,
+    formulaContent: `### Inline Formula
+Einstein's mass-energy relation is $E = mc^2$, and the quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$.
+
+### Display Formula
+$$\\frac{1}{2} + \\frac{1}{3} = \\frac{5}{6}$$
+
+$$\\sum_{k=1}^{n} k = \\frac{n(n+1)}{2}$$
+
+$$\\int_0^\\infty e^{-x}\\,dx = 1$$
+
+### Delimiter Semantics
+The price is \\$20, while \`$not_math$\` remains inline code.`,
     currentIndex: 0,
   },
 

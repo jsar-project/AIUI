@@ -1,6 +1,6 @@
 # Web API
 
-AIUI is designed to provide AI + AR developers with a development experience aligned with modern Web standards. To ensure cross-platform code reuse and interoperability, the underlying AIUI runtime deeply supports Web standards.
+AIUI is designed to provide AI + AR developers with a development experience aligned with modern Web standards. Its underlying runtime provides deep Web standards support to improve code reuse and interoperability.
 
 ## WinterCG Compatibility
 
@@ -21,7 +21,7 @@ To help developers find documentation faster by usage scenario, Web-standard cap
 - **[Network](/AIUI/api/network)**: See common Web networking capabilities such as `fetch` and `URL`.
 - **[Encoding](/AIUI/api/encoding)**: See text encoding and decoding capabilities such as `TextEncoder` and `TextDecoder`.
 - **[Crypto](/AIUI/api/crypto)**: See Web Crypto capabilities such as `crypto` and `SubtleCrypto`.
-- **[Storage](/AIUI/api/storage)**: See local persistence capabilities such as `localStorage` and `sessionStorage`.
+- **[Storage](/AIUI/api/storage)**: See local persistence through `localStorage` and OPFS.
 - **[Console](/AIUI/api/console)**: See standard debugging output APIs.
 - **[Performance](/AIUI/api/performance)**: See runtime performance monitoring capabilities.
 

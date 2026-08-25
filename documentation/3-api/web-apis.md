@@ -1,6 +1,6 @@
 # Web API
 
-AIUI 旨在为 AI + AR 开发者提供一套符合现代 Web 标准的开发体验。为了确保跨平台的代码复用性和互操作性，AIUI 的底层运行时深度支持了 Web 标准。
+AIUI 旨在为 AI + AR 开发者提供一套符合现代 Web 标准的开发体验。AIUI 的底层运行时深度支持 Web 标准，以提升代码复用性和互操作性。
 
 ## WinterCG 兼容性
 
@@ -21,7 +21,7 @@ AIUI 积极拥护并主要支持 **WinterCG (Web-interoperable Runtimes Communit
 - **[网络](/AIUI/api/network)**：查看 `fetch`、`URL` 等通用 Web 网络能力。
 - **[编码](/AIUI/api/encoding)**：查看 `TextEncoder`、`TextDecoder` 等文本编码与解码能力。
 - **[加密](/AIUI/api/crypto)**：查看 `crypto`、`SubtleCrypto` 等 Web Crypto 能力。
-- **[数据存储](/AIUI/api/storage)**：查看 `localStorage`、`sessionStorage` 等本地持久化能力。
+- **[数据存储](/AIUI/api/storage)**：查看 `localStorage` 与 OPFS 本地持久化能力。
 - **[控制台](/AIUI/api/console)**：查看标准调试输出接口。
 - **[性能](/AIUI/api/performance)**：查看运行性能监控能力。
 
