@@ -23,6 +23,22 @@ wx.speech.playTTS('欢迎使用 AIUI');
 
 <!-- /aiui-api-style -->
 
+## 选择音色播报
+
+`speechSynthesis.speak()` 和 `speechSynthesis.synthesize()` 都使用 `SpeechSynthesisUtterance` 作为语音合成请求，各属性的支持情况见下方 API Reference。通过 `voice` 设置音色 ID，再将同一个 `utterance` 传给需要的方法：
+
+```javascript
+const utterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
+utterance.voice = 'female-tianmei';
+
+speechSynthesis.speak(utterance, 'enqueue');
+
+// 或者生成流式音频与字幕
+const task = await speechSynthesis.synthesize(utterance, {
+  subtitles: 'word',
+});
+```
+
 ## 生成音频与同步字幕
 
 如果需要把生成与播放分开，使用 `synthesize()` 创建任务，再交给 `SpeechAudioPlayer` 播放：
@@ -56,7 +72,9 @@ player.play();
 
 - [x] 通过 `speechSynthesis.speak()` 发起播报，并支持通过 `mode` 控制排队或立即播放。
 - [x] 通过 `speechSynthesis.synthesize()` 生成音频分片与字幕 cue，并使用 `SpeechAudioPlayer` 播放。
-- [ ] `SpeechSynthesisUtterance` 上的 `lang`、`pitch`、`rate`、`volume`、`voice` 等参数（当前暂未生效）。
+- [x] `SpeechSynthesisUtterance` 上的属性同时用于 `speak()` 和 `synthesize()`。
+- [x] `pitch` 支持 `-12.0` 到 `12.0`；`rate` 对应语音生成速度，支持 `0.5` 到 `2.0`；`volume` 支持 `0.0` 到 `1.0`。
+- [ ] `lang` 当前不支持，设置后不会改变语音生成的语言。
 - [ ] `cancel()`、`pause()`、`resume()`、`getVoices()` 以及完整的 utterance 生命周期事件（当前未暴露）。
 
 ## 继续阅读
@@ -79,18 +97,56 @@ speechSynthesis.speak(utterance, 'immediate');
 
 `SpeechSynthesisUtterance` 也可通过内置 `speech` 模块使用。
 
+### `SpeechSynthesisUtterance`
+
+`SpeechSynthesisUtterance` 是一个可修改的语音合成请求对象。`speechSynthesis.speak()` 和 `speechSynthesis.synthesize()` 都接收该对象，并对当前支持的属性采用相同的处理方式。
+
+#### `new SpeechSynthesisUtterance(text?)`
+
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `text` | `string` | 否 | 初始播报文本，默认为空字符串。 |
+
+#### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `text` | `string` | `''` | 要合成的文本。 |
+| `lang` | `string` | `'en-US'` | 语音生成语言，当前不支持。 |
+| `pitch` | `number` | `1.0` | 音高，取值范围为 `-12.0` 到 `12.0`。 |
+| `rate` | `number` | `1.0` | 转换为语音生成速度，取值范围为 `0.5` 到 `2.0`。 |
+| `voice` | `string \| null` | `null` | 要使用的音色 ID；为 `null` 时使用默认音色。 |
+| `volume` | `number` | `1.0` | 音量，取值范围为 `0.0` 到 `1.0`。 |
+
+#### `voice` 可用音色
+
+| Voice ID | 类型 | 用途 |
+| --- | --- | --- |
+| `female-tianmei` | 中文甜美女声 | `tts_streaming` 中文短文本 |
+| `English_radiant_girl` | 英文活力女声 | `tts_streaming` 英文短文本 |
+| `English_expressive_narrator` | 英文叙事声 | `tts_streaming` 英文长文本 |
+| `male-qn-qingse` | 中文青年男声 | Ink 当前默认音色、通用对话 |
+| `male-qn-jingying` | 中文成熟男声 | 商务、助手播报 |
+| `female-yujie` | 中文成熟御姐 | 品牌介绍、内容解说 |
+| `Chinese (Mandarin)_News_Anchor` | 中文新闻女声 | 新闻和信息播报 |
+| `Chinese (Mandarin)_Radio_Host` | 中文电台男声 | 长文本和故事 |
+| `clever_boy` | 中文男童 | 儿童内容 |
+| `lovely_girl` | 中文女童 | 儿童内容 |
+| `Cantonese_ProfessionalHost（F)` | 粤语女主持 | 粤语场景 |
+| `English_Trustworthy_Man` | 英文可信男声 | 英文助手、商务内容 |
+
 ### 方法
 
 #### `speechSynthesis.speak(utterance, mode?)`
 
-`speak()` 会把当前 `utterance` 的状态转发给宿主运行时执行播报。
+`speak()` 使用当前 `utterance` 的属性执行播报。
 
 - `utterance`：`SpeechSynthesisUtterance` 实例，当前主要使用其中的文本内容发起播报。
 - `mode`：可选的播报模式，支持以下取值：
   - `'enqueue'`：把当前播报请求追加到播放队列中。
-  - `'immediate'`：请求宿主立即播放当前播报。
+  - `'immediate'`：立即播放当前播报。
 
-如果省略 `mode`，默认按 `'enqueue'` 处理，也就是尽量不打断当前正在进行的播报，最终行为仍以宿主实现为准。
+如果省略 `mode`，默认按 `'enqueue'` 处理，也就是把当前播报请求追加到播放队列中。
 
 #### `speechSynthesis.synthesize(utterance, options?)`
 
@@ -112,7 +168,7 @@ speechSynthesis.speak(utterance, 'immediate');
 | --- | --- | --- |
 | `id` | `string` | 任务标识。 |
 | `state` | `'running' \| 'completed' \| 'aborted' \| 'errored'` | 当前任务状态。 |
-| `audioConfig` | `SpeechSynthesisAudioConfig` | 宿主实际返回的格式、采样率、声道、采样格式与 MIME type。 |
+| `audioConfig` | `SpeechSynthesisAudioConfig` | 实际生成的格式、采样率、声道、采样格式与 MIME type。 |
 | `language` | `string` | 实际语言。 |
 | `granularity` | `'none' \| 'sentence' \| 'word'` | 实际字幕粒度。 |
 | `finished` | `Promise<{ duration: number }>` | 任务结束后解析。 |
