@@ -3,19 +3,6 @@
 AIUI 0.17.0 brings richer agent surfaces, media capabilities, persistent file storage, and improved rendering diagnostics. This release is especially useful for agents that combine wearable interaction, streaming content, and native host capabilities.
 
 ## Framework
-- **Host Messaging**: Added `postMessage` support between App/Page and the host, enabling agents to exchange structured messages with their embedding application.
-
-  ```js
-  export default {
-    onLoad() {
-      this.postMessage({
-        type: 'open-settings',
-        source: 'focus-agent',
-      });
-    },
-  };
-  ```
-
 - **Expanded Component Composition**: Added named slots and expanded component composition capabilities for more flexible built-in and custom component layouts.
 - **Persistent Storage with OPFS**: Added OPFS support and reorganized storage APIs, including browser-compatible file and writable stream interfaces for persistent agent data.
 
@@ -42,15 +29,6 @@ AIUI 0.17.0 brings richer agent surfaces, media capabilities, persistent file st
   - Formulas
 - **timed-text**: Added the `<timed-text>` component for synchronized speech transcripts and generated TTS audio experiences.
 - **Markdown Primitives**: Added the `<p>`, `<header>`, `<blockquote>`, `<list>`, `<list-item>`, `<b>`, `<i>`, `<snippet>`, and `<formula>` components for paragraphs, headings, quotes, lists, list entries, bold text, italic text, code snippets, and formulas.
-- **Map Traces and Layouts**: Added GPX overlay support to the `<map>` component for displaying location traces and route data, together with named slots for richer custom layouts.
-
-  ```xml
-  <view class="briefing">
-    <video id="briefing" src="{{videoUrl}}" controls />
-    <timed-text text="{{transcript}}" active-index="{{activeWord}}" />
-  </view>
-  ```
-
 ## API
 - **Media Capture and Recording**: Added media capture and recording APIs, including photo capture, audio/video recording, Opus output, header callbacks, and semantic capture modes.
 
@@ -86,7 +64,6 @@ AIUI 0.17.0 brings richer agent surfaces, media capabilities, persistent file st
 
 ## Performance and Compatibility
 - **Improved Rendering Diagnostics**: Added paint-only dirty tracking and Canvas performance metrics, together with render-path benchmarks to help diagnose rendering costs.
-- **AIX Runtime Version Checks**: Added runtime-version checks for AIX engine compatibility so incompatible agent bundles fail with clearer version information.
 - **Audio Improvements**: Improved audio path resolution and media playback behavior, including MP3 support and preferred audio format hints.
 
 # v0.16.0

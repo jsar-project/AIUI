@@ -170,6 +170,12 @@ Notifies the system that the current page task has been completed.
 
 ### Lifecycle Callbacks
 
+The Page lifecycle describes how one page is created, shown, initially rendered, hidden, and unloaded. Declare these callbacks on the page's default export; each callback runs with the current Page instance as `this`.
+
+![A Page is created and initially rendered, can cycle between shown and hidden, and is eventually unloaded](../../image/framework/page-lifecycle-flow.svg)
+
+`onLoad()` and `onReady()` each run once for a page instance. While the page remains in the page stack, it can move between `onShow()` and `onHide()` repeatedly. `onUnload()` runs only when the page is removed from the stack.
+
 | Callback | Description | Trigger Timing |
 | :--- | :--- | :--- |
 | `onLoad` | Listens for page loading | Triggered when the page loads, only once globally |
@@ -177,7 +183,65 @@ Notifies the system that the current page task has been completed.
 | `onReady` | Listens for the initial page render to complete | Triggered when the initial render completes, only once globally |
 | `onHide` | Listens for the page being hidden | Triggered when the page is hidden or moved to the background |
 | `onUnload` | Listens for page unload | Triggered when the page is unloaded. The runtime automatically disables world awareness before this stage finishes. |
+
+#### `onLoad(Object query)`
+
+Runs once when the page is created. `query` contains the route parameters passed when the page was opened. Use it to initialize page data, parse parameters, and start work owned by this page instance.
+
+#### `onShow()`
+
+Runs when the page is first shown and whenever it returns to the foreground. Returning from another page triggers `onShow()` again, but does not trigger `onLoad()` again. Use it to refresh visible state or resume paused work.
+
+#### `onReady()`
+
+Runs once after the page completes its initial render. Use it for work that depends on the initial view being available. Later updates made with `setData()` do not trigger `onReady()` again.
+
+#### `onHide()`
+
+Runs when another page covers this page or the page moves to the background. The page instance may remain in the page stack. Use it to pause timers, animations, polling, and other work needed only while the page is visible.
+
+#### `onUnload()`
+
+Runs when the page is removed from the page stack and its resources are about to be released. Use it to cancel requests, unregister listeners, and clean up page-private resources. The runtime automatically disables world awareness before this stage finishes.
+
+### Event Callbacks
+
+The following callbacks receive page-level input, world-awareness, and host-message events. They are not Page lifecycle callbacks; the same event can run multiple times while the page remains alive.
+
+| Callback | Description | Trigger Timing |
+| :--- | :--- | :--- |
+| `onKeyDown` | Listens for page-level key-down events | Triggered when the user presses a key; read the key code from `event.code` |
+| `onKeyUp` | Listens for page-level key-up events | Triggered when the user releases a key; read `event.code` and call `event.preventDefault()` to prevent default behavior when needed |
+| `onVoiceWakeup` | Listens for page-level voice-wakeup events | Triggered when voice wakeup is matched; read the wake word from `event.keyword` |
 | `onHeadGesture` | Listens for page-scoped head gestures | Triggered after `enableWorldAwareness()` when the page receives `headgesture` |
 | `onHeadGestureStateChange` | Listens for head-gesture state | Triggered after `enableWorldAwareness()` when a gesture enters `start`, `update`, `end`, or `cancel` |
 | `onOrientationStabilityChange` | Listens for page-scoped orientation stability changes | Triggered after `enableWorldAwareness()` when the page receives `orientationstabilitychange` |
 | `onMessage` | Receives host messages | Triggered when the host sends one-shot data or a streamed message to the current page; data is exposed as `event.data` |
+
+#### `onKeyDown(KeyboardEvent event)`
+
+Runs when the user presses a key. `event.code` identifies the key. Use it for immediate feedback from directional, confirmation, or device keys. This callback normally observes the input itself; default behavior generally occurs during the corresponding `keyup` phase.
+
+#### `onKeyUp(KeyboardEvent event)`
+
+Runs when the user releases a key. `event.code` identifies the key. Keys such as `Backspace`, `ArrowUp`, `ArrowDown`, and `Enter` may trigger default navigation, scrolling, or activation behavior. Call `event.preventDefault()` when the page needs to take over that action.
+
+#### `onVoiceWakeup(VoiceWakeupEvent event)`
+
+Runs after the host detects voice wakeup. `event.keyword` contains the matched wake word. This callback handles wakeup for the active page only; put shared cross-page handling in the App callback with the same name.
+
+#### `onHeadGesture(HeadGestureEvent event)`
+
+Runs after `enableWorldAwareness()` when the runtime recognizes a page-scoped head gesture. Use it when the interaction only needs the final recognized gesture. The page stops receiving this event after unload.
+
+#### `onHeadGestureStateChange(HeadGestureStateChangeEvent event)`
+
+Runs after `enableWorldAwareness()` when gesture recognition enters `start`, `update`, `end`, or `cancel`. Use it to display in-progress gesture state or restore temporary UI when recognition is canceled.
+
+#### `onOrientationStabilityChange(StabilityChangeEvent event)`
+
+Runs after `enableWorldAwareness()` when the page's orientation stability changes. Read the page-private `this.orientationSensor` for the current pose, timestamp, and stability data.
+
+#### `onMessage(MessageEvent event)`
+
+Runs when the host sends a message to the current page. `event.data` can contain either a parsed one-shot value or an object used to consume a streamed message. Page-level delivery stops after the page unloads.

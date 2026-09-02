@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc" data-diagram-version="2">
+  <title id="title">Component lifecycle flow</title>
+  <desc id="desc">A Component is created, attached, becomes ready after its first render, can move within the host tree, and ends when detached.</desc>
+  <defs>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#3c4043" flood-opacity=".14"/></filter>
+    <style>text{font-family:Inter,"Noto Sans SC","PingFang SC",Arial,sans-serif}.title{font-size:28px;font-weight:700;fill:#202124}.label{font-size:19px;font-weight:700;fill:#202124}.state{font-size:14px;fill:#5f6368}.note{font-size:13px;font-weight:600;fill:#5f6368}.flow{fill:none;stroke:#5f6368;stroke-width:3}.head{fill:#5f6368}</style>
+  </defs>
+  <rect width="1200" height="470" fill="#fff"/><path d="M0 0h1200v8H0z" fill="#34a853"/>
+  <text x="52" y="58" class="title">Component lifecycle</text>
+  <g filter="url(#shadow)"><rect x="52" y="157" width="86" height="66" rx="33" fill="#f8f9fa" stroke="#dadce0"/><text x="95" y="196" text-anchor="middle" class="label">Create</text></g>
+  <g filter="url(#shadow)"><rect x="185" y="132" width="174" height="116" rx="18" fill="#e6f4ea" stroke="#81c995"/><circle cx="221" cy="168" r="16" fill="#34a853"/><text x="249" y="175" class="label">created</text><text x="210" y="217" class="state">Initialize once</text></g>
+  <g filter="url(#shadow)"><rect x="406" y="132" width="174" height="116" rx="18" fill="#e6f4ea" stroke="#81c995"/><circle cx="442" cy="168" r="16" fill="#34a853"/><text x="470" y="175" class="label">attached</text><text x="431" y="217" class="state">Join host tree</text></g>
+  <g filter="url(#shadow)"><rect x="627" y="132" width="174" height="116" rx="18" fill="#f1f8f3" stroke="#a8dab5"/><circle cx="663" cy="168" r="16" fill="#188038"/><text x="691" y="175" class="label">ready</text><text x="652" y="217" class="state">First render once</text></g>
+  <g filter="url(#shadow)"><rect x="848" y="132" width="174" height="116" rx="18" fill="#f8f9fa" stroke="#bdc1c6"/><text x="935" y="180" text-anchor="middle" class="label">Active</text><text x="935" y="217" text-anchor="middle" class="state">Mounted instance</text></g>
+  <g filter="url(#shadow)"><rect x="848" y="318" width="174" height="92" rx="18" fill="#e6f4ea" stroke="#81c995"/><circle cx="884" cy="350" r="16" fill="#34a853"/><text x="912" y="357" class="label">moved</text><text x="873" y="391" class="state">Position changed</text></g>
+  <text x="759" y="404" class="note">May repeat</text>
+  <g filter="url(#shadow)"><rect x="1067" y="132" width="112" height="116" rx="18" fill="#fce8e6" stroke="#f28b82"/><text x="1123" y="181" text-anchor="middle" class="label">detached</text><text x="1123" y="217" text-anchor="middle" class="state">Release</text></g>
+  <path d="M138 190H173" class="flow"/><path d="M359 190H394" class="flow"/><path d="M580 190H615" class="flow"/><path d="M801 190H836" class="flow"/><path d="M1022 190H1055" class="flow"/>
+  <path d="M935 248v58" class="flow"/><path d="M848 364h-38c-30 0-54-24-54-54v-26c0-30 24-54 54-54h26" class="flow"/>
+  <path d="M173 190l-13-8v16zM394 190l-13-8v16zM615 190l-13-8v16zM836 190l-13-8v16zM1055 190l-13-8v16zM935 306l-8-13h16zM836 230l-13-8v16z" class="head"/>
+</svg>

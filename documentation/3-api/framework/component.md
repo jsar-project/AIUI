@@ -86,6 +86,59 @@ export default {
 
 写在 `methods` 里的方法会被直接挂到组件实例上，并以当前组件实例作为 `this` 执行。
 
+### 生命周期回调
+
+组件生命周期描述一个组件实例从创建、挂载、首次渲染到移动和卸载的过程。回调定义在 `lifetimes` 中，每个回调都以当前组件实例作为 `this` 执行。
+
+![Component 从创建、挂载和首次渲染进入活动状态，可发生移动，最终卸载](../../image/framework/component-lifecycle-flow.svg)
+
+`created()`、`attached()` 和 `ready()` 构成组件首次进入宿主树的主流程。组件保持挂载时可能多次触发 `moved()`；从宿主树移除时触发 `detached()` 并结束当前实例的生命周期。
+
+| 回调函数 | 说明 | 触发时机 |
+| :--- | :--- | :--- |
+| `created` | 监听组件实例创建 | 组件实例与初始状态创建后触发 |
+| `attached` | 监听组件挂载 | 组件挂载到宿主树后触发 |
+| `ready` | 监听组件首次渲染完成 | 组件子树完成首次渲染后触发 |
+| `moved` | 监听组件节点移动 | 组件在宿主树中的位置发生变化时触发 |
+| `detached` | 监听组件卸载 | 组件从宿主树移除时触发 |
+
+#### `lifetimes.created()`
+
+组件实例和初始 `data`、`properties` 创建后调用。适合初始化不依赖组件已经挂载或渲染的本地状态。此时不要执行依赖宿主树或首次渲染完成的操作。
+
+#### `lifetimes.attached()`
+
+组件挂载到宿主树后调用。适合建立与宿主节点相关的监听或启动组件挂载期间需要运行的任务。
+
+#### `lifetimes.ready()`
+
+组件子树完成首次渲染后调用。适合执行依赖组件视图已准备完成的初始化逻辑；后续状态更新不会再次触发该回调。
+
+#### `lifetimes.moved()`
+
+组件节点在宿主树中的位置发生变化时调用。仅在需要响应组件重排或父级关系变化时使用。
+
+#### `lifetimes.detached()`
+
+组件从宿主树移除时调用。适合停止计时器、取消未完成任务、注销监听器，以及释放该组件实例持有的资源。
+
+### 节点事件处理函数
+
+组件不会自动接收 Page 或 App 上的宿主级回调。需要响应按键时，应在模板节点上绑定事件，并把处理函数定义在 `methods` 中。
+
+| 处理函数 | 对应绑定 | 说明 |
+| :--- | :--- | :--- |
+| `onKeyDown(event)` | `bindkeydown="onKeyDown"` | 处理当前组件节点上的按键按下事件 |
+| `onKeyUp(event)` | `bindkeyup="onKeyUp"` | 处理当前组件节点上的按键抬起事件 |
+
+#### `methods.onKeyDown(KeyboardEvent event)`
+
+当绑定了 `bindkeydown="onKeyDown"` 的组件节点收到按键按下事件时调用。`event.code` 表示按键编码，回调中的 `this` 指向当前组件实例，因此可以直接调用 `this.setData()` 更新组件状态。
+
+#### `methods.onKeyUp(KeyboardEvent event)`
+
+当绑定了 `bindkeyup="onKeyUp"` 的组件节点收到按键抬起事件时调用。`event.code` 表示按键编码；如果该按键带有默认行为，可以调用 `event.preventDefault()` 阻止默认行为。组件不会因为只定义了同名方法就自动收到事件，模板绑定是必需的。
+
 ### `this.data`
 
 `data` 用来保存组件自己的可变状态。

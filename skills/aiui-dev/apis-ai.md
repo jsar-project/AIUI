@@ -276,13 +276,49 @@ while (true) {
 
 ### Methods
 
-- `speechSynthesis.speak(utterance)`
+- `speechSynthesis.speak(utterance, mode?)`
+- `speechSynthesis.synthesize(utterance, options?)`
 
 ### Behavior notes
 
-- `speak(utterance)` forwards the utterance state to the native runtime through IPC.
-- `speechSynthesis` currently supports dispatching speech synthesis requests through `speak()` only.
+- `speak()` and `synthesize()` are independent workflows. Do not call both to complete one playback operation.
+- `speak()` generates and plays speech directly, returns `void`, and uses one runtime-managed speech player shared by all `speak()` calls.
+- `speak()` accepts `mode: 'enqueue' | 'immediate'`; omission defaults to `'enqueue'`.
+- `synthesize()` starts generation and returns `Promise<SpeechSynthesisTask>`, but does not play the generated audio automatically.
+- Tasks created by `synthesize()` do not enter the shared `speak()` playback queue.
+- For playback after `synthesize()`, construct an independent `SpeechAudioPlayer` for the returned task.
+- Prefer `speak()` for ordinary prompts and replies that only need direct playback.
+- Prefer `synthesize()` for subtitle cues, audio chunks, cancellation, custom playback UI, or independent playback controls.
 - `cancel()`, `pause()`, `resume()`, `getVoices()`, and utterance lifecycle events are not exposed.
+
+### Synthesis options
+
+- `subtitles?: 'none' | 'sentence' | 'word'`
+- `audio.preferredFormat?: 'pcm' | 'mp3' | 'ogg_opus'`
+- `audio.sampleRate?: number`
+- `audio.channels?: 1 | 2`
+- `audio.bitrate?: number`
+- `signal?: AbortSignal`
+
+### Examples
+
+Direct playback through the shared player:
+
+```js
+const utterance = new SpeechSynthesisUtterance('Hello Ink');
+speechSynthesis.speak(utterance, 'enqueue');
+```
+
+Independent generation and playback:
+
+```js
+const utterance = new SpeechSynthesisUtterance('Hello Ink');
+const task = await speechSynthesis.synthesize(utterance, {
+  subtitles: 'word',
+});
+const player = new SpeechAudioPlayer(task);
+player.play();
+```
 
 ## `SpeechSynthesisUtterance`
 
@@ -294,8 +330,6 @@ while (true) {
 
 - `text`
 - `lang`
-- `pitch`
-- `rate`
 - `voice`
 - `volume`
 
@@ -303,10 +337,73 @@ while (true) {
 
 - The default initial state is `text = ''`.
 - The default initial state is `lang = 'en-US'`.
-- The default initial state is `pitch = 1.0`.
-- The default initial state is `rate = 1.0`.
 - The default initial state is `voice = null`.
-- The default initial state is `volume = 1.0`.
+- `lang` is not currently supported and does not change the generated language.
+- `volume` accepts integers from `0` to `10` and defaults to `1`.
+
+### Supported voice IDs
+
+- `female-tianmei`
+- `English_radiant_girl`
+- `English_expressive_narrator`
+- `male-qn-qingse`
+- `male-qn-jingying`
+- `female-yujie`
+- `Chinese (Mandarin)_News_Anchor`
+- `Chinese (Mandarin)_Radio_Host`
+- `clever_boy`
+- `lovely_girl`
+- `English_Trustworthy_Man`
+
+## `SpeechSynthesisTask`
+
+### Members
+
+- `id: string`
+- `state: 'running' | 'completed' | 'aborted' | 'errored'`
+- `audioConfig: SpeechSynthesisAudioConfig`
+- `language: string`
+- `granularity: 'none' | 'sentence' | 'word'`
+- `finished: Promise<{ duration: number }>`
+
+### Methods
+
+- `abort()`
+
+### Events
+
+- Event names: `chunk`, `end`, `error`, and `abort`.
+- Handler properties: `onchunk`, `onend`, `onerror`, and `onabort`.
+- A `chunk` event exposes `audio: Uint8Array` and `cues: readonly SpeechSynthesisCue[]`.
+
+## `SpeechAudioPlayer`
+
+### Constructor
+
+- `new SpeechAudioPlayer(task, options?)`
+- `options.trackMode?: 'hidden' | 'showing'`
+
+### Members
+
+- `audioPlayer`
+- `textTrack`
+- `activeCue`
+- `currentTime`
+- `duration`
+- `paused`
+
+### Methods
+
+- `play()`
+- `pause()`
+- `stop()`
+- `seek(position)`
+- `destroy()`
+
+### Behavior notes
+
+- Each instance consumes one `SpeechSynthesisTask` created by `synthesize()`.
+- It neither represents nor controls the runtime-managed player shared by `speak()` calls.
 
 ## `SpeechRecognition`
 

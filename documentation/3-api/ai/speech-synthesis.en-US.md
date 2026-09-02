@@ -1,8 +1,8 @@
 # Speech Synthesis
 
-Speech synthesis converts text into spoken output. It is well suited for welcome messages, spoken replies, navigation prompts, status reminders, and similar scenarios.
+Speech synthesis converts text into spoken output. It is well suited for welcome messages, spoken replies, navigation prompts, status reminders, and similar scenarios. AIUI provides two independent methods: `speechSynthesis.speak()` generates and plays speech directly, with all `speak()` requests sharing a runtime-managed speech player; `speechSynthesis.synthesize()` only creates a generation task and does not play it automatically, leaving playback timing and state to a caller-created `SpeechAudioPlayer`.
 
-In AIUI, speech synthesis is typically used at the output stage of a workflow: once a large language model or business logic has produced a text result, the synthesis capability reads it aloud to the user.
+In AIUI, speech synthesis is typically used at the output stage of a workflow. Use `speak()` when the result only needs to be read aloud. Use `synthesize()` when you need subtitles, audio chunks, or independent playback control. Calling either method does not automatically call the other.
 
 ## Speak a Text Response
 
@@ -23,25 +23,34 @@ wx.speech.playTTS('欢迎使用 AIUI');
 
 <!-- /aiui-api-style -->
 
+`speak()` immediately enters the direct-playback flow and does not return a generation task or an independent player. Multiple calls share one speech player, and `mode` determines whether a request joins the shared queue or plays immediately.
+
 ## Select a Voice
 
-Both `speechSynthesis.speak()` and `speechSynthesis.synthesize()` use `SpeechSynthesisUtterance` as the speech-synthesis request. See the API Reference below for the support status of each property. Set a voice ID through `voice`, then pass the same `utterance` to the method you need:
+Both `speechSynthesis.speak()` and `speechSynthesis.synthesize()` use `SpeechSynthesisUtterance` as the speech-synthesis request. See the API Reference below for the support status of each property. Set a voice ID through `voice`, then choose one method based on whether you need independent playback control. The following blocks show alternative workflows, not steps that must run in sequence:
 
 ```javascript
-const utterance = new SpeechSynthesisUtterance('Welcome to AIUI');
-utterance.voice = 'English_radiant_girl';
+// Path 1: play directly through the shared speak() player
+const spokenUtterance = new SpeechSynthesisUtterance('Welcome to AIUI');
+spokenUtterance.voice = 'English_radiant_girl';
+speechSynthesis.speak(spokenUtterance, 'enqueue');
+```
 
-speechSynthesis.speak(utterance, 'enqueue');
+```javascript
+// Path 2: create a task, then control an independent player
+const generatedUtterance = new SpeechSynthesisUtterance('Welcome to AIUI');
+generatedUtterance.voice = 'English_radiant_girl';
 
-// Or generate streaming audio and subtitles
-const task = await speechSynthesis.synthesize(utterance, {
+const task = await speechSynthesis.synthesize(generatedUtterance, {
   subtitles: 'word',
 });
+const player = new SpeechAudioPlayer(task);
+player.play();
 ```
 
 ## Generate Audio and Synchronized Subtitles
 
-To separate generation from playback, create a task with `synthesize()` and play it through `SpeechAudioPlayer`:
+To separate generation from playback, create a task with `synthesize()` and play it through `SpeechAudioPlayer`. `synthesize()` itself only starts generation; it does not enter the shared player or playback queue used by `speak()`:
 
 ```javascript
 const utterance = new SpeechSynthesisUtterance('Welcome to AIUI');
@@ -62,18 +71,34 @@ player.play();
 
 `preferredFormat` is only a preference hint. Always use `task.audioConfig.format` as the actual format.
 
+## Choose Between `speak()` and `synthesize()`
+
+Both methods accept a `SpeechSynthesisUtterance`, but they differ in who owns the generated result and how playback is controlled:
+
+| Comparison | `speak()` | `synthesize()` |
+| --- | --- | --- |
+| Primary responsibility | Generate speech and play it directly | Create a generation task without playing it automatically |
+| Return value | `void`; no task or player is exposed | `Promise<SpeechSynthesisTask>` |
+| Player | All calls share the runtime-managed speech player | The caller can create an independent `SpeechAudioPlayer` for the task |
+| Playback control | Use `mode` to enqueue or play immediately | Use the player to play, pause, stop, and seek |
+| Subtitles and chunks | Not exposed to the caller | Exposes audio chunks, subtitle cues, and task events |
+| Best for | Welcome messages, prompts, and ordinary replies that only need direct playback | Synchronized subtitles, custom playback UI, streaming processing, task cancellation, or independent playback control |
+
+The methods do not share task state: a task created by `synthesize()` does not join the shared `speak()` playback queue, and `speak()` does not return a task that can be passed to `SpeechAudioPlayer`. Calling both methods for the same text starts two independent speech-generation requests.
+
 ## Recommendations
 
 - Keep spoken text short enough to be understood in a single listen, rather than reading long paragraphs directly.
+- Prefer `speak()` for direct playback. Use `synthesize()` only when you need subtitles, chunks, or independent playback control.
 - For multiple consecutive replies, control the playback rhythm at the business layer to avoid overwhelming users with too much simultaneous voice output.
 - Use different wording lengths and tones for important prompts versus ordinary prompts.
 
 ## Current Capability Scope
 
-- [x] Start playback through `speechSynthesis.speak()` and control queueing or immediate playback with `mode`.
-- [x] Generate audio chunks and subtitle cues with `speechSynthesis.synthesize()` and play them through `SpeechAudioPlayer`.
+- [x] Play directly through the shared `speechSynthesis.speak()` player and use `mode` to enqueue or play immediately.
+- [x] Independently generate tasks, audio chunks, and subtitle cues through `speechSynthesis.synthesize()`, then optionally play them through `SpeechAudioPlayer`.
 - [x] Properties on `SpeechSynthesisUtterance` are used by both `speak()` and `synthesize()`.
-- [x] `pitch` supports values from `-12.0` to `12.0`; `rate` controls the speech-generation speed and supports values from `0.5` to `2.0`; `volume` supports values from `0.0` to `1.0`.
+- [x] `volume` accepts integers from `0` to `10` and defaults to `1`.
 - [ ] `lang` is not currently supported. Setting it does not change the language used for speech generation.
 - [ ] `cancel()`, `pause()`, `resume()`, `getVoices()`, and the full utterance lifecycle events are not exposed yet.
 
@@ -86,14 +111,23 @@ player.play();
 
 ### Entry Point
 
-Speech synthesis is based on the global `speechSynthesis` object and `SpeechSynthesisUtterance`:
+Speech synthesis is based on the global `speechSynthesis` object and `SpeechSynthesisUtterance`. `speak()` is the direct-playback entry point:
 
 ```javascript
-const utterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
-speechSynthesis.speak(utterance);
-speechSynthesis.speak(utterance, 'enqueue');
-speechSynthesis.speak(utterance, 'immediate');
+const spokenUtterance = new SpeechSynthesisUtterance('Welcome to AIUI');
+speechSynthesis.speak(spokenUtterance, 'enqueue');
 ```
+
+`synthesize()` is the independent task-generation entry point:
+
+```javascript
+const generatedUtterance = new SpeechSynthesisUtterance('Welcome to AIUI');
+const task = await speechSynthesis.synthesize(generatedUtterance);
+const player = new SpeechAudioPlayer(task);
+player.play();
+```
+
+These entry points represent different workflows. Choose one based on whether you need an independent task and playback controls instead of calling both in sequence for one playback operation.
 
 `SpeechSynthesisUtterance` can also be used through the built-in `speech` module.
 
@@ -113,10 +147,8 @@ speechSynthesis.speak(utterance, 'immediate');
 | --- | --- | --- | --- |
 | `text` | `string` | `''` | Text to synthesize. |
 | `lang` | `string` | `'en-US'` | Speech-generation language. This property is not currently supported. |
-| `pitch` | `number` | `1.0` | Pitch, ranging from `-12.0` to `12.0`. |
-| `rate` | `number` | `1.0` | Converted to the speech-generation speed, ranging from `0.5` to `2.0`. |
 | `voice` | `string \| null` | `null` | Voice ID to use. When set to `null`, the default voice is used. |
-| `volume` | `number` | `1.0` | Volume, ranging from `0.0` to `1.0`. |
+| `volume` | `number` | `1` | Volume. Accepts integers from `0` to `10`. |
 
 #### Available `voice` Values
 
@@ -132,14 +164,13 @@ speechSynthesis.speak(utterance, 'immediate');
 | `Chinese (Mandarin)_Radio_Host` | Mandarin male radio voice | Long-form text and stories |
 | `clever_boy` | Mandarin boy voice | Children's content |
 | `lovely_girl` | Mandarin girl voice | Children's content |
-| `Cantonese_ProfessionalHost（F)` | Cantonese female host | Cantonese scenarios |
 | `English_Trustworthy_Man` | Trustworthy English male voice | English assistants and business content |
 
 ### Methods
 
 #### `speechSynthesis.speak(utterance, mode?)`
 
-`speak()` plays the speech using the current properties of `utterance`.
+`speak()` generates and directly plays speech using the current properties of `utterance`. It returns `void`. All `speak()` calls share one runtime-managed speech player and playback queue; that player is not exposed as an object to the caller.
 
 - `utterance`: A `SpeechSynthesisUtterance` instance. At present, playback is mainly initiated using its text content.
 - `mode`: Optional playback mode. Supported values are:
@@ -148,9 +179,11 @@ speechSynthesis.speak(utterance, 'immediate');
 
 If `mode` is omitted, it defaults to `'enqueue'`, which appends the current playback request to the queue.
 
+`speak()` does not create a `SpeechSynthesisTask` and does not use the independently controlled playback flow provided by a caller-created `SpeechAudioPlayer`.
+
 #### `speechSynthesis.synthesize(utterance, options?)`
 
-Creates a streaming speech-generation task without starting playback automatically. Returns `Promise<SpeechSynthesisTask>`.
+Creates an independent streaming speech-generation task without starting playback automatically. Returns `Promise<SpeechSynthesisTask>`. The task does not enter the shared player or playback queue used by `speak()`. To play it, create a `SpeechAudioPlayer` for the task and control playback explicitly.
 
 | Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -178,7 +211,7 @@ The task dispatches `chunk`, `end`, `error`, and `abort` events and exposes the 
 
 ### `new SpeechAudioPlayer(task, options?)`
 
-Creates a player that consumes a `SpeechSynthesisTask`. `options.trackMode` can be `'hidden'` or `'showing'`.
+Creates an independent player that consumes the specified `SpeechSynthesisTask`. It is only used with tasks from `synthesize()` and neither represents nor controls the shared speech player inside `speak()`. `options.trackMode` can be `'hidden'` or `'showing'`.
 
 | Member | Type | Description |
 | --- | --- | --- |

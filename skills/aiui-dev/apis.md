@@ -103,6 +103,7 @@ The currently verified APIs are:
 
 - `speechSynthesis`
 - `SpeechSynthesisUtterance`
+- `SpeechAudioPlayer`
 - `SpeechRecognition`
 
 ### Crypto runtime
@@ -230,7 +231,12 @@ Global objects:
 
 ```javascript
 const utterance = new SpeechSynthesisUtterance('Hello Ink');
-speechSynthesis.speak(utterance);
+speechSynthesis.speak(utterance, 'enqueue');
+
+const generatedUtterance = new SpeechSynthesisUtterance('Generate this separately');
+const task = await speechSynthesis.synthesize(generatedUtterance);
+const player = new SpeechAudioPlayer(task);
+player.play();
 
 const recognition = new SpeechRecognition();
 recognition.start();
@@ -242,6 +248,7 @@ Module import:
 import {
   speechSynthesis,
   SpeechSynthesisUtterance,
+  SpeechAudioPlayer,
   SpeechRecognition,
 } from 'speech';
 ```
@@ -261,7 +268,7 @@ Behavior notes:
 - For streamed text, prefer `TextDecoder.decode(value, { stream: true })` while reading chunks, followed by a final `decode()` flush.
 - Current compatibility checks explicitly cover `Headers` case-insensitive lookup and duplicate value merging through `get()`.
 - `LanguageModel` is mounted on `globalThis` and `window`, and is exported by `'language-model'`.
-- `speechSynthesis`, `SpeechSynthesisUtterance`, and `SpeechRecognition` are registered globally and are exported by `'speech'`.
+- `speechSynthesis`, `SpeechSynthesisUtterance`, `SpeechAudioPlayer`, and `SpeechRecognition` are registered globally and are exported by `'speech'`.
 - Imported `CryptoKey` objects report `extractable` as `false`.
 
 ## Detailed References

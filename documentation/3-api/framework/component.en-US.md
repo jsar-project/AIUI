@@ -86,6 +86,59 @@ export default {
 
 Methods declared in `methods` are attached directly to the component instance and run with the current component instance as `this`.
 
+### Lifecycle Callbacks
+
+The component lifecycle describes how one component instance is created, attached, initially rendered, moved, and detached. Declare these callbacks under `lifetimes`; every callback runs with the current component instance as `this`.
+
+![A Component is created, attached, initially rendered, may move, and is eventually detached](../../image/framework/component-lifecycle-flow.svg)
+
+`created()`, `attached()`, and `ready()` form the main path into the host tree. `moved()` can run multiple times while the component remains attached. `detached()` runs when the component leaves the host tree and ends the lifecycle of that instance.
+
+| Callback | Description | Trigger Timing |
+| :--- | :--- | :--- |
+| `created` | Listens for component creation | After the component instance and its initial state are created |
+| `attached` | Listens for component attachment | After the component is attached to its host tree |
+| `ready` | Listens for initial render completion | After the component subtree completes its initial render |
+| `moved` | Listens for component node movement | When the component changes position in its host tree |
+| `detached` | Listens for component detachment | When the component is removed from its host tree |
+
+#### `lifetimes.created()`
+
+Runs after the component instance and its initial `data` and `properties` are created. Use it to initialize local state that does not depend on attachment or rendering. Do not perform work that requires the host tree or completed initial render here.
+
+#### `lifetimes.attached()`
+
+Runs after the component is attached to its host tree. Use it to register host-node-related listeners or start work that should remain active while the component is attached.
+
+#### `lifetimes.ready()`
+
+Runs after the component subtree completes its initial render. Use it for initialization that depends on the component view being ready. Later state updates do not trigger this callback again.
+
+#### `lifetimes.moved()`
+
+Runs when the component changes position in its host tree. Use it only when the component needs to respond to reordering or a parent relationship change.
+
+#### `lifetimes.detached()`
+
+Runs when the component is removed from its host tree. Use it to stop timers, cancel unfinished work, unregister listeners, and release resources owned by this component instance.
+
+### Node Event Handlers
+
+Components do not automatically receive the host-level callbacks delivered to a Page or App. To handle keys, bind events on a template node and declare the handlers under `methods`.
+
+| Handler | Corresponding Binding | Description |
+| :--- | :--- | :--- |
+| `onKeyDown(event)` | `bindkeydown="onKeyDown"` | Handles a key-down event on the current component node |
+| `onKeyUp(event)` | `bindkeyup="onKeyUp"` | Handles a key-up event on the current component node |
+
+#### `methods.onKeyDown(KeyboardEvent event)`
+
+Runs when a component node with `bindkeydown="onKeyDown"` receives a key-down event. `event.code` identifies the key. `this` is the current component instance, so the handler can call `this.setData()` directly to update component state.
+
+#### `methods.onKeyUp(KeyboardEvent event)`
+
+Runs when a component node with `bindkeyup="onKeyUp"` receives a key-up event. `event.code` identifies the key; call `event.preventDefault()` when the key has default behavior that the component needs to prevent. Defining a method with this name does not subscribe the component automatically—the template binding is required.
+
 ### `this.data`
 
 `data` stores the component's own mutable state.

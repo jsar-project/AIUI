@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc" data-diagram-version="3">
+  <title id="title">App lifecycle flow</title>
+  <desc id="desc">The App launches once, enters the foreground through onShow, moves to the background through onHide, and can return through onShow. onError is an independent error callback.</desc>
+  <defs>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#3c4043" flood-opacity=".14"/></filter>
+    <style>text{font-family:Inter,"Noto Sans SC","PingFang SC",Arial,sans-serif}.title{font-size:28px;font-weight:700;fill:#202124}.label{font-size:20px;font-weight:700;fill:#202124}.state{font-size:14px;fill:#5f6368}.note{font-size:13px;font-weight:600;fill:#5f6368}.flow{fill:none;stroke:#5f6368;stroke-width:3}.head{fill:#5f6368}</style>
+  </defs>
+  <rect width="1200" height="440" fill="#fff"/><path d="M0 0h1200v8H0z" fill="#34a853"/>
+  <text x="52" y="58" class="title">App lifecycle</text>
+  <g filter="url(#shadow)"><rect x="52" y="164" width="90" height="72" rx="36" fill="#f8f9fa" stroke="#dadce0"/><text x="97" y="206" text-anchor="middle" class="label">Start</text></g>
+  <g filter="url(#shadow)"><rect x="190" y="138" width="180" height="124" rx="18" fill="#e6f4ea" stroke="#81c995"/><circle cx="226" cy="176" r="17" fill="#34a853"/><text x="256" y="183" class="label">onLaunch</text><text x="218" y="226" class="state">Initialize once</text></g>
+  <g filter="url(#shadow)"><rect x="410" y="138" width="180" height="124" rx="18" fill="#dff3e4" stroke="#5bb974"/><circle cx="446" cy="176" r="17" fill="#188038"/><text x="476" y="183" class="label">onShow</text><text x="438" y="226" class="state">Enter foreground</text></g>
+  <g filter="url(#shadow)"><rect x="630" y="138" width="180" height="124" rx="18" fill="#f1f8f3" stroke="#a8dab5"/><circle cx="666" cy="176" r="17" fill="#34a853"/><text x="696" y="183" class="label">onHide</text><text x="658" y="226" class="state">Enter background</text></g>
+  <text x="610" y="401" text-anchor="middle" class="note">Foreground / background cycle</text>
+  <path d="M870 118v164" stroke="#dadce0" stroke-width="2" stroke-dasharray="5 6"/>
+  <g filter="url(#shadow)"><rect x="920" y="138" width="228" height="124" rx="18" fill="#fce8e6" stroke="#f28b82"/><circle cx="958" cy="176" r="17" fill="#ea4335"/><text x="988" y="183" class="label">onError</text><text x="948" y="226" class="state">Independent callback</text></g>
+  <path d="M142 200H178" class="flow"/><path d="M370 200H398" class="flow"/><path d="M590 200H618" class="flow"/>
+  <path d="M720 262v48c0 34-28 62-62 62h-96c-34 0-62-28-62-62v-36" class="flow"/>
+  <path d="M178 200l-13-8v16zM398 200l-13-8v16zM618 200l-13-8v16zM500 274l-8 13h16z" class="head"/>
+</svg>

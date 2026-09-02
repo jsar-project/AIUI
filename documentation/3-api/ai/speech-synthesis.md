@@ -1,8 +1,8 @@
 # 语音播报
 
-语音播报用于把文本内容转换成语音输出，适合欢迎语、回复播报、导航提示、状态提醒等场景。
+语音播报用于把文本内容转换成语音输出，适合欢迎语、回复播报、导航提示、状态提醒等场景。AIUI 提供两种彼此独立的方法：`speechSynthesis.speak()` 生成语音后直接播放，所有 `speak()` 请求共享一个由运行时管理的语音播放器；`speechSynthesis.synthesize()` 只创建语音生成任务，不会自动播放，播放时机和状态由调用方创建的 `SpeechAudioPlayer` 控制。
 
-在 AIUI 中，语音播报通常用在结果输出阶段：当大语言模型或业务逻辑已经得到文本结果后，再由播报能力把它读给用户听。
+在 AIUI 中，语音播报通常用在结果输出阶段：只需要把结果读给用户时使用 `speak()`；需要字幕、音频分片或独立播放控制时使用 `synthesize()`。调用其中一种方法不会自动调用另一种方法。
 
 ## 播报一段文本
 
@@ -23,25 +23,34 @@ wx.speech.playTTS('欢迎使用 AIUI');
 
 <!-- /aiui-api-style -->
 
+`speak()` 会立即进入直接播报流程，不会返回生成任务或独立播放器。多次调用共享同一个语音播放器，并通过 `mode` 决定加入共享队列还是立即播放。
+
 ## 选择音色播报
 
-`speechSynthesis.speak()` 和 `speechSynthesis.synthesize()` 都使用 `SpeechSynthesisUtterance` 作为语音合成请求，各属性的支持情况见下方 API Reference。通过 `voice` 设置音色 ID，再将同一个 `utterance` 传给需要的方法：
+`speechSynthesis.speak()` 和 `speechSynthesis.synthesize()` 都使用 `SpeechSynthesisUtterance` 作为语音合成请求，各属性的支持情况见下方 API Reference。通过 `voice` 设置音色 ID，再根据是否需要独立控制播放选择其中一种方法。以下两段代码是互斥的使用路径，并不是必须连续执行的步骤：
 
 ```javascript
-const utterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
-utterance.voice = 'female-tianmei';
+// 路径一：直接播放，并使用 speak() 的共享播放器
+const spokenUtterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
+spokenUtterance.voice = 'female-tianmei';
+speechSynthesis.speak(spokenUtterance, 'enqueue');
+```
 
-speechSynthesis.speak(utterance, 'enqueue');
+```javascript
+// 路径二：只生成任务，再使用独立播放器控制播放
+const generatedUtterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
+generatedUtterance.voice = 'female-tianmei';
 
-// 或者生成流式音频与字幕
-const task = await speechSynthesis.synthesize(utterance, {
+const task = await speechSynthesis.synthesize(generatedUtterance, {
   subtitles: 'word',
 });
+const player = new SpeechAudioPlayer(task);
+player.play();
 ```
 
 ## 生成音频与同步字幕
 
-如果需要把生成与播放分开，使用 `synthesize()` 创建任务，再交给 `SpeechAudioPlayer` 播放：
+如果需要把生成与播放分开，使用 `synthesize()` 创建任务，再交给 `SpeechAudioPlayer` 播放。`synthesize()` 本身只开始生成，不会进入 `speak()` 的共享播放器或共享播放队列：
 
 ```javascript
 const utterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
@@ -62,18 +71,34 @@ player.play();
 
 `preferredFormat` 只是偏好提示，实际格式始终以 `task.audioConfig.format` 为准。
 
+## 选择 `speak()` 还是 `synthesize()`
+
+两种方法都接收 `SpeechSynthesisUtterance`，但生成结果的所有权和播放方式不同：
+
+| 对比项 | `speak()` | `synthesize()` |
+| --- | --- | --- |
+| 主要职责 | 生成语音并直接播放 | 创建语音生成任务，不自动播放 |
+| 返回结果 | `void`，不暴露任务或播放器 | `Promise<SpeechSynthesisTask>` |
+| 播放器 | 所有调用共享运行时管理的语音播放器 | 调用方可为任务创建独立的 `SpeechAudioPlayer` |
+| 播放控制 | 通过 `mode` 选择排队或立即播放 | 通过播放器控制播放、暂停、停止和跳转 |
+| 字幕与分片 | 不向调用方暴露 | 可监听音频分片、字幕 cue 和任务事件 |
+| 适用场景 | 欢迎语、提示音、普通回复等只需直接播报的内容 | 同步字幕、自定义播放界面、流式处理、任务取消或独立播放控制 |
+
+两种方法不会共享任务状态：`synthesize()` 创建的任务不会加入 `speak()` 的共享播放队列，`speak()` 也不会返回可交给 `SpeechAudioPlayer` 的任务。如果对同一段文本同时调用两种方法，会发起两次独立的语音生成请求。
+
 ## 使用建议
 
 - 把要播报的文本控制在适合一次听清的长度内，避免整段长文本直接朗读。
+- 只需要直接播报时优先使用 `speak()`；只有需要字幕、分片或独立播放控制时才使用 `synthesize()`。
 - 对于连续多条回复，建议在业务层控制播报节奏，避免用户同时收到过多语音输出。
 - 对重要提示和普通提示使用不同的文案长度与语气。
 
 ## 当前能力范围
 
-- [x] 通过 `speechSynthesis.speak()` 发起播报，并支持通过 `mode` 控制排队或立即播放。
-- [x] 通过 `speechSynthesis.synthesize()` 生成音频分片与字幕 cue，并使用 `SpeechAudioPlayer` 播放。
+- [x] 通过 `speechSynthesis.speak()` 使用共享语音播放器直接播报，并通过 `mode` 控制排队或立即播放。
+- [x] 通过独立的 `speechSynthesis.synthesize()` 生成任务、音频分片与字幕 cue，并按需使用 `SpeechAudioPlayer` 播放。
 - [x] `SpeechSynthesisUtterance` 上的属性同时用于 `speak()` 和 `synthesize()`。
-- [x] `pitch` 支持 `-12.0` 到 `12.0`；`rate` 对应语音生成速度，支持 `0.5` 到 `2.0`；`volume` 支持 `0.0` 到 `1.0`。
+- [x] `volume` 支持 `0` 到 `10` 的整数，默认值为 `1`。
 - [ ] `lang` 当前不支持，设置后不会改变语音生成的语言。
 - [ ] `cancel()`、`pause()`、`resume()`、`getVoices()` 以及完整的 utterance 生命周期事件（当前未暴露）。
 
@@ -86,14 +111,23 @@ player.play();
 
 ### 入口
 
-语音播报基于全局 `speechSynthesis` 对象和 `SpeechSynthesisUtterance`：
+语音播报基于全局 `speechSynthesis` 对象和 `SpeechSynthesisUtterance`。`speak()` 是直接播放入口：
 
 ```javascript
-const utterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
-speechSynthesis.speak(utterance);
-speechSynthesis.speak(utterance, 'enqueue');
-speechSynthesis.speak(utterance, 'immediate');
+const spokenUtterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
+speechSynthesis.speak(spokenUtterance, 'enqueue');
 ```
+
+`synthesize()` 是独立的任务生成入口：
+
+```javascript
+const generatedUtterance = new SpeechSynthesisUtterance('欢迎使用 AIUI');
+const task = await speechSynthesis.synthesize(generatedUtterance);
+const player = new SpeechAudioPlayer(task);
+player.play();
+```
+
+示例中的两条入口用于不同工作流。实际使用时应根据是否需要独立任务和播放控制选择其中一种，而不是为了完成一次播报依次调用两者。
 
 `SpeechSynthesisUtterance` 也可通过内置 `speech` 模块使用。
 
@@ -113,10 +147,8 @@ speechSynthesis.speak(utterance, 'immediate');
 | --- | --- | --- | --- |
 | `text` | `string` | `''` | 要合成的文本。 |
 | `lang` | `string` | `'en-US'` | 语音生成语言，当前不支持。 |
-| `pitch` | `number` | `1.0` | 音高，取值范围为 `-12.0` 到 `12.0`。 |
-| `rate` | `number` | `1.0` | 转换为语音生成速度，取值范围为 `0.5` 到 `2.0`。 |
 | `voice` | `string \| null` | `null` | 要使用的音色 ID；为 `null` 时使用默认音色。 |
-| `volume` | `number` | `1.0` | 音量，取值范围为 `0.0` 到 `1.0`。 |
+| `volume` | `number` | `1` | 音量，取值范围为整数 `0` 到 `10`。 |
 
 #### `voice` 可用音色
 
@@ -132,14 +164,13 @@ speechSynthesis.speak(utterance, 'immediate');
 | `Chinese (Mandarin)_Radio_Host` | 中文电台男声 | 长文本和故事 |
 | `clever_boy` | 中文男童 | 儿童内容 |
 | `lovely_girl` | 中文女童 | 儿童内容 |
-| `Cantonese_ProfessionalHost（F)` | 粤语女主持 | 粤语场景 |
 | `English_Trustworthy_Man` | 英文可信男声 | 英文助手、商务内容 |
 
 ### 方法
 
 #### `speechSynthesis.speak(utterance, mode?)`
 
-`speak()` 使用当前 `utterance` 的属性执行播报。
+`speak()` 使用当前 `utterance` 的属性生成语音并直接播放，返回 `void`。所有 `speak()` 调用共享一个由运行时管理的语音播放器和播放队列；该播放器不会作为对象暴露给调用方。
 
 - `utterance`：`SpeechSynthesisUtterance` 实例，当前主要使用其中的文本内容发起播报。
 - `mode`：可选的播报模式，支持以下取值：
@@ -148,9 +179,11 @@ speechSynthesis.speak(utterance, 'immediate');
 
 如果省略 `mode`，默认按 `'enqueue'` 处理，也就是把当前播报请求追加到播放队列中。
 
+`speak()` 不会创建 `SpeechSynthesisTask`，也不会使用调用方通过 `SpeechAudioPlayer` 控制的独立播放流程。
+
 #### `speechSynthesis.synthesize(utterance, options?)`
 
-创建流式语音生成任务，但不会自动开始播放。返回 `Promise<SpeechSynthesisTask>`。
+创建独立的流式语音生成任务，但不会自动开始播放。返回 `Promise<SpeechSynthesisTask>`。该任务不进入 `speak()` 的共享播放器或播放队列；需要播放时，调用方应为任务创建 `SpeechAudioPlayer` 并自行控制播放状态。
 
 | 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
@@ -178,7 +211,7 @@ speechSynthesis.speak(utterance, 'immediate');
 
 ### `new SpeechAudioPlayer(task, options?)`
 
-创建一个消费 `SpeechSynthesisTask` 的播放器。`options.trackMode` 可设为 `'hidden'` 或 `'showing'`。
+创建一个消费指定 `SpeechSynthesisTask` 的独立播放器。它只用于 `synthesize()` 生成的任务，不代表也不控制 `speak()` 内部共享的语音播放器。`options.trackMode` 可设为 `'hidden'` 或 `'showing'`。
 
 | 成员 | 类型 | 说明 |
 | --- | --- | --- |
