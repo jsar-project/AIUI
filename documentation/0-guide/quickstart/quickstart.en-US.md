@@ -1,128 +1,151 @@
-# Quick Start
+## I. What Is AIUI Studio?
+AIUI Studio is Rokid's **one-stop AIUI agent development and build platform** for Rokid Glasses. It runs in a browser, so no local development environment is required. It provides developers with the complete workflow from **creating an AIUI agent** to **submitting it for publication**:
 
-## I. Initialize an AIUI Project
++ Develop with **AIUI CODE**: describe requirements in natural language, and AI directly reads and writes project code;
++ **Real-device simulation**: simulate how an agent interacts on the glasses, or run the agent directly;
++ **Agent debugging and submission**: complete real-device verification, generate a version, save the required information, and submit it for review.
 
-1.Run the following commands in the device terminal
+## II. Sign In to AIUI Studio
+1. Open AIUI Studio(Global) in a browser: [https://aiui-global.rokid.com/](https://aiui-global.rokid.com/)
+2. If you are not signed in, complete sign-in through the Rokid Account Center.
+3. After signing in, you will be returned to the workspace automatically. The agent list on the left will load the cloud-based AIUI agents associated with your account.
 
-```
+## III. Create an AIUI Project in AIUI Studio(Global)
+There are three ways to create a new AIUI agent:
+
+| Creation method | Applicable scenario | Result |
+| :---: | :---: | :---: |
+| Create with Coding | Build an agent from scratch | Enter AIUI CODE and generate a complete project with natural language |
+| Import form local folder | An AIUI project already exists on your computer | Authorize the system folder and import the code |
+| Import from Github | The code is in a remote repository | Import the specified directory by repository URL, branch, or tag |
+
+⚠️ Choose only one method to create an AIUI project. Beginners are recommended to use Conversational creation.
+
+
+## **Method 1: Create with Coding**
+AIUI CODE is the primary development interface. The first time you use it, download and enable the built-in `aiui-dev` Skill in AIUI Studio.
+
+![image.png](../../image/quickstart/1.png)
+
+You can continue to use natural language to add features, adjust the interface, or troubleshoot issues. AI reads the project context and directly modifies project files.
+
+## **Method 2: Import form local folder (Create an AIUI Scaffold with npm)**
+**(1) Enter the following in a device terminal (or command prompt):**
+
+```plain
 npm create @yodaos-pkg/aiui-agent@latest my-agent
 ```
 
-![image.png](../../image/quickstart.en-us/image.png)
-
-```
-cd my-agent # Navigate to the folder named my-agent
-ls # List the files and subfolders in the current folder
+```plain
+cd my-agent  # Enter the folder named my-agent
+ls           # List files and subfolders in the current folder
 ```
 
-![image.png](../../image/quickstart.en-us/image%201.png)
+![image.png](../../image/quickstart/2.png)
 
-2.Project file location
+**(2) Locate the directory containing the files.**
 
-![image.png](../../image/quickstart.en-us/image%202.png)
+![image.png](../../image/quickstart/3.png)
 
-## II. Import an AIUI Project Using Craft Global (AIUI Web IDE)
+**(3) Click “Local import” and select the corresponding local folder.**
 
-1.Open Craft Global (AIUI Web IDE): [https://js.rokid.com/craft?region=global](https://js.rokid.com/craft?region=global)
+![image.png](../../image/quickstart/4.png)
 
-![image.png](../../image/quickstart.en-us/image%203.png)
+## Method 3: Import from Github
+AIUI Sample project: [https://github.com/jsar-project/AIUI/tree/main/samples](https://github.com/jsar-project/AIUI/tree/main/samples)
 
-2.Import an AIUI project from a local folder, a local .aix file, or a GitHub subdirectory
+![image.png](../../image/quickstart/5.png)
 
-![image.png](../../image/quickstart.en-us/image%204.png)
+## IV. Generate and Modify Projects with AIUI CODING
+AIUI CODING is AIUI Studio's AI development tool. You can continuously use natural language to add project features, adjust the interface, or troubleshoot issues. The AI CODING tool reads the project context and directly modifies project files.
 
-## III. Debug in Craft Web
++ **Command input box**: Enter a requirement and send it; generation can be stopped at any time.
 
-1.Click Run Agent to debug the project in the browser
+![image.png](../../image/quickstart/6.png)
 
-![image.png](../../image/quickstart.en-us/image%205.png)
++ **Context attachments**: Attach relevant files to the current instruction to help AI accurately understand the scope of the change.
 
-2.The Web IDE can simulate the entire process, from wake-up and speech recognition through large language model processing and voice output
+![image.png](../../image/quickstart/7.png)
 
-3.The controls on the right simulate the glasses' Back, Tap, and forward/backward swipe actions
++ **<font style="color:rgb(38, 38, 38);">Instruction suggestions:</font>** <font style="color:rgb(38, 38, 38);">Describe one clear objective per instruction, and include the page state, interaction method, and acceptance criteria.</font>
 
-![image.png](../../image/quickstart.en-us/image%206.png)
+![image.png](../../image/quickstart/8.png)
 
-## IV. Develop with AIUI Coding Agent in Craft
+## V. Web Simulation and Debugging in AIUI Studio(Global)
+Click the **“Preview”** button in the **“Real-device simulation”** section to debug through a web-based simulation.
 
-1.Craft provides an LLM (DeepSeek V4 Pro) free of charge by default. You can download Skills to assist with development; remember to enable them after downloading
+![image.png](../../image/quickstart/9.png)
 
-![image.png](../../image/quickstart.en-us/image%207.png)
+**[User input]** Simulates the complete process from wake-up, speech recognition, and the large language model through voice playback.
 
-2.You can also use your own model for development
+**[Temple Controls]** Simulates glasses interactions including click, double-click, swipe backward, and swipe forward.
 
-![image.png](../../image/quickstart.en-us/image%208.png)
+**[Environment Simulation]** Simulates how the AIUI agent appears in different environments.
 
-3.Use Vibe Coding on the main AIUI Code page
+## VI. Debug an AIUI Agent on a Real Device
+In the Hi Rokid app, go to **Settings -> Developer -> Update glasses resource package**.
 
-![image.png](../../image/quickstart.en-us/image%209.png)
+![image.png](../../image/quickstart/10.png)
 
-## V. Package and Upload the AIUI Project from Craft to AIUI Studio
+After you see the message **“Agent resource package downloaded successfully,”** invoke the agent by voice and experience the complete real interaction flow.
 
-1.AIUI Studio (Global): [https://aiui-global.rokid.com/](https://aiui-global.rokid.com/)
+For example: “Hi Rokid, open the xxx agent.”
 
-2.Create an AIUI Agent in AIUI Studio
+![image.png](../../image/quickstart/11.png)
 
-![image.png](../../image/quickstart.en-us/image%2010.png)
+## VII. View and Edit AIUI Agent Code
+Open the **“Code”** tab on the right to inspect or manually edit AIUI code. The file tree supports creating, renaming, deleting, copying paths, and refreshing directories.
 
-<aside>
+![image.png](../../image/quickstart/12.png)
 
-Warning: You must change the icon. The default icon cannot be used when submitting the Agent for review.
+An AIUI agent's directory structure usually includes global configuration, pages, components, and assets:
 
-</aside>
+```latex
+agent-app/
+├── AGENTS.md
+├── app.json
+├── app.js
+├── pages/
+│   └── index/
+│       └── index.ink
+└── assets/
+```
 
-3.A newly created AIUI Agent is not yet bound to an AIUI project. It is normal for a load failure message to appear; close it, then bind the project
++ `AGENTS.md`: Describes the agent's identity, responsibilities, and behavioral boundaries.
++ `app.json`: Configures page entry points and global window behavior.
++ `pages/`: Stores pages and interaction logic.
++ `assets/`: Stores static resources such as images and audio.
++ `.ink`: A file format that combines page configuration, logic, structure, and styles in a single file.
++ A project can also use a multi-file page structure composed of WXML, WXSS, JavaScript, and JSON.
 
-![image.png](../../image/quickstart.en-us/image%2011.png)
+For more information about AIUI file and page structures, see [Project structure](https://js.rokid.com/AIUI/guide/structure?version=0.16.1&lang=zh-CN).
 
-4.Choose one of the following methods to bind the AIUI project to the corresponding AIUI Agent
+## VIII. Publish and Submit for Review in the Hi Rokid Agent Store
+In the **“Build &Review”** section, fill in the basic information, permission dependencies, and preview materials. Then save the information and submit it for review.
 
-Method 1: After closing the message, upload the AIUI project directly to bind it
+![image.png](../../image/quickstart/13.png)
 
-![image.png](../../image/quickstart.en-us/image%204.png)
+| Field | Entry requirement | Content requirement |
+| --- | --- | --- |
+| Agent name | Required | No more than 20 characters; accurately describe the function and must not duplicate another agent's name |
+| Icon | Required | Replace the icon; the default icon cannot be used |
+| Current Version | Automatically generated and incremented by the system | Cannot be edited by the developer |
+| Agent ID | Generated by the system | Keep it securely |
+| App Category | Required | Must match the agent's actual function |
+| Function description | Required | No more than 500 characters; briefly describe actual capabilities and applicable scenarios |
+| Opening message | Required | Recommended to keep within 300 Chinese characters; guide users on first entry and do not duplicate the function description |
+| Agent icon | Required | Clear, correctly oriented, and related to the name and function |
+| Permission requests | Select based on actual needs | Truthfully select network, camera, microphone, and speaker permissions and explain each purpose |
+| Rokid account information | Select based on actual needs | Must provide a description when using Rokid account information or other personal information |
+| Preview materials | Required | Upload 3–5 files, including at least 1 image and 1 video |
 
-Method 2: Go to Editor Settings > Local Management, then bind the corresponding AIUI Agent
 
-![image.png](../../image/quickstart.en-us/image%2012.png)
+After confirming that the information and current version are correct, click **“Submit for review.”**
 
-![image.png](../../image/quickstart.en-us/image%2013.png)
+Review statuses:
 
-5.Package the AIUI project and upload it to AIUI Studio
++ **Under review**: Wait for platform review. You can view the status in the agent list during this period.
++ **Review rejected**: Modify the code or information according to the rejection reason, then repackage, save, and resubmit.
++ **Review approved**: The agent enters a publishable state and can be displayed and used in the agent store in the Rokid AI app.
 
-![image.png](../../image/quickstart.en-us/image%2014.png)
-
-6.Configure the required permissions for the AIUI project. You can enter a description of the AIUI Agent on the right
-
-![image.png](../../image/quickstart.en-us/image%2015.png)
-
-## VI. Debug on the Glasses
-
-<aside>
-
-Warning: Before you can debug the AIUI project on the physical glasses, it must be bound to an AIUI Agent, packaged, and uploaded.
-
-</aside>
-
-1.On the glasses, go to Settings > Developer > AIUI > Update Glasses Resource Package
-
-![IMG_7527.jpg](../../image/quickstart.en-us/IMG_7527.jpg)
-
-2.A download indicator appears in the lower-right corner while the package is downloading
-
-![image.png](../../image/quickstart.en-us/image%2016.png)
-
-3.When the download is complete, the icon disappears and a toast message appears
-
-![image.png](../../image/quickstart.en-us/image%2017.png)
-
-4.Wake the AI assistant and say the name of the corresponding AIUI Agent to launch it for debugging
-
-![image.png](../../image/quickstart.en-us/image%2018.png)
-
-## VII. Submit and Publish the Agent to the Hi Rokid Agent Store
-
-1.Click Submit for Review, accept the User Agreement, and submit the Agent for review
-
-![image.png](../../image/quickstart.en-us/image%2019.png)
-
-![image.png](../../image/quickstart.en-us/image%2020.png)
+Before submitting, it is recommended that you confirm once more that the core real-device flow has passed, permission declarations match the code, the information contains no exaggerated claims, and the number and formats of images and videos meet the requirements.

@@ -1,128 +1,116 @@
-# AIUI快速入门
+## 一、什么是 AIUI Studio
 
-## 一、初始化AIUI项目
+AIUI Studio 是 Rokid 面向 Rokid Glasses 的 AIUI 智能体一站式开发构建平台，运行在浏览器中，无需安装本地开发环境。它为开发者提供从“创建 AIUI 智能体”到“提交上架”的完整链路：
 
-1.在设备终端（terminal）输入
+- 用 **AIUI CODE** 驱动开发：用自然语言描述需求，AI 直接读写项目代码；
+- **真机模拟**：模拟智能体在眼镜上的交互流程，也可直接运行智能体；
+- **智能体调试与提审**：完成真机验证、版本生成、资料保存和提交审核。
 
-```
+## 二、登陆 AIUI Studio
+
+1. 在浏览器打开 AIUI Studio：<https://aiui.rokid.com/>
+2. 若无登录，请在 Rokid 账号中心完成登录。
+3. 登录完成后自动返回工作台，左侧智能体列表会加载当前账号下的云端 AIUI 智能体。
+
+## 三、在 AIUI Studio 中创建 AIUI 项目
+
+新建 AIUI 智能体有三种方式：
+
+| 创建方式 | 适用场景 | 结果 |
+| --- | --- | --- |
+| 对话创建 | 从零开始构建智能体 | 进入 AIUI CODE，通过自然语言生成完整工程 |
+| 本地导入 | 本机已有 AIUI 工程 | 授权系统文件夹后导入代码 |
+| GitHub 导入 | 代码位于远程仓库 | 按仓库地址、分支或标签导入指定目录 |
+
+⚠️ 只需选择一种方式进行创建 AIUI 项目，新手推荐使用“对话创建”。
+
+## 方式一：通过 AI Coding 创建
+
+AIUI CODE 是主要开发界面，初次使用需要下载并启用 AIUI Studio 内置的 `aiui-dev` Skill。
+
+![image.png](../../image/quickstart/1.png)
+
+你可以持续用自然语言补充功能、调整界面或排查问题，AI 会读取工程上下文并直接修改项目文件。
+
+## 方式二：本地导入 AIUI 项目
+
+1. 在终端输入：
+
+```plain
 npm create @yodaos-pkg/aiui-agent@latest my-agent
 ```
 
-![image.png](../../image/quickstart/image.png)
+![image.png](../../image/quickstart/2.png)
 
+2. 找到文件所在位置。
+
+![image.png](../../image/quickstart/3.png)
+
+3. 点击“本地导入”，选择对应文件夹。
+
+![image.png](../../image/quickstart/4.png)
+
+## 方式三：GitHub 导入
+
+AIUI Sample 项目：<https://github.com/jsar-project/AIUI/tree/main/samples>
+
+![image.png](../../image/quickstart/5.png)
+
+## 四、使用 AIUI CODING 生成与修改项目
+
+AIUI CODING 是 AIUI Studio 的 AI 开发工具，可以持续用自然语言补充项目功能、调整界面或排查问题，工具会读取工程上下文并直接修改项目文件。
+
+- **命令输入框**：输入需求后发送，生成过程中可随时停止。
+
+![image.png](../../image/quickstart/6.png)
+
+- **上下文附件**：将相关文件附加到当前指令，帮助 AI 精确理解修改范围。
+
+![image.png](../../image/quickstart/7.png)
+
+- **指令建议**：一次指令只描述一个清晰目标，并补充页面状态、交互方式和验收结果。
+
+![image.png](../../image/quickstart/8.png)
+
+## 五、AIUI Studio 网页端模拟调试
+
+点击“真机模拟”栏的“效果预览”按钮，可直接在 Web 端进行模拟调试。可模拟用户输入、镜腿操作和不同光照环境。
+
+![image.png](../../image/quickstart/9.png)
+
+## 六、AIUI 智能体真机调试
+
+在 Rokid Ai APP 中进入“设置——开发者”，更新眼镜资源包。
+
+![image.png](../../image/quickstart/10.png)
+
+看到“智能体资源包下载成功”提示后，通过语义命中智能体，体验真实交互链路，例如：“乐奇，打开 xxx 智能体”。
+
+![image.png](../../image/quickstart/11.png)
+
+## 七、查看和编辑 AIUI 智能体代码
+
+打开右侧“代码”页签即可检查或手动编辑 AIUI 代码，文件树支持新建、重命名、删除、复制路径和刷新目录。
+
+![image.png](../../image/quickstart/12.png)
+
+项目目录通常包含全局配置、页面、组件和资源：
+
+```text
+agent-app/
+├── AGENTS.md
+├── app.json
+├── app.js
+├── pages/
+│   └── index/
+│       └── index.ink
+└── assets/
 ```
-cd my-agent #进入名为 my-agent 的文件夹
-ls #列出当前文件夹里的文件和子文件夹
-```
 
-![image.png](../../image/quickstart/image%201.png)
+## 八、发布提审上架到 Rokid Ai 智能体商店
 
-2.文件所在文件位置
+在“构建与提审”栏中填写基本信息、权限依赖和预览素材，然后保存资料并提交审核。
 
-![image.png](../../image/quickstart/image%202.png)
+![image.png](../../image/quickstart/13.png)
 
-## 二、使用Craft（AIUI Web IDE）导入AIUI项目
-
-1.进入Craft（AIUI Web IDE）：[https://js.rokid.com/craft?lang=zh-CN](https://js.rokid.com/craft?lang=zh-CN)
-
-![image.png](../../image/quickstart/image%203.png)
-
-2.使用本地文件夹/本地.aix文件/GitHub子目录导入AIUI
-
-![image.png](../../image/quickstart/image%204.png)
-
-## 三、Craft Web端调试
-
-1.点击运行智能体进行Web端调试
-
-![image.png](../../image/quickstart/image%205.png)
-
-2.在Web IDE中可模拟从唤醒、语言识别、大语言模型最后到语音播报到全过程
-
-3.右侧有模拟眼镜的返回、单击、前后滑动的按钮
-
-![image.png](../../image/quickstart/image%206.png)
-
-## 四、在Craft中使用AIUI Coding Agent进行开发
-
-1.Craft中默认免费提供了LLM（DeepSeek V4 Pro），可以下载Skill进行辅助开发，下载完成记得点击启用
-
-![image.png](../../image/quickstart/image%207.png)
-
-2.也可替换自己的模型进行开发
-
-![image.png](../../image/quickstart/image%208.png)
-
-3.在AIUI Code主页面使用
-
-![image.png](../../image/quickstart/image%209.png)
-
-## 五、将Craft中的AIUI项目打包上传到AIUI Studio
-
-1.AIUI Studio（中国站）：[https://aiui.rokid.com/space](https://aiui.rokid.com/space)
-
-2.通过AIUI Studio创建AIUI Agent
-
-![image.png](../../image/quickstart/image%2010.png)
-
-<aside>
-
-**⚠️ 需要修改图标，不可使用默认图标进行提审**
-
-</aside>
-
-3.第一次创建的AIUI Agent没有绑定AIUI项目，会弹出加载失败是正常的，关闭并绑定即可
-
-![image.png](../../image/quickstart/image%2011.png)
-
-4.选择一种绑定方式将AIUI项目绑定到对应的AIUI Agent
-
-绑定方式一：关闭后直接上传AIUI项目进行绑定
-
-![image.png](../../image/quickstart/image%204.png)
-
-绑定方式二：编辑器设置——本地管理——绑定对应AIUI智能体
-
-![image.png](../../image/quickstart/image%2012.png)
-
-![image.png](../../image/quickstart/image%2013.png)
-
-6.将AIUI项目打包上传到AIUI Studio中
-
-![image.png](../../image/quickstart/image%2014.png)
-
-7.依据AIUI项目情况设置对应的权限，右侧可以填写对AIUI的描述
-
-![image.png](../../image/quickstart/image%2015.png)
-
-## 六、眼镜真机调试
-
-<aside>
-
-**⚠️ AIUI项目需要绑定AIUI Agent并进行打包上传才可以进行真机调试**
-
-</aside>
-
-1.眼镜设置——开发者——AIUI——更新眼镜资源包
-
-![image.png](../../image/quickstart/image%2016.png)
-
-2.下载过程中，右下角有下载标识
-
-![image.png](../../image/quickstart/image%2017.png)
-
-3.下载成功，iCon消失，Toast提示
-
-![image.png](../../image/quickstart/image%2018.png)
-
-4.唤醒AI助手，说出对应AIUI智能体名称即可唤醒调试
-
-![image.png](../../image/quickstart/image%2019.png)
-
-## 七、发布提审上架到Rokid Ai智能体商店中
-
-1.点击提审，勾选用户协议，提交提审
-
-![image.png](../../image/quickstart/image%2020.png)
-
-![image.png](../../image/quickstart/image%2021.png)
+提交前确认真机核心流程已通过、权限声明与代码一致、资料无夸大内容，且预览素材数量和格式符合要求。
