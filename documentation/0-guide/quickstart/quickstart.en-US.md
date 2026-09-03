@@ -1,3 +1,4 @@
+# AIUI QuickStart 
 ## I. What Is AIUI Studio?
 AIUI Studio is Rokid's **one-stop AIUI agent development and build platform** for Rokid Glasses. It runs in a browser, so no local development environment is required. It provides developers with the complete workflow from **creating an AIUI agent** to **submitting it for publication**:
 
@@ -25,7 +26,7 @@ There are three ways to create a new AIUI agent:
 ## Method 1: Create with Coding
 AIUI CODEING is the primary development interface. The first time you use it, download and enable the built-in `aiui-dev` Skill in AIUI Studio.
 
-![image.png](../../image/quickstart/1.png)
+![image.png](../../image/quickstart.en-us/1.png)
 
 You can continue to use natural language to add features, adjust the interface, or troubleshoot issues. AI reads the project context and directly modifies project files.
 
@@ -41,40 +42,40 @@ cd my-agent  # Enter the folder named my-agent
 ls           # List files and subfolders in the current folder
 ```
 
-![image.png](../../image/quickstart/2.png)
+![image.png](../../image/quickstart.en-us/2.png)
 
 **(2) Locate the directory containing the files.**
 
-![image.png](../../image/quickstart/3.png)
+![image.png](../../image/quickstart.en-us/3.png)
 
 **(3) Click “Local import” and select the corresponding local folder.**
 
-![image.png](../../image/quickstart/4.png)
+![image.png](../../image/quickstart.en-us/4.png)
 
 ## Method 3: Import from Github
 AIUI Sample project: [https://github.com/jsar-project/AIUI/tree/main/samples](https://github.com/jsar-project/AIUI/tree/main/samples)
 
-![image.png](../../image/quickstart/5.png)
+![image.png](../../image/quickstart.en-us/5.png)
 
 ## IV. Generate and Modify Projects with AIUI CODING
 AIUI CODING is AIUI Studio's AI development tool. You can continuously use natural language to add project features, adjust the interface, or troubleshoot issues. The AI CODING tool reads the project context and directly modifies project files.
 
 + **Command input box**: Enter a requirement and send it; generation can be stopped at any time.
 
-![image.png](../../image/quickstart/6.png)
+![image.png](../../image/quickstart.en-us/6.png)
 
 + **Context attachments**: Attach relevant files to the current instruction to help AI accurately understand the scope of the change.
 
-![image.png](../../image/quickstart/7.png)
+![image.png](../../image/quickstart.en-us/7.png)
 
-+ **<font style="color:rgb(38, 38, 38);">Instruction suggestions:</font>** <font style="color:rgb(38, 38, 38);">Describe one clear objective per instruction, and include the page state, interaction method, and acceptance criteria.</font>
++ **Instruction suggestions:** Describe one clear objective per instruction, and include the page state, interaction method, and acceptance criteria.
 
-![image.png](../../image/quickstart/8.png)
+![image.png](../../image/quickstart.en-us/8.png)
 
 ## V. Web Simulation and Debugging in AIUI Studio(Global)
 Click the **“Preview”** button in the **“Real-device simulation”** section to debug through a web-based simulation.
 
-![image.png](../../image/quickstart/9.png)
+![image.png](../../image/quickstart.en-us/9.png)
 
 **[User input]** Simulates the complete process from wake-up, speech recognition, and the large language model through voice playback.
 
@@ -85,18 +86,18 @@ Click the **“Preview”** button in the **“Real-device simulation”** secti
 ## VI. Debug an AIUI Agent on a Real Device
 In the Hi Rokid app, go to **Settings -> Developer -> Update glasses resource package**.
 
-![image.png](../../image/quickstart/10.png)
+![image.png](../../image/quickstart.en-us/10.png)
 
 After you see the message **“Agent resource package downloaded successfully,”** invoke the agent by voice and experience the complete real interaction flow.
 
 For example: “Hi Rokid, open the xxx agent.”
 
-![image.png](../../image/quickstart/11.png)
+![image.png](../../image/quickstart.en-us/11.png)
 
 ## VII. View and Edit AIUI Agent Code
 Open the **“Code”** tab on the right to inspect or manually edit AIUI CODEING. The file tree supports creating, renaming, deleting, copying paths, and refreshing directories.
 
-![image.png](../../image/quickstart/12.png)
+![image.png](../../image/quickstart.en-us/12.png)
 
 An AIUI agent's directory structure usually includes global configuration, pages, components, and assets:
 
@@ -123,7 +124,7 @@ For more information about AIUI file and page structures, see [Project structure
 ## VIII. Publish and Submit for Review in the Hi Rokid Agent Store
 In the **“Build &Review”** section, fill in the basic information, permission dependencies, and preview materials. Then save the information and submit it for review.
 
-![image.png](../../image/quickstart/13.png)
+![image.png](../../image/quickstart.en-us/13.png)
 
 | Field | Entry requirement | Content requirement |
 | --- | --- | --- |

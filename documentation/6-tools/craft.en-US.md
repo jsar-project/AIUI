@@ -1,4 +1,4 @@
-## 1. What Is Craft
+## I. What Is Craft
 
 Craft is an integrated workspace for AIUI and Ink projects. It helps developers import projects, browse files, edit code, preview pages, and run simulations in one interface.
 
@@ -9,7 +9,7 @@ Craft is part of the AIUI development toolchain and does not replace the AIUI fr
 
 Access: [https://js.rokid.com/craft](https://js.rokid.com/craft)
 
-## 2. Initialize an AIUI Project
+## II. Initialize an AIUI Project
 
 1.Enter the following commands in a terminal.
 
@@ -28,7 +28,7 @@ ls           # List files and subdirectories
 
 ![image.png](../image/craft.en-us/02.png)
 
-## 3. Import an AIUI Project into Craft (AIUI Web IDE)
+## III. Import an AIUI Project into Craft (AIUI Web IDE)
 
 1.Open Craft (AIUI Web IDE): [https://js.rokid.com/craft?lang=zh-CN](https://js.rokid.com/craft?lang=zh-CN)
 
@@ -38,7 +38,7 @@ ls           # List files and subdirectories
 
 ![image.png](../image/craft.en-us/04.png)
 
-## 4. Debug on the Craft Web
+## IV. Debug on the Craft Web
 
 1.Click **Run Agent** to start Web debugging.
 
@@ -49,7 +49,7 @@ ls           # List files and subdirectories
 
 ![image.png](../image/craft.en-us/06.png)
 
-## 5. Develop with the AIUI Coding Agent in Craft
+## V. Develop with the AIUI Coding Agent in Craft
 
 1.Craft provides a free LLM (DeepSeek V4 Pro) by default. Download and enable a Skill to assist development.
 
@@ -63,7 +63,7 @@ ls           # List files and subdirectories
 
 ![image.png](../image/craft.en-us/09.png)
 
-## 6. Create an AIUI Agent in AIUI Studio
+## VI. Create an AIUI Agent in AIUI Studio
 
 Sign in to AIUI Studio (China): [https://aiui.rokid.com/space](https://aiui.rokid.com/space)
 
@@ -103,7 +103,7 @@ AIUI Sample project: [https://github.com/jsar-project/AIUI/tree/main/samples](ht
 
 ![image.png](../image/craft.en-us/14.png)
 
-## 7. Bind the Craft AIUI Project to an AIUI Agent
+## VII. Bind the Craft AIUI Project to an AIUI Agent
 
 1.In the Craft editor, open **Settings > Local Management** and bind the corresponding AIUI agent.
 
@@ -119,7 +119,7 @@ AIUI Sample project: [https://github.com/jsar-project/AIUI/tree/main/samples](ht
 
 ![image.png](../image/craft.en-us/18.png)
 
-## 8. Debug on Glasses
+## VIII. Debug on Glasses
 
 **Warning:** The AIUI project must be bound to an AIUI agent and packaged and uploaded before real-device debugging is available.
 
@@ -133,7 +133,7 @@ Example: “Leqi, open the xxx agent.”
 
 ![image.png](../image/craft.en-us/20.png)
 
-## 9. Publish and Submit for Review
+## IX. Publish and Submit for Review
 
 1.In [AIUI Studio](https://aiui.rokid.com/), open **Build & Submit for Review**, fill in the basic information, permissions, and preview materials, then save and submit.
 
