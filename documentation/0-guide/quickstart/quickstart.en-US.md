@@ -119,7 +119,7 @@ agent-app/
 + `.ink`: A file format that combines page configuration, logic, structure, and styles in a single file.
 + A project can also use a multi-file page structure composed of WXML, WXSS, JavaScript, and JSON.
 
-For more information about AIUI file and page structures, see [Project structure](/AIUI/guide/structure).
+For more information about AIUI file and page structures, see [Project structure](../structure.en-US.md).
 
 ## VIII. Publish and Submit for Review in the Hi Rokid Agent Store
 In the **“Build &Review”** section, fill in the basic information, permission dependencies, and preview materials. Then save the information and submit it for review.

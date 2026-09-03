@@ -114,7 +114,7 @@ agent-app/
 + `.ink`：该文件格式可在单个文件中组合页面配置、逻辑、结构和样式；
 + 项目也可以采用 WXML、WXSS、JavaScript 和 JSON 组成的多文件页面结构
 
-了解更多 AIUI 文件页面结构请查看[项目结构](/AIUI/guide/structure)
+了解更多 AIUI 文件页面结构请查看[项目结构](../structure.md)
 
 ## 八、发布提审上架到 Rokid Ai 智能体商店
 
