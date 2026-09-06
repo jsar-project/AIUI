@@ -1,22 +1,21 @@
-# Media
+# Choose a Media API
 
-AIUI media capabilities cover sound effects, audio playback, media capture, and video playback. For local short sounds such as button clicks and prompts, start with `Sound`; for photography, audio recording, or video recording, use the unified media-capture documentation.
+AIUI provides audio playback, short sound effects, audio processing, video playback, and media capture. Start with the task you want to complete, then open the corresponding page for examples and the full API.
 
-## Simple Example
+## Choose by Task
 
-For example, play a button click sound effect:
-
-```javascript
-const click = new Sound('./click.wav');
-click.volume = 0.8;
-click.play();
-```
+| If you want to | Choose |
+| --- | --- |
+| Play music, a local audio file, or audio data as it arrives | [Audio Playback](/AIUI/api/media-audio-player) |
+| Play short local sounds such as button clicks and prompts repeatedly | [Short Sound Effects (Sound)](/AIUI/api/media-sound) |
+| Generate sound, play PCM data, adjust volume or tone, or inspect waveforms | [Audio Processing (Web Audio)](/AIUI/api/media-web-audio) |
+| Play video in a page and control its playback state | [Video Playback](/AIUI/api/media-video) |
+| Use a microphone or camera to take photos or record audio and video | [Media Capture](/AIUI/api/media-media-capture) |
 
 ## Continue Reading
 
-- **[Sound](/AIUI/api/media-sound)**: See the lightweight playback API for local short sound effects, suitable for frequently replayed sounds such as button clicks and prompts.
-- **[AudioPlayer](/AIUI/api/media-audio-player)**: See the audio playback capability recommended by AIUI, suitable for local audio and streaming audio scenarios.
-- **[Web Audio](/AIUI/api/media-web-audio)**: See sound generation, PCM playback, volume adjustment, filtering, and audio analysis.
-- **[Media Capture](/AIUI/api/media-media-capture)**: See `navigator.mediaDevices`, `ImageCapture`, `MediaRecorder`, and the wx-style camera and recorder APIs.
+- **[Audio Playback](/AIUI/api/media-audio-player)**: Use `AudioPlayer` to play local audio or audio data as it arrives.
+- **[Short Sound Effects (Sound)](/AIUI/api/media-sound)**: Use the lightweight `Sound` API for button clicks and prompt sounds.
+- **[Audio Processing (Web Audio)](/AIUI/api/media-web-audio)**: Generate sound, play PCM data, adjust sound, and inspect waveform or frequency data.
 - **[Video Playback](/AIUI/api/media-video)**: See the `<video>` component and its `VideoContext` playback controls.
-- **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See device media APIs such as camera and recording.
+- **[Media Capture](/AIUI/api/media-media-capture)**: Use `navigator.mediaDevices`, `ImageCapture`, `MediaRecorder`, and wx-style APIs to take photos or record audio and video.

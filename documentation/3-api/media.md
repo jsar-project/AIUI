@@ -1,22 +1,21 @@
-# 多媒体
+# 如何选择媒体 API
 
-AIUI 的多媒体能力覆盖音效播放、音频播放、媒体采集与视频播放等场景。对于按钮点击、提示音这类本地短音效，通常可以先从 `Sound` 开始；对于拍照、录音或录像，则查看统一的媒体采集文档。
+AIUI 提供音频播放、短音效、音频处理、视频播放和媒体采集能力。先根据要完成的任务选择入口，再进入对应页面查看示例和完整 API。
 
-## 简单示例
+## 根据需求选择
 
-例如，播放一个按钮点击音效：
-
-```javascript
-const click = new Sound('./click.wav');
-click.volume = 0.8;
-click.play();
-```
+| 如果你想要 | 选择 |
+| --- | --- |
+| 播放一首音乐、本地音频文件或持续到达的音频数据 | [音频播放](/AIUI/api/media-audio-player) |
+| 播放按钮点击声、提示音等短小且需要频繁触发的本地音效 | [短音效（Sound）](/AIUI/api/media-sound) |
+| 生成声音、播放 PCM 数据，或者调整音量、音色并读取波形 | [音频处理（Web Audio）](/AIUI/api/media-web-audio) |
+| 在页面中播放视频并控制播放状态 | [视频播放](/AIUI/api/media-video) |
+| 使用麦克风或相机完成拍照、录音和录像 | [媒体采集](/AIUI/api/media-media-capture) |
 
 ## 继续阅读
 
-- **[音效 (Sound)](/AIUI/api/media-sound)**：查看面向本地短音效的轻量播放接口，适合按钮点击、提示音等高频重播场景。
-- **[音频播放器 (AudioPlayer)](/AIUI/api/media-audio-player)**：查看 AIUI 推荐的音频播放能力，适合本地音频与流式音频场景。
-- **[Web Audio](/AIUI/api/media-web-audio)**：查看声音生成、PCM 播放、音量调节、滤波和音频分析能力。
-- **[媒体采集](/AIUI/api/media-media-capture)**：查看 `navigator.mediaDevices`、`ImageCapture`、`MediaRecorder` 以及 wx 风格的相机和录音接口。
+- **[音频播放](/AIUI/api/media-audio-player)**：使用 `AudioPlayer` 播放本地音频或持续到达的音频数据。
+- **[短音效（Sound）](/AIUI/api/media-sound)**：使用轻量的 `Sound` 接口播放按钮点击声和提示音。
+- **[音频处理（Web Audio）](/AIUI/api/media-web-audio)**：生成声音、播放 PCM 数据、调整声音并分析波形或频率。
 - **[视频播放](/AIUI/api/media-video)**：查看 `<video>` 组件与 `VideoContext` 播放控制接口。
-- **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看摄像头、录音等设备媒体接口。
+- **[媒体采集](/AIUI/api/media-media-capture)**：使用 `navigator.mediaDevices`、`ImageCapture`、`MediaRecorder` 以及 wx 风格接口完成拍照、录音和录像。
