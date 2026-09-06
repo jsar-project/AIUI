@@ -1,8 +1,8 @@
-# Web Audio
+# 音频处理（Web Audio）
 
-Web Audio API 用于生成声音、处理 PCM 音频、调整音量、添加滤波器，以及读取波形或频率数据。它适合需要实时音频处理的场景。
+音频处理适合需要实时生成或改变声音的场景。AIUI 通过 Web Audio API 支持生成声音、处理 PCM 音频、调整音量、添加滤波器，以及读取波形或频率数据。
 
-如果只是播放 MP3、Ogg 等音频文件，优先使用 [`AudioPlayer`](/AIUI/api/media-audio-player)，通常更省电，也更容易使用。
+如果只是播放 MP3、Ogg 等完整音频文件，优先使用[音频播放](/AIUI/api/media-audio-player)，通常更省电，也更容易使用。
 
 ## 生成一段提示音
 

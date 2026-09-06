@@ -1,6 +1,6 @@
-# Sound Effect (Sound)
+# Short Sound Effects (Sound)
 
-`Sound` is a dedicated playback entry for local short sound effects. It is suitable for scenarios that require frequent replay, such as button clicks, prompts, and status feedback sounds.
+Short sound effects are intended for brief sounds that need frequent replay, such as button clicks, prompts, and status feedback. AIUI provides dedicated local short-sound playback through `Sound`.
 
 Compared with the general-purpose `AudioPlayer`, `Sound` offers a narrower feature set but a more direct API, making it suitable for local sound effect resources that should play immediately.
 
@@ -24,8 +24,8 @@ click.play();
 ## Use Cases
 
 - If you need a lighter local sound effect playback API, prefer `Sound`.
-- If you need more complete playback control, use [Audio Player (AudioPlayer)](/AIUI/api/media-audio-player).
-- For recording, camera, and other device media capabilities, continue with [WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis).
+- If you need more complete playback control, use [Audio Playback](/AIUI/api/media-audio-player).
+- If you need to record audio or use a camera, see [Media Capture](/AIUI/api/media-media-capture).
 
 ## API Reference
 

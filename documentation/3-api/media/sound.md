@@ -1,6 +1,6 @@
-# 音效 (Sound)
+# 短音效（Sound）
 
-`Sound` 是面向本地短音效的专用播放入口，适合按钮点击、提示音、状态反馈音等需要频繁重播的场景。
+短音效适合按钮点击、提示音、状态反馈音等短小且需要频繁重播的声音。AIUI 通过 `Sound` 提供专用的本地短音效播放能力。
 
 相比通用的 `AudioPlayer`，`Sound` 的能力面更窄，但调用更直接，适合“拿来即播”的本地音效资源。
 
@@ -24,8 +24,8 @@ click.play();
 ## 适用场景
 
 - 需要一个更轻量的本地音效播放接口时，优先使用 `Sound`。
-- 需要更完整的播放控制能力时，使用 [音频播放器 (AudioPlayer)](/AIUI/api/media-audio-player)。
-- 录音、摄像头等设备媒体能力可继续参考[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)。
+- 需要更完整的播放控制能力时，使用[音频播放](/AIUI/api/media-audio-player)。
+- 需要录音或使用摄像头时，查看[媒体采集](/AIUI/api/media-media-capture)。
 
 ## API Reference
 

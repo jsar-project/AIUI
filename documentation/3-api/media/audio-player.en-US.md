@@ -1,11 +1,11 @@
-# Audio Player (AudioPlayer)
+# Audio Playback
 
-Provides the core low-level audio playback capability for regular playback and streaming scenarios.
+Audio playback is intended for background music, complete voice clips, local audio files, and audio data that arrives over time. AIUI provides regular file playback and streaming playback through `AudioPlayer`.
 
-> **Why not use AudioContext?**
+> **When should you choose audio processing?**
 > [`AudioContext`](/AIUI/api/media-web-audio) is intended for generating sound, processing PCM, applying filters, and analysing audio. For ordinary file playback, `AudioPlayer` is simpler and can use the runtime's file playback path.
 >
-> Use `AudioPlayer` as the first choice for ordinary audio files in AIUI, and choose Web Audio when real-time processing is required.
+> Use the audio playback capability described on this page for ordinary audio files. Choose [Audio Processing (Web Audio)](/AIUI/api/media-web-audio) when real-time processing is required.
 
 ## File Playback
 

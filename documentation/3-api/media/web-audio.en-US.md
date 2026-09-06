@@ -1,8 +1,8 @@
-# Web Audio
+# Audio Processing (Web Audio)
 
-Use the Web Audio API to generate sounds, process PCM audio, adjust volume, apply filters, and inspect waveform or frequency data. It is intended for real-time audio processing.
+Audio processing is intended for scenarios that generate or modify sound in real time. AIUI uses the Web Audio API to generate sounds, process PCM audio, adjust volume, apply filters, and inspect waveform or frequency data.
 
-For ordinary MP3, Ogg, or other file playback, prefer [`AudioPlayer`](/AIUI/api/media-audio-player). It is usually easier to use and more power efficient.
+For ordinary MP3, Ogg, or other complete file playback, prefer [Audio Playback](/AIUI/api/media-audio-player). It is usually easier to use and more power efficient.
 
 ## Generate a Short Tone
 
