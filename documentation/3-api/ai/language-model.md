@@ -31,6 +31,70 @@ const text = await session.prompt('请用一句话介绍 AIUI');
 console.log(text);
 ```
 
+## 上传图片给模型
+
+需要让模型理解本地图片时，可以把图片作为 `Blob` 导入，转换为 Data URL，再和问题一起放入用户消息的 `content` 数组：
+
+```javascript
+import productPhoto, { mimeType } from '../../assets/product.jpg';
+
+async function blobToDataUrl(blob, type) {
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  const chunkSize = 0x8000;
+  let binary = '';
+
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(
+      ...bytes.subarray(offset, offset + chunkSize)
+    );
+  }
+
+  return `data:${type};base64,${btoa(binary)}`;
+}
+
+const session = await LanguageModel.create();
+const imageUrl = await blobToDataUrl(productPhoto, mimeType);
+const answer = await session.prompt([
+  {
+    role: 'user',
+    content: [
+      {
+        type: 'text',
+        text: '请描述图片中的商品，并列出主要颜色。',
+      },
+      {
+        type: 'image_url',
+        image_url: { url: imageUrl },
+      },
+    ],
+  },
+]);
+
+console.log(answer);
+session.destroy();
+```
+
+从相机获得的图片也可以使用相同方式处理：`ImageCapture.takePhoto()` 返回 `Blob`，将它传给 `blobToDataUrl()` 即可。
+
+如果图片已经有可以公开访问的 HTTPS 地址，则不需要转换 Base64，可以直接设置 `image_url.url`：
+
+```javascript
+const answer = await session.prompt([
+  {
+    role: 'user',
+    content: [
+      { type: 'text', text: '这张图片里有什么？' },
+      {
+        type: 'image_url',
+        image_url: { url: 'https://example.com/photos/product.jpg' },
+      },
+    ],
+  },
+]);
+```
+
+所选模型必须支持图片输入。建议在上传前缩小尺寸并压缩图片，避免 Data URL 过大导致请求变慢或超出模型限制。
+
 ## 流式输出
 
 ```javascript
@@ -78,7 +142,7 @@ const session = await LanguageModel.create({
 session.addEventListener('toolcall', (event) => {
   console.log('收到工具调用请求:', event.functionName);
   console.log('参数:', event.arguments);
-  
+
   if (event.functionName === 'get_weather') {
     // 处理天气查询逻辑
     const { city } = event.arguments;
@@ -148,7 +212,7 @@ import { LanguageModel } from 'language-model';
 
 #### `prompt(input)`
 - **返回值**：`Promise<string>`
-- **说明**：发送一次请求，并在完成后返回最终文本。
+- **说明**：发送一次请求，并在完成后返回最终文本。`input` 可以是字符串，也可以是 `LanguageModelMessage[]`。
 
 #### `promptStreaming(input)`
 - **返回值**：`LanguageModelTextStream`
@@ -159,6 +223,17 @@ import { LanguageModel } from 'language-model';
 
 #### `destroy()`
 - **说明**：销毁当前会话，释放后续使用所需的会话资源。
+
+### 图片输入消息
+
+图片输入只能放在 `role: 'user'` 的结构化消息中。`content` 是一个内容数组，可以同时包含文字和一张或多张图片。
+
+| 内容类型 | 结构 | 说明 |
+| --- | --- | --- |
+| 文字 | `{ type: 'text', text: string }` | `text` 不能为空。 |
+| 图片 | `{ type: 'image_url', image_url: { url: string } }` | `url` 可以是模型能够访问的图片地址或图片 Data URL，不能为空。 |
+
+`system` 和 `assistant` 消息只支持字符串 `content`，不能使用图片内容数组。空的内容数组、空文字或空图片 URL 会导致调用失败。
 
 ### toolcall 事件对象
 

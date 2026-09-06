@@ -31,6 +31,70 @@ const text = await session.prompt('请用一句话介绍 AIUI');
 console.log(text);
 ```
 
+## Upload an Image to the Model
+
+To let the model understand a local image, import it as a `Blob`, convert it to a Data URL, and place it alongside the question in the user message's `content` array:
+
+```javascript
+import productPhoto, { mimeType } from '../../assets/product.jpg';
+
+async function blobToDataUrl(blob, type) {
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  const chunkSize = 0x8000;
+  let binary = '';
+
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(
+      ...bytes.subarray(offset, offset + chunkSize)
+    );
+  }
+
+  return `data:${type};base64,${btoa(binary)}`;
+}
+
+const session = await LanguageModel.create();
+const imageUrl = await blobToDataUrl(productPhoto, mimeType);
+const answer = await session.prompt([
+  {
+    role: 'user',
+    content: [
+      {
+        type: 'text',
+        text: 'Describe the product and list its main colors.',
+      },
+      {
+        type: 'image_url',
+        image_url: { url: imageUrl },
+      },
+    ],
+  },
+]);
+
+console.log(answer);
+session.destroy();
+```
+
+Images captured from a camera work the same way. `ImageCapture.takePhoto()` returns a `Blob` that can be passed to `blobToDataUrl()`.
+
+If the image already has a publicly accessible HTTPS URL, no Base64 conversion is needed. Assign the URL directly to `image_url.url`:
+
+```javascript
+const answer = await session.prompt([
+  {
+    role: 'user',
+    content: [
+      { type: 'text', text: 'What is shown in this image?' },
+      {
+        type: 'image_url',
+        image_url: { url: 'https://example.com/photos/product.jpg' },
+      },
+    ],
+  },
+]);
+```
+
+The selected model must support image input. Resize and compress images before uploading so a large Data URL does not slow the request or exceed model limits.
+
 ## Streaming Output
 
 ```javascript
@@ -78,7 +142,7 @@ const session = await LanguageModel.create({
 session.addEventListener('toolcall', (event) => {
   console.log('收到工具调用请求:', event.functionName);
   console.log('参数:', event.arguments);
-  
+
   if (event.functionName === 'get_weather') {
     // Handle weather query logic
     const { city } = event.arguments;
@@ -148,7 +212,7 @@ import { LanguageModel } from 'language-model';
 
 #### `prompt(input)`
 - **Return value**: `Promise<string>`
-- **Description**: Sends a single request and returns the final text after completion.
+- **Description**: Sends a single request and returns the final text after completion. `input` can be a string or `LanguageModelMessage[]`.
 
 #### `promptStreaming(input)`
 - **Return value**: `LanguageModelTextStream`
@@ -159,6 +223,17 @@ import { LanguageModel } from 'language-model';
 
 #### `destroy()`
 - **Description**: Destroys the current session and releases the session resources needed for later use.
+
+### Image Input Messages
+
+Image input is only allowed in a structured message with `role: 'user'`. `content` is an array that can contain text and one or more images.
+
+| Content type | Shape | Description |
+| --- | --- | --- |
+| Text | `{ type: 'text', text: string }` | `text` must not be empty. |
+| Image | `{ type: 'image_url', image_url: { url: string } }` | `url` can be an image URL accessible to the model or an image Data URL. It must not be empty. |
+
+`system` and `assistant` messages only support string `content`; they cannot use an image content array. An empty content array, empty text, or empty image URL causes the call to fail.
 
 ### `toolcall` Event Object
 
