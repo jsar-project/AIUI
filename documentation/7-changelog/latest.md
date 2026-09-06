@@ -96,6 +96,23 @@ AIUI 0.18.0 支持开发 Widget 和后台任务，并带来更多常用 Web API�
   oscillator.stop(context.currentTime + 0.2);
   ```
 
+- **分析麦克风声音**：可以通过 `AudioContext.createMediaStreamSource()` 把麦克风接入 Web Audio，用来制作实时音量动画、绘制波形，或根据声音控制界面。使用前需要在 `app.json` 中添加 `RECORD_AUDIO` 权限。
+
+  ```js
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const context = new AudioContext();
+  const microphone = context.createMediaStreamSource(stream);
+  const analyser = context.createAnalyser();
+
+  microphone.connect(analyser);
+  await context.resume();
+
+  const waveform = new Float32Array(analyser.fftSize);
+  analyser.getFloatTimeDomainData(waveform);
+  ```
+
+  完整用法请查看[音频处理（Web Audio）](/AIUI/api/media-web-audio#分析麦克风输入)。
+
 - **持续识别音频内容**：可以把录制或已有的音频逐段写入 `SpeechRecognitionSession`，持续收到最新识别文字，并随时结束或取消任务；语音播报也支持直接取消。
 
   ```js

@@ -1,6 +1,6 @@
 # 音频处理（Web Audio）
 
-音频处理适合需要实时生成或改变声音的场景。AIUI 通过 Web Audio API 支持生成声音、处理 PCM 音频、调整音量、添加滤波器，以及读取波形或频率数据。
+音频处理适合需要实时生成、采集或改变声音的场景。AIUI 通过 Web Audio API 支持生成声音、处理 PCM 音频、接入麦克风、调整音量、添加滤波器，以及读取波形或频率数据。
 
 如果只是播放 MP3、Ogg 等完整音频文件，优先使用[音频播放](/AIUI/api/media-audio-player)，通常更省电，也更容易使用。
 
@@ -79,6 +79,61 @@ analyser.getByteFrequencyData(spectrum);
 
 不再使用时调用 `context.close()` 释放音频资源。
 
+## 分析麦克风输入
+
+可以把 `getUserMedia()` 获取的麦克风媒体流接入 Web Audio，例如显示音量动画、绘制实时波形，或根据声音控制界面。
+
+先在 `app.json` 中声明录音权限：
+
+```json
+{
+  "permissions": ["RECORD_AUDIO"]
+}
+```
+
+下面的页面示例在用户点击按钮后开始计算麦克风音量，并在页面卸载时释放资源：
+
+```javascript
+export default {
+  async startMicrophoneAnalysis() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const context = new AudioContext();
+    const source = context.createMediaStreamSource(stream);
+    const analyser = context.createAnalyser();
+    const waveform = new Float32Array(analyser.fftSize);
+
+    source.connect(analyser);
+    await context.resume();
+
+    this.microphone = { stream, context, source };
+    this.volumeTimer = setInterval(() => {
+      analyser.getFloatTimeDomainData(waveform);
+      let energy = 0;
+      for (const sample of waveform) energy += sample * sample;
+      const volume = Math.sqrt(energy / waveform.length);
+      console.log('当前音量：', volume);
+    }, 50);
+  },
+
+  async stopMicrophoneAnalysis() {
+    clearInterval(this.volumeTimer);
+    if (!this.microphone) return;
+
+    const { stream, context, source } = this.microphone;
+    source.disconnect();
+    for (const track of stream.getTracks()) track.stop();
+    await context.close();
+    this.microphone = null;
+  },
+
+  onUnload() {
+    return this.stopMicrophoneAnalysis();
+  },
+};
+```
+
+请从按钮的 `bindtap` 等用户操作中调用 `startMicrophoneAnalysis()`。分析音量时不需要连接 `context.destination`，否则麦克风声音会从扬声器播放，可能产生啸叫。
+
 ## API Reference
 
 ### `new AudioContext(options?)`
@@ -96,7 +151,7 @@ analyser.getByteFrequencyData(spectrum);
 | `suspend()` | 暂停处理。 |
 | `close()` | 关闭上下文并释放资源。 |
 | `decodeAudioData(data)` | 把编码音频的 `ArrayBuffer` 解码为 `AudioBuffer`。 |
-| `createMediaStreamSource(stream)` | 创建读取 `MediaStream` 音轨的节点。 |
+| `createMediaStreamSource(mediaStream)` | 创建读取媒体流中音频轨道的 `MediaStreamAudioSourceNode`。媒体流没有音频轨道时会抛出 `InvalidStateError`。 |
 
 `AudioContext` 继承 `BaseAudioContext` 的所有属性和创建方法。
 
@@ -255,4 +310,12 @@ const analyser = context.createAnalyser();
 microphone.connect(analyser);
 ```
 
-只读属性 `mediaStream` 返回创建节点时使用的媒体流。构造函数的 `options.mediaStream` 是必填项。
+| 成员 | 说明 |
+| --- | --- |
+| `new MediaStreamAudioSourceNode(context, { mediaStream })` | 使用指定媒体流创建节点；`mediaStream` 必填且必须包含音频轨道。 |
+| `mediaStream` | 只读，返回创建节点时使用的媒体流。 |
+| `numberOfInputs` | 始终为 `0`，声音来自媒体流而不是其他音频节点。 |
+
+节点使用媒体流中的音频轨道。将轨道的 `enabled` 设为 `false` 可以暂时静音，重新设为 `true` 后继续输入；调用 `track.stop()` 后，该轨道结束，节点将输出静音。
+
+不再使用时，应依次调用 `source.disconnect()`、停止媒体流中的轨道，并调用 `context.close()`。如果传入的值不是 `MediaStream`，构造函数和 `createMediaStreamSource()` 会抛出 `TypeError`。

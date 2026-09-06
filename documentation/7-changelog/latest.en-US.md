@@ -96,6 +96,23 @@ AIUI 0.18.0 lets you build Widgets and background tasks, and adds more familiar 
   oscillator.stop(context.currentTime + 0.2);
   ```
 
+- **Analyse Microphone Audio**: `AudioContext.createMediaStreamSource()` can connect a microphone to Web Audio for live volume animations, waveform displays, and sound-controlled interfaces. Add `RECORD_AUDIO` to `permissions` in `app.json` before using the microphone.
+
+  ```js
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const context = new AudioContext();
+  const microphone = context.createMediaStreamSource(stream);
+  const analyser = context.createAnalyser();
+
+  microphone.connect(analyser);
+  await context.resume();
+
+  const waveform = new Float32Array(analyser.fftSize);
+  analyser.getFloatTimeDomainData(waveform);
+  ```
+
+  See [Audio Processing (Web Audio)](/AIUI/api/media-web-audio#analyse-microphone-input) for complete usage.
+
 - **Continuous Audio Recognition**: Apps can write recorded or existing audio to `SpeechRecognitionSession` in parts, receive updated recognition text as it becomes available, and finish or cancel the task at any time. Spoken output can now also be cancelled directly.
 
   ```js

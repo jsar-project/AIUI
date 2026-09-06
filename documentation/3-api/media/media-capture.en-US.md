@@ -72,6 +72,8 @@ The Web `ImageCapture` API requires a video track. `takePhoto()` returns an enco
 
 Both API styles continuously deliver data chunks that the application can process:
 
+To inspect microphone volume, waveform, or frequency data in real time, pass the same `MediaStream` to `AudioContext.createMediaStreamSource()`. See [Audio Processing (Web Audio)](/AIUI/api/media-web-audio#analyse-microphone-input) for a complete example.
+
 <!-- aiui-api-style default=web -->
 
 **Web**

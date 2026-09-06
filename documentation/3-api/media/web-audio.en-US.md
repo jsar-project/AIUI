@@ -1,6 +1,6 @@
 # Audio Processing (Web Audio)
 
-Audio processing is intended for scenarios that generate or modify sound in real time. AIUI uses the Web Audio API to generate sounds, process PCM audio, adjust volume, apply filters, and inspect waveform or frequency data.
+Audio processing is intended for scenarios that generate, capture, or modify sound in real time. AIUI uses the Web Audio API to generate sounds, process PCM audio, connect microphone input, adjust volume, apply filters, and inspect waveform or frequency data.
 
 For ordinary MP3, Ogg, or other complete file playback, prefer [Audio Playback](/AIUI/api/media-audio-player). It is usually easier to use and more power efficient.
 
@@ -79,6 +79,61 @@ analyser.getByteFrequencyData(spectrum);
 
 Call `context.close()` when the context is no longer needed to release audio resources.
 
+## Analyse Microphone Input
+
+You can connect a microphone stream returned by `getUserMedia()` to Web Audio. This is useful for volume animations, live waveforms, and interfaces controlled by sound.
+
+First declare microphone permission in `app.json`:
+
+```json
+{
+  "permissions": ["RECORD_AUDIO"]
+}
+```
+
+The following page example starts measuring microphone volume after a user action and releases its resources when the page unloads:
+
+```javascript
+export default {
+  async startMicrophoneAnalysis() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const context = new AudioContext();
+    const source = context.createMediaStreamSource(stream);
+    const analyser = context.createAnalyser();
+    const waveform = new Float32Array(analyser.fftSize);
+
+    source.connect(analyser);
+    await context.resume();
+
+    this.microphone = { stream, context, source };
+    this.volumeTimer = setInterval(() => {
+      analyser.getFloatTimeDomainData(waveform);
+      let energy = 0;
+      for (const sample of waveform) energy += sample * sample;
+      const volume = Math.sqrt(energy / waveform.length);
+      console.log('Current volume:', volume);
+    }, 50);
+  },
+
+  async stopMicrophoneAnalysis() {
+    clearInterval(this.volumeTimer);
+    if (!this.microphone) return;
+
+    const { stream, context, source } = this.microphone;
+    source.disconnect();
+    for (const track of stream.getTracks()) track.stop();
+    await context.close();
+    this.microphone = null;
+  },
+
+  onUnload() {
+    return this.stopMicrophoneAnalysis();
+  },
+};
+```
+
+Call `startMicrophoneAnalysis()` from a user action such as a button `bindtap`. Volume analysis does not require a connection to `context.destination`; connecting it would play the microphone through the speaker and may cause feedback.
+
 ## API Reference
 
 ### `new AudioContext(options?)`
@@ -96,7 +151,7 @@ Call `context.close()` when the context is no longer needed to release audio res
 | `suspend()` | Suspends processing. |
 | `close()` | Closes the context and releases resources. |
 | `decodeAudioData(data)` | Decodes an encoded audio `ArrayBuffer` into an `AudioBuffer`. |
-| `createMediaStreamSource(stream)` | Creates a node that reads audio tracks from a `MediaStream`. |
+| `createMediaStreamSource(mediaStream)` | Creates a `MediaStreamAudioSourceNode` that reads an audio track from the media stream. Throws `InvalidStateError` if the stream has no audio track. |
 
 `AudioContext` inherits all properties and creation methods from `BaseAudioContext`.
 
@@ -255,4 +310,12 @@ const analyser = context.createAnalyser();
 microphone.connect(analyser);
 ```
 
-The read-only `mediaStream` property returns the stream used to create the node. `options.mediaStream` is required when using the constructor.
+| Member | Description |
+| --- | --- |
+| `new MediaStreamAudioSourceNode(context, { mediaStream })` | Creates a node for the specified stream. `mediaStream` is required and must contain an audio track. |
+| `mediaStream` | Read-only. Returns the stream used to create the node. |
+| `numberOfInputs` | Always `0`, because audio comes from the media stream instead of another audio node. |
+
+The node uses an audio track from the media stream. Set the track's `enabled` property to `false` to mute it temporarily and back to `true` to resume input. After `track.stop()` ends the track, the node outputs silence.
+
+When finished, call `source.disconnect()`, stop the stream tracks, and call `context.close()`. The constructor and `createMediaStreamSource()` throw `TypeError` when the supplied value is not a `MediaStream`.

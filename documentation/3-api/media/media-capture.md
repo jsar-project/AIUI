@@ -72,6 +72,8 @@ Web 写法中的 `ImageCapture` 需要一个视频轨道。`takePhoto()` 返回�
 
 录制音频时，两种 API 风格都会持续交付可处理的数据分片：
 
+如果需要实时读取麦克风音量、波形或频率，可以把同一个 `MediaStream` 传给 `AudioContext.createMediaStreamSource()`。完整示例请查看[音频处理（Web Audio）](/AIUI/api/media-web-audio#分析麦克风输入)。
+
 <!-- aiui-api-style default=web -->
 
 **Web**
