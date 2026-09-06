@@ -34,6 +34,112 @@ console.log('识别会话:', sessionId);
 
 <!-- /aiui-api-style -->
 
+## 使用当前麦克风进行识别
+
+`SpeechRecognitionSession` 不会直接打开麦克风。需要先获取当前麦克风，再用 `MediaRecorder` 把录音片段持续写入会话。使用前在 `app.json` 中声明录音权限：
+
+```json
+{
+  "permissions": ["RECORD_AUDIO"]
+}
+```
+
+下面的页面示例会自动选择录音和识别服务都支持的音频格式，同时加入热词和初始 ASR 上下文：
+
+```javascript
+export default {
+  session: null,
+  recorder: null,
+  microphone: null,
+  writer: null,
+  writeQueue: Promise.resolve(),
+
+  async startMicrophoneRecognition() {
+    const capabilities = await SpeechRecognitionSession.getCapabilities();
+    const candidates = ['audio/ogg;codecs=opus', 'audio/wav'];
+    const mimeType = candidates.find((candidate) =>
+      MediaRecorder.isTypeSupported(candidate) &&
+      capabilities.audioFormats.some(
+        (format) => format.mimeType.toLowerCase() === candidate
+      )
+    );
+
+    if (!mimeType) {
+      throw new Error('当前没有录音和语音识别都支持的音频格式');
+    }
+
+    const session = new SpeechRecognitionSession({
+      lang: 'zh-CN',
+      interimResults: capabilities.interimResults,
+      audio: { mimeType },
+      phrases: capabilities.phrases
+        ? [
+            { phrase: 'Rokid', boost: 5 },
+            { phrase: 'AIUI', boost: 5 },
+          ]
+        : undefined,
+    });
+    this.session = session;
+
+    if (capabilities.contextUpdates) {
+      await session.updateContext([
+        { role: 'user', text: '我正在使用语音查询 Rokid 产品' },
+        { role: 'assistant', text: '好的，请说出产品名称或问题' },
+      ]);
+    }
+
+    session.onresult = (event) => {
+      const result = event.results[event.resultIndex][0];
+      console.log(result.transcript);
+    };
+    session.onerror = (event) => {
+      console.error(event.error, event.message);
+    };
+
+    this.microphone = await navigator.mediaDevices.getUserMedia({ audio: true });
+    this.writer = session.audio.getWriter();
+    this.writeQueue = Promise.resolve();
+    this.recorder = new MediaRecorder(this.microphone, { mimeType });
+
+    this.recorder.ondataavailable = (event) => {
+      if (event.data.size === 0) return;
+      this.writeQueue = this.writeQueue.then(() =>
+        this.writer.write(event.data)
+      );
+    };
+
+    this.recorder.onstop = async () => {
+      try {
+        await this.writeQueue;
+        await this.writer.close();
+      } finally {
+        this.microphone.getTracks().forEach((track) => track.stop());
+        this.recorder = null;
+        this.microphone = null;
+        this.writer = null;
+        this.session = null;
+      }
+    };
+
+    // 在用户点击事件中开始录音，每 250 ms 产生一个音频片段。
+    this.recorder.start(250);
+  },
+
+  stopMicrophoneRecognition() {
+    if (this.recorder && this.recorder.state !== 'inactive') {
+      this.recorder.stop();
+    }
+  },
+};
+```
+
+```xml
+<button bindtap="startMicrophoneRecognition">开始识别</button>
+<button bindtap="stopMicrophoneRecognition">停止识别</button>
+```
+
+`startMicrophoneRecognition()` 必须由用户点击等有效交互触发。停止时要等待所有录音片段写入完成，再关闭 `writer`；`writer.close()` 会通知识别服务音频已经结束，使其生成最终结果。最后调用每条麦克风音轨的 `stop()` 释放设备。
+
 ## 识别已有或分段到达的音频
 
 `SpeechRecognitionSession` 不会主动打开麦克风。你可以把录音文件、已有音频，或者持续收到的音频片段写入 `audio`：
@@ -172,6 +278,7 @@ await writer.close();
 
 - **[语音播报](/AIUI/api/ai-speech-synthesis)**：查看如何把文本结果播报给用户。
 - **[大语言模型](/AIUI/api/ai-language-model)**：查看如何把识别文本继续交给模型处理。
+- **[媒体采集](/AIUI/api/media-media-capture)**：查看麦克风、相机和 `MediaRecorder` 的完整用法。
 
 ## API Reference
 

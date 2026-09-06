@@ -34,6 +34,112 @@ console.log('Recognition session:', sessionId);
 
 <!-- /aiui-api-style -->
 
+## Recognize the Current Microphone
+
+`SpeechRecognitionSession` does not open the microphone directly. Get the current microphone first, then use `MediaRecorder` to write recorded chunks into the session. Declare recording permission in `app.json`:
+
+```json
+{
+  "permissions": ["RECORD_AUDIO"]
+}
+```
+
+The following page example selects an audio format supported by both recording and recognition, and also adds custom phrases and initial ASR context:
+
+```javascript
+export default {
+  session: null,
+  recorder: null,
+  microphone: null,
+  writer: null,
+  writeQueue: Promise.resolve(),
+
+  async startMicrophoneRecognition() {
+    const capabilities = await SpeechRecognitionSession.getCapabilities();
+    const candidates = ['audio/ogg;codecs=opus', 'audio/wav'];
+    const mimeType = candidates.find((candidate) =>
+      MediaRecorder.isTypeSupported(candidate) &&
+      capabilities.audioFormats.some(
+        (format) => format.mimeType.toLowerCase() === candidate
+      )
+    );
+
+    if (!mimeType) {
+      throw new Error('Recording and recognition have no shared audio format');
+    }
+
+    const session = new SpeechRecognitionSession({
+      lang: 'en-US',
+      interimResults: capabilities.interimResults,
+      audio: { mimeType },
+      phrases: capabilities.phrases
+        ? [
+            { phrase: 'Rokid', boost: 5 },
+            { phrase: 'AIUI', boost: 5 },
+          ]
+        : undefined,
+    });
+    this.session = session;
+
+    if (capabilities.contextUpdates) {
+      await session.updateContext([
+        { role: 'user', text: 'I am asking about Rokid products by voice.' },
+        { role: 'assistant', text: 'Please say the product name or question.' },
+      ]);
+    }
+
+    session.onresult = (event) => {
+      const result = event.results[event.resultIndex][0];
+      console.log(result.transcript);
+    };
+    session.onerror = (event) => {
+      console.error(event.error, event.message);
+    };
+
+    this.microphone = await navigator.mediaDevices.getUserMedia({ audio: true });
+    this.writer = session.audio.getWriter();
+    this.writeQueue = Promise.resolve();
+    this.recorder = new MediaRecorder(this.microphone, { mimeType });
+
+    this.recorder.ondataavailable = (event) => {
+      if (event.data.size === 0) return;
+      this.writeQueue = this.writeQueue.then(() =>
+        this.writer.write(event.data)
+      );
+    };
+
+    this.recorder.onstop = async () => {
+      try {
+        await this.writeQueue;
+        await this.writer.close();
+      } finally {
+        this.microphone.getTracks().forEach((track) => track.stop());
+        this.recorder = null;
+        this.microphone = null;
+        this.writer = null;
+        this.session = null;
+      }
+    };
+
+    // Start from a user click and produce an audio chunk every 250 ms.
+    this.recorder.start(250);
+  },
+
+  stopMicrophoneRecognition() {
+    if (this.recorder && this.recorder.state !== 'inactive') {
+      this.recorder.stop();
+    }
+  },
+};
+```
+
+```xml
+<button bindtap="startMicrophoneRecognition">Start recognition</button>
+<button bindtap="stopMicrophoneRecognition">Stop recognition</button>
+```
+
+`startMicrophoneRecognition()` must be triggered by a valid interaction such as a user click. On stop, wait for all recorded chunks before closing the writer. `writer.close()` tells the recognition service that audio has ended so it can produce a final result. Finally, call `stop()` on every microphone track to release the device.
+
 ## Recognize Existing or Incremental Audio
 
 `SpeechRecognitionSession` does not open the microphone itself. Write a recording, an existing audio file, or incoming audio chunks to its `audio` stream:
@@ -172,6 +278,7 @@ Each message must use `user` or `assistant` as its `role`, and `text` must not b
 
 - **[Speech Synthesis](/AIUI/api/ai-speech-synthesis)**: Learn how to speak text results to the user.
 - **[Large Language Model](/AIUI/api/ai-language-model)**: Learn how to pass recognized text to the model for further processing.
+- **[Media Capture](/AIUI/api/media-media-capture)**: See complete microphone, camera, and `MediaRecorder` usage.
 
 ## API Reference
 
