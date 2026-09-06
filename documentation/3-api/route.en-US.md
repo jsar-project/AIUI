@@ -17,6 +17,8 @@ Continue reading:
 - **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See APIs such as `wx.navigateTo`, `wx.redirectTo`, and `wx.navigateBack`.
 - **[App](/AIUI/api/framework-app)**: Learn about application-level configuration and lifecycle entry points.
 - **[Page](/AIUI/api/framework-page)**: Learn how pages are defined and how page-level behavior works.
+- **[Widget](/AIUI/api/framework-widget)**: Learn about Widget data, state, and dimension APIs.
+- **[AgentWorker](/AIUI/api/framework-agent-worker)**: Learn about background-task events and instance APIs.
 
 ## API Reference
 

@@ -21,6 +21,8 @@ In other words, OAF is not a single config file. It is an engineering-oriented o
 - `AGENTS.md` expresses the agent description layer
 - `app.json` and the application entry express the runtime layer
 - `pages/` expresses pages and interaction
+- `widgets/` expresses small independent interfaces
+- `workers/` expresses background tasks shared across entries
 - Components, modules, and packages express the reuse layer
 
 ## What AIUI Extends
@@ -32,6 +34,8 @@ In AIUI, a complete OAF project usually contains at least these parts:
 - `AGENTS.md`: defines agent identity, system instructions, capability boundaries, and collaboration constraints
 - `app.json`: defines the application entry, page list, and global window configuration
 - `pages/`: defines concrete pages, page lifecycle, events, and interaction logic
+- `widgets/`: defines Widget entries, displayed content, and state callbacks
+- `workers/`: defines Agent Worker background tasks
 - `components/`: encapsulates reusable UI and local interaction units
 - `modules/` or other regular module files: split business logic, utility functions, and asset imports
 - `package.json` and package exports: distribute reusable capabilities to other AIUI applications
@@ -55,6 +59,11 @@ agent-app/
   pages/
     home/
       index.ink
+  widgets/
+    weather/
+      index.ink
+  workers/
+    sync.js
   components/
     agent-card.ink
   modules/
@@ -67,6 +76,8 @@ Each layer answers a different question:
 - `AGENTS.md`: who this agent is and how it should think and respond
 - `app.json` / `app.js`: how the agent application starts and which global behaviors it owns
 - `pages/`: which UI the user actually sees and interacts with
+- `widgets/`: the small interfaces users can quickly read or operate
+- `workers/`: the tasks that should keep running across Pages or Widgets
 - `components/`: which UI fragments should be reused and encapsulated
 - `modules/`: which logic, assets, or capabilities should be factored out
 - `package.json`: which capabilities should be exposed as a package for other projects
@@ -89,6 +100,8 @@ This matters even more in AIUI, because AIUI is not built for agents that only a
 - [AGENTS.md](/AIUI/framework/config-agents): learn how the agent description file defines identity, description, and instructions
 - [app.json](/AIUI/framework/open-agent-format-app-json): learn how application entry, page lists, and global configuration work
 - [Pages](/AIUI/framework/open-agent-format-page): learn how pages carry concrete UI, lifecycle, and interaction
+- [Widget](/AIUI/framework/open-agent-format-widget): learn how to build a small independent interface
+- [Agent Worker](/AIUI/framework/open-agent-format-agent-worker): learn how to build a shared background task
 - [Components](./custom-components): learn how reusable UI units are registered, composed, and connected
 - [Modules](./module): learn how logic, assets, and WebAssembly are organized through modules
 - [Packages](./package): learn how modules and components are packaged into distributable capabilities

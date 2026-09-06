@@ -297,6 +297,18 @@
             ]
           },
           {
+            "id": "widget",
+            "label": "Widgets",
+            "docId": "open-agent-format-widget",
+            "docPath": "1-framework/open-agent-format/widget.en-US.md"
+          },
+          {
+            "id": "agent-worker",
+            "label": "Agent Workers",
+            "docId": "open-agent-format-agent-worker",
+            "docPath": "1-framework/open-agent-format/agent-worker.en-US.md"
+          },
+          {
             "id": "custom-components",
             "label": "Components",
             "docId": "open-agent-format-custom-components",
@@ -511,6 +523,18 @@
             "id": "page",
             "label": "Page",
             "docId": "framework-page"
+          },
+          {
+            "id": "widget",
+            "label": "Widget",
+            "docId": "framework-widget",
+            "docPath": "3-api/framework/widget.en-US.md"
+          },
+          {
+            "id": "agent-worker",
+            "label": "AgentWorker",
+            "docId": "framework-agent-worker",
+            "docPath": "3-api/framework/agent-worker.en-US.md"
           },
           {
             "id": "component",

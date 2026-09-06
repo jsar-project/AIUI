@@ -21,6 +21,8 @@ Open Agent Format 解决的，就是这些信息的组织问题。它把智能�
 - 用 `AGENTS.md` 表达智能体描述层
 - 用 `app.json` 和应用入口表达运行层
 - 用 `pages/` 表达页面和交互层
+- 用 `widgets/` 表达小尺寸独立界面
+- 用 `workers/` 表达跨页面共享的后台任务
 - 用组件、模块与 Package 表达复用层
 
 ## AIUI 扩展了什么
@@ -32,6 +34,8 @@ Open Agent Format 解决的，就是这些信息的组织问题。它把智能�
 - `AGENTS.md`：定义智能体身份、系统指令、能力边界和协作约束
 - `app.json`：定义应用入口、页面列表和全局窗口配置
 - `pages/`：定义具体页面、页面生命周期、事件以及交互逻辑
+- `widgets/`：定义 Widget 入口、显示内容和状态变化回调
+- `workers/`：定义 Agent Worker 后台任务
 - `components/`：封装可复用 UI 与局部交互单元
 - `modules/` 或其他普通模块文件：拆分业务逻辑、工具函数和资源导入
 - `package.json` 与 Package 导出：把可复用能力分发给其他 AIUI 应用
@@ -55,6 +59,11 @@ agent-app/
   pages/
     home/
       index.ink
+  widgets/
+    weather/
+      index.ink
+  workers/
+    sync.js
   components/
     agent-card.ink
   modules/
@@ -67,6 +76,8 @@ agent-app/
 - `AGENTS.md`：这个智能体是谁，应该如何思考和回应
 - `app.json` / `app.js`：这个智能体应用如何启动，以及有哪些全局行为
 - `pages/`：用户实际看到和操作的界面是什么
+- `widgets/`：用户可以快速查看或操作的小尺寸界面是什么
+- `workers/`：哪些任务需要在多个 Page 或 Widget 之间保持运行
 - `components/`：界面里哪些片段需要复用和封装
 - `modules/`：哪些逻辑、资源或能力需要被拆分复用
 - `package.json`：哪些能力要作为 Package 暴露给别的项目使用
@@ -89,6 +100,8 @@ Open Agent Format 的价值，不在于引入新的术语，而在于让智能�
 - [AGENTS.md](/AIUI/framework/config-agents)：了解智能体描述文件如何定义身份、说明和指令
 - [app.json](/AIUI/framework/open-agent-format-app-json)：了解应用入口、页面集合和全局配置
 - [页面](/AIUI/framework/open-agent-format-page)：了解页面如何承载具体 UI、生命周期和交互
+- [Widget](/AIUI/framework/open-agent-format-widget)：了解如何开发小尺寸独立界面
+- [Agent Worker](/AIUI/framework/open-agent-format-agent-worker)：了解如何开发共享后台任务
 - [组件](./custom-components)：了解可复用 UI 单元如何注册、组合和通信
 - [模块](./module)：了解逻辑、资源和 WebAssembly 如何通过模块组织
 - [Package](./package)：了解如何把模块与组件封装成可分发能力

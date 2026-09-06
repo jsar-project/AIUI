@@ -297,6 +297,18 @@
             ]
           },
           {
+            "id": "widget",
+            "label": "Widget",
+            "docId": "open-agent-format-widget",
+            "docPath": "1-framework/open-agent-format/widget.md"
+          },
+          {
+            "id": "agent-worker",
+            "label": "Agent Worker",
+            "docId": "open-agent-format-agent-worker",
+            "docPath": "1-framework/open-agent-format/agent-worker.md"
+          },
+          {
             "id": "custom-components",
             "label": "组件",
             "docId": "open-agent-format-custom-components",
@@ -666,6 +678,18 @@
             "id": "page",
             "label": "Page",
             "docId": "framework-page"
+          },
+          {
+            "id": "widget",
+            "label": "Widget",
+            "docId": "framework-widget",
+            "docPath": "3-api/framework/widget.md"
+          },
+          {
+            "id": "agent-worker",
+            "label": "AgentWorker",
+            "docId": "framework-agent-worker",
+            "docPath": "3-api/framework/agent-worker.md"
           },
           {
             "id": "component",

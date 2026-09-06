@@ -1,10 +1,10 @@
 # app.json
 
-在 AIUI 对 Open Agent Format 的扩展中，`app.json` 用来定义应用级入口和全局配置。它决定一个智能体应用从哪里开始运行，也决定页面集合和全局窗口行为如何组织。
+在 AIUI 对 Open Agent Format 的扩展中，`app.json` 用来定义应用级入口和全局配置。它决定一个智能体应用从哪里开始运行，也决定 Page、Widget、Agent Worker 和全局窗口行为如何组织。
 
 不过，一个完整的应用级定义通常不只有 `app.json`，还会同时配合应用级逻辑入口一起使用。你可以把它理解成：
 
-- `app.json`：定义应用入口、页面集合和全局配置
+- `app.json`：定义 Page、Widget、Agent Worker 和全局配置
 - `app.js`：定义应用级逻辑和全局生命周期
 
 ## `app.json` 负责什么
@@ -12,6 +12,8 @@
 `app.json` 主要用于声明：
 
 - 应用包含哪些页面
+- 应用包含哪些 Widget
+- 需要随智能体运行的后台任务
 - 应用从哪个页面开始启动
 - 全局窗口样式
 - 跨页面共享的基础配置
@@ -37,6 +39,32 @@
 
 - `pages`：声明页面路径列表
 - `window`：声明全局窗口配置
+
+## 声明 Widget 和后台任务
+
+除了 Page，`app.json` 还可以声明 Widget 与 Agent Worker：
+
+```json
+{
+  "pages": ["pages/index/index"],
+  "widgets": [
+    { "path": "widgets/weather/index", "family": "1x2" }
+  ],
+  "agentWorkers": [
+    {
+      "name": "sync",
+      "script": "workers/sync.js",
+      "trigger": { "type": "open" },
+      "lifetime": "instant"
+    }
+  ]
+}
+```
+
+- `widgets`：声明独立 Widget 入口及其 `1x1` 或 `1x2` 尺寸类别。
+- `agentWorkers`：声明后台脚本的名称、入口文件、启动条件和运行时长。
+
+具体配置和示例请参阅 [Widget](/AIUI/framework/open-agent-format-widget) 与 [Agent Worker](/AIUI/framework/open-agent-format-agent-worker)。
 
 ## 它和 `AGENTS.md` 的关系
 
@@ -90,7 +118,7 @@ export default {
 从 Open Agent Format 视角看，`app.json` 和 `app.js` 共同补上了“应用级定义”这一层：
 
 - `AGENTS.md`：描述智能体
-- `app.json`：定义应用入口和全局配置
+- `app.json`：定义 Page、Widget、Agent Worker 和全局配置
 - `app.js`：定义应用级逻辑和全局生命周期
 - `pages/`：定义具体页面与交互界面
 
@@ -101,3 +129,5 @@ export default {
 - [AGENTS.md](/AIUI/framework/config-agents)
 - [页面概览](/AIUI/framework/open-agent-format-page)
 - [页面定义](/AIUI/framework/open-agent-format-page-definition)
+- [Widget](/AIUI/framework/open-agent-format-widget)
+- [Agent Worker](/AIUI/framework/open-agent-format-agent-worker)

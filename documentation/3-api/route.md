@@ -17,6 +17,8 @@ wx.navigateTo({
 - **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看 `wx.navigateTo`、`wx.redirectTo`、`wx.navigateBack` 等接口。
 - **[App](/AIUI/api/framework-app)**：了解应用级配置与生命周期入口。
 - **[Page](/AIUI/api/framework-page)**：了解页面的定义方式与页面级行为。
+- **[Widget](/AIUI/api/framework-widget)**：了解 Widget 数据、状态和尺寸 API。
+- **[AgentWorker](/AIUI/api/framework-agent-worker)**：了解后台任务的事件和实例 API。
 
 ## API Reference
 
