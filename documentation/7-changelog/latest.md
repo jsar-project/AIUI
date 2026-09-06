@@ -67,6 +67,22 @@ AIUI 0.18.0 支持开发 Widget 和后台任务，并带来更多常用 Web API�
   });
   ```
 
+- **GEO 与位置信息**：可以通过 `navigator.geolocation` 获取当前位置或持续接收位置变化；还可以使用 `GPXDocument` 读取、创建和导出 GPX 路线数据，用于运动记录、导航和地图路线展示。使用定位前，需要在 `app.json` 的 `permissions` 中添加 `GEOLOCATION`。
+
+  ```js
+  navigator.geolocation.getCurrentPosition((position) => {
+    const { latitude, longitude } = position.coords;
+    console.log('当前位置：', latitude, longitude);
+  });
+
+  const route = new GPXDocument();
+  route.appendTrackPoint({ latitude: 30.2741, longitude: 120.1551 });
+  route.appendTrackPoint({ latitude: 30.2792, longitude: 120.1618 });
+  console.log(route.toString());
+  ```
+
+  完整用法请查看 [Geolocation](/AIUI/api/geo-data-geolocation) 和 [GPXDocument](/AIUI/api/geo-data-gpx-document)。
+
 - **更灵活的音频处理**：通过 Web Audio 可以播放或生成声音、调节音量、添加滤波效果、读取波形和频谱，并连续播放 PCM 音频数据。
 
   ```js

@@ -33,7 +33,7 @@ console.log('storage root:', root.name);
 - `navigator.getDeviceSerialNumber()` 返回的是宿主提供的设备序列号，若宿主未实现则返回空字符串；使用时应注意隐私与数据安全。
 - `navigator.userAgent` 适合用于识别运行时与平台信息，不建议依赖字符串解析实现强耦合逻辑。
 - `navigator.language`、`navigator.languages` 与 `navigator.region` 都来自宿主环境，不同平台的具体值格式可能不同。
-- `navigator.bluetooth`、`navigator.geolocation`、`navigator.mediaDevices`、`navigator.storage` 与电池状态都依赖宿主能力和 Agent 权限。
+- `navigator.bluetooth`、`navigator.geolocation`、`navigator.mediaDevices`、`navigator.storage` 与电池状态都依赖设备能力和 Agent 权限。
 
 ## API Reference
 
@@ -134,7 +134,7 @@ console.log('Bluetooth mounted:', !!bluetooth);
 #### `navigator.geolocation`
 
 - **类型**：`Geolocation`。
-- **说明**：地理位置能力入口，用于读取当前位置、监听位置变化和清理监听。定位权限与实现由宿主负责；完整接口见[地理位置](/AIUI/api/geo-data-geolocation)。
+- **说明**：地理位置能力入口，用于读取当前位置、监听位置变化和清理监听。使用前需要获得定位权限；完整接口见 [Geolocation](/AIUI/api/geo-data-geolocation)。
 
 ```javascript
 const geolocation = navigator.geolocation;

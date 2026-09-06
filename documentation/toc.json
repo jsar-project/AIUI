@@ -824,6 +824,25 @@
         ]
       },
       {
+        "id": "geo-data",
+        "label": "GEO & Location",
+        "expanded": false,
+        "children": [
+          {
+            "id": "geolocation",
+            "label": "Geolocation",
+            "docId": "geo-data-geolocation",
+            "docPath": "3-api/geo-data/geolocation.md"
+          },
+          {
+            "id": "gpx-document",
+            "label": "GPXDocument",
+            "docId": "geo-data-gpx-document",
+            "docPath": "3-api/geo-data/gpx-document.md"
+          }
+        ]
+      },
+      {
         "id": "ai",
         "label": "AI",
         "expanded": false,

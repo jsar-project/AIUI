@@ -67,6 +67,22 @@ AIUI 0.18.0 lets you build Widgets and background tasks, and adds more familiar 
   });
   ```
 
+- **GEO & Location**: Apps can use `navigator.geolocation` to get the current position or receive ongoing location updates. `GPXDocument` can read, create, and export GPX route data for activity tracking, navigation, and route display. Add `GEOLOCATION` to `permissions` in `app.json` before accessing location.
+
+  ```js
+  navigator.geolocation.getCurrentPosition((position) => {
+    const { latitude, longitude } = position.coords;
+    console.log('Current position:', latitude, longitude);
+  });
+
+  const route = new GPXDocument();
+  route.appendTrackPoint({ latitude: 30.2741, longitude: 120.1551 });
+  route.appendTrackPoint({ latitude: 30.2792, longitude: 120.1618 });
+  console.log(route.toString());
+  ```
+
+  See [Geolocation](/AIUI/api/geo-data-geolocation) and [GPXDocument](/AIUI/api/geo-data-gpx-document) for complete usage.
+
 - **More Flexible Audio**: Web Audio can play or generate sounds, adjust volume, add filters, inspect waveforms and frequency data, and continuously play PCM audio data.
 
   ```js

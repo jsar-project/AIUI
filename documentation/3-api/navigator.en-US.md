@@ -33,7 +33,7 @@ console.log('storage root:', root.name);
 - `navigator.getDeviceSerialNumber()` returns the serial number provided by the host. If the host does not implement it, the return value is `''`. Be mindful of privacy and data security when using it.
 - `navigator.userAgent` is suitable for identifying runtime and platform information. Avoid building tightly coupled logic that depends on string parsing.
 - `navigator.language`, `navigator.languages`, and `navigator.region` are all derived from the host environment, so their exact values may vary across platforms.
-- `navigator.bluetooth`, `navigator.geolocation`, `navigator.mediaDevices`, `navigator.storage`, and battery status depend on host capabilities and Agent permissions.
+- `navigator.bluetooth`, `navigator.geolocation`, `navigator.mediaDevices`, `navigator.storage`, and battery status depend on device capabilities and Agent permissions.
 
 ## API Reference
 
@@ -134,7 +134,7 @@ console.log('Bluetooth mounted:', !!bluetooth);
 #### `navigator.geolocation`
 
 - **Type**: `Geolocation`.
-- **Description**: Geolocation capability entry point for reading the current position, observing changes, and clearing observations. Permission handling and implementation are host-controlled. See [Geolocation](/AIUI/api/geo-data-geolocation).
+- **Description**: Entry point for reading the current position, watching changes, and clearing watches. Location permission is required; see [Geolocation](/AIUI/api/geo-data-geolocation).
 
 ```javascript
 const geolocation = navigator.geolocation;
