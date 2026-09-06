@@ -1,4 +1,4 @@
-# Quick Start
+# QuickStart
 
 Welcome to AIUI! AIUI is an AI-native GUI local agent framework designed specifically for AI + AR. It emphasizes both agent-oriented interaction and organizational patterns, while also integrating local device-side capabilities to help developers build truly deployable intelligent agents. To help you develop agents more efficiently, we provide a complete documentation guide:
 
@@ -18,7 +18,7 @@ In addition, you can choose different documentation versions from the upper-righ
 ## 🚀 Next Steps
 
 - **[Read the introduction](/AIUI/guide/quickstart-intro)**: Understand the basic ideas behind AIUI.
-- **[Quickstart](/AIUI/guide/quickstart)**: Get a quick overview of AIUI AI development, debugging, submission for review, and release.
+- **[AIUI Quickstart](/AIUI/guide/quickstart)**: Get a quick overview of AIUI Studio AI CODEING development, debugging, submission for review, and release.
 - **[Conversational AIUI](/AIUI/guide/quickstart-first-chat)**: Start with card-based interaction inside the chat flow.
 - **[Immersive AIUI](/AIUI/guide/quickstart-first-immersive)**: Start with complete interaction inside a standalone interface.
 - **[Learn the directory structure](/AIUI/guide/structure)**: Get familiar with how a standard intelligent agent project is organized.

@@ -1,3 +1,5 @@
+# Craft
+
 ## I. What Is Craft
 
 Craft is an integrated workspace for AIUI and Ink projects. It helps developers import projects, browse files, edit code, preview pages, and run simulations in one interface.

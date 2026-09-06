@@ -1,4 +1,6 @@
-## 一、什么是 Craft 平台
+# Craft 平台
+
+## 1.什么是 Craft 平台
 Craft 是面向 AIUI 与 Ink 工程的一体化工作台，帮助开发者在一个界面内完成项目导入、文件浏览、代码编辑与页面预览，模拟调试
 
 Craft 属于 AIUI 开发工具链的一部分，不替代 AIUI 框架本身，
@@ -8,7 +10,7 @@ Craft 属于 AIUI 开发工具链的一部分，不替代 AIUI 框架本身，
 
 访问地址：[https://js.rokid.com/craft](https://js.rokid.com/craft)
 
-## 二、初始化AIUI项目
+## 2.初始化AIUI项目
 1.在设备终端（terminal）输入
 ```plain
 npm create @yodaos-pkg/aiui-agent@latest my-agent
@@ -24,7 +26,7 @@ ls #列出当前文件夹里的文件和子文件夹
 2.文件所在文件位置
 ![image.png](../image/craft/02.png)
 
-## 三、使用 Craft（AIUI Web IDE）导入 AIUI 项目
+## 3.使用 Craft（AIUI Web IDE）导入 AIUI 项目
 1.进入 Craft（AIUI Web IDE）：[https://js.rokid.com/craft?lang=zh-CN](https://js.rokid.com/craft?lang=zh-CN)
 
 ![image.png](../image/craft/03.png)
@@ -33,13 +35,13 @@ ls #列出当前文件夹里的文件和子文件夹
 
 ![image.png](../image/craft/04.png)
 
-## 四、Craft Web 端调试
+## 4.Craft Web 端调试
 点击运行智能体进行 Web 端调试，
 ![image.png](../image/craft/05.png)
 在 Web IDE 中可模拟从唤醒、语言识别、大语言模型最后到语音播报到全过程，右侧有模拟眼镜的返回、单击、前后滑动的按钮
 ![image.png](../image/craft/06.png)
 
-## 五、在 Craft 中使用 AIUI Coding Agent 进行开发
+## 5.在 Craft 中使用 AIUI Coding Agent 进行开发
 1.Craft 中默认免费提供了 LLM（DeepSeek V4 Pro），可以下载 Skill 进行辅助开发，下载完成记得点击启用
 ![image.png](../image/craft/07.png)
 
@@ -49,7 +51,7 @@ ls #列出当前文件夹里的文件和子文件夹
 3.在 AIUI Code 主页面使用
 ![image.png](../image/craft/09.png)
 
-## 六、在 AIUI Studio 中新建 AIUI 智能体
+## 6.在 AIUI Studio 中新建 AIUI 智能体
 登陆 AIUI Studio（中国站）：[https://aiui.rokid.com/space](https://aiui.rokid.com/space)
 
 新建 AIUI 智能体的三种方式：
@@ -96,7 +98,7 @@ AIUI Sample项目：[https://github.com/jsar-project/AIUI/tree/main/samples](htt
 
 ![image.png](../image/craft/14.png)
 
-## 七、将 Craft 中的 AIUI 项目绑定到 AIUI 智能体上
+## 7.将 Craft 中的 AIUI 项目绑定到 AIUI 智能体上
 1.Craft 编辑器设置——本地管理——绑定对应 AIUI 智能体
 ![image.png](../image/craft/15.png)
 
@@ -108,7 +110,7 @@ AIUI Sample项目：[https://github.com/jsar-project/AIUI/tree/main/samples](htt
 3.依据 AIUI 项目情况设置对应的权限，右侧可以填写对 AIUI 的描述
 ![image.png](../image/craft/18.png)
 
-## 八、眼镜真机调试
+## 8.眼镜真机调试
 ⚠️  AIUI 项目需要绑定 AIUI Agent 并进行打包上传才可以进行真机调试
 
 Rokid Ai APP 中设置——开发者——更新眼镜资源包
@@ -121,7 +123,7 @@ Rokid Ai APP 中设置——开发者——更新眼镜资源包
 
 ![image.png](../image/craft/20.png)
 
-## 九、发布提审上架到 Rokid Ai 智能体商店中
+## 9.发布提审上架到 Rokid Ai 智能体商店中
 在 [AIUI Studio](https://aiui.rokid.com/) 的“构建与提审”栏中填写基本信息、权限依赖和预览素材，然后保存资料并提交审核
 
 ![image.png](../image/craft/21.png)
