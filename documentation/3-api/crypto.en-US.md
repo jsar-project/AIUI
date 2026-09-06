@@ -72,11 +72,11 @@ async function signMessage(keyText, message) {
 
 `Crypto` is the main entry point for cryptographic functionality.
 
-#### Properties
+**Properties**
 
 - **`subtle`**: Returns a `SubtleCrypto` object for digest, key import, and signing operations.
 
-#### Methods
+**Methods**
 
 - **`randomUUID()`**: Returns a randomly generated v4 UUID string.
 - **`getRandomValues(typedArray)`**: Fills an integer typed array with secure random values and returns the same array object. One call accepts at most 65,536 bytes.
@@ -85,7 +85,7 @@ async function signMessage(keyText, message) {
 
 The `SubtleCrypto` interface provides a number of low-level cryptographic primitives. All methods return a `Promise`.
 
-#### Methods
+**Methods**
 
 - **`digest(algorithm, data)`**: Generates a digest (hash) for the given data.
     - `algorithm`: Supports `"SHA-1"`, `"SHA-256"`, `"SHA-384"`, and `"SHA-512"`.
@@ -100,7 +100,7 @@ The `SubtleCrypto` interface provides a number of low-level cryptographic primit
 
 Represents a key object imported through `SubtleCrypto.importKey()`.
 
-#### Properties
+**Properties**
 
 - **`algorithm`**: Returns an object describing the key algorithm.
 - **`type`**: Always returns `"secret"`.

@@ -825,7 +825,7 @@
       },
       {
         "id": "geo-data",
-        "label": "GEO & Location",
+        "label": "地理与位置",
         "expanded": false,
         "children": [
           {
