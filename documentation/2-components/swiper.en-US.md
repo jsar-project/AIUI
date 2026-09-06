@@ -1,6 +1,6 @@
 # Swiper
 
-`swiper` and `swiper-item` are registered view-container tags in AIUI 0.16 for organizing carousel-like content structures.
+`swiper` and `swiper-item` are view-container tags for organizing paged content. They currently provide content grouping and CSS layout, but they do not create a carousel automatically.
 
 ## Organize Paged Content
 
@@ -25,4 +25,6 @@
 
 ## Current Behavior
 
-AIUI 0.16 registers `swiper` and `swiper-item` with the same basic container implementation as `view`. They support child nodes and CSS layout, but do not provide built-in pagination state, autoplay, indicators, or change events. Implement those behaviors in page logic and styles.
+`swiper` and `swiper-item` currently use the same basic container implementation as `view`. They support child nodes and CSS layout, but do not provide built-in pagination state, autoplay, indicators, or change events. Implement those behaviors in page logic and styles.
+
+If you only need a regular horizontal layout, `view` is usually easier to understand. Choose `swiper` when its name helps communicate that the children represent separate pages.

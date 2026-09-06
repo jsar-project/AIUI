@@ -115,6 +115,32 @@ export default {
 }
 ```
 
+## 让使用者传入内容
+
+如果组件需要保留一块由使用者决定的内容，可以在组件模板中使用 `<slot>`。下面的卡片提供默认内容区域和名为 `actions` 的操作区域：
+
+```xml
+<template>
+  <view class="card">
+    <slot></slot>
+    <view class="actions">
+      <slot name="actions"></slot>
+    </view>
+  </view>
+</template>
+```
+
+使用组件时，不带 `slot` 属性的内容会进入默认区域；`slot="actions"` 的内容会进入同名区域：
+
+```xml
+<demo-card>
+  <text>设备运行正常</text>
+  <button slot="actions" bindtap="openDetails">查看详情</button>
+</demo-card>
+```
+
+组件逻辑可以通过 `this.hasSlot('actions')` 判断使用者是否传入了操作内容，也可以通过 `this.$slots.actions` 查看这一组内容的只读快照。具名插槽的实例接口参见 [`Component`](/AIUI/api/framework/component)。
+
 ## 生命周期
 
 当前支持的组件生命周期包括：
@@ -122,6 +148,7 @@ export default {
 - `created`
 - `attached`
 - `ready`
+- `moved`
 - `detached`
 
 可以在 `lifetimes` 中声明：
@@ -132,6 +159,7 @@ export default {
     created() {},
     attached() {},
     ready() {},
+    moved() {},
     detached() {}
   }
 }
@@ -142,3 +170,4 @@ export default {
 - 组件可以继续引用其他组件，适合构建嵌套组件树
 - 组件样式默认只作用于组件内部，不会泄漏到页面其他区域
 - 组件内部可以通过事件转发，将子组件事件继续向外层传递
+- `<slot>` 只能在自定义组件模板中作为内容放置位置使用；普通页面不需要直接使用它

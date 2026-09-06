@@ -1,18 +1,40 @@
 # ErrorState
 
-The `error-state` component is used to display exception, empty-data, or failure states in a page, helping users understand the feedback shown in the current interface.
+Use `error-state` when a page cannot show its normal content and needs to explain what happened. Typical uses include a failed network request, an empty search result, or a screen with no data yet.
 
-## Usage
+## Show a Message
+
+Set the message with `text`:
+
+```xml
+<error-state text="Unable to load. Please try again later."></error-state>
+```
+
+## Add an Icon
+
+Use `icon` to display an image to the left of the message. It accepts a local image path or a network URL.
 
 ```xml
 <error-state
-  title="Load Failed"
-  description="Please check your network and try again"
+  icon="/assets/network-error.png"
+  text="No network connection. Check your connection and try again."
 ></error-state>
 ```
 
-## Features
+When `icon` is omitted, the component only displays the message. You can place it next to a button when the user needs a retry action:
 
-- Suitable for displaying error states, empty results, and interfaces waiting for recovery.
-- Supports clear feedback through a title and description.
-- Can be combined with action components such as buttons to provide retry or back entry points.
+```xml
+<view class="error-panel">
+  <error-state text="Unable to load content"></error-state>
+  <button bindtap="retry">Reload</button>
+</view>
+```
+
+## Properties
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` | String | `""` | Message displayed by the component. |
+| `icon` | String | - | Image path or URL displayed to the left of the message. |
+
+`error-state` does not support `title` or `description`. To display a separate title and description, compose them with `view` and `text`.

@@ -1,20 +1,17 @@
-# Chart Data Visualization
+# Chart
 
-The `chart` component renders line, area, bar, scatter, pie, radar, and funnel charts with dynamically bound data.
+Use `chart` to display array data as a line, area, bar, scatter, pie, radar, or funnel chart. You provide the data and chart type instead of drawing the result manually with Canvas.
 
-## Usage
+## Draw Your First Chart
+
+This line chart reads the `value` field from each data item:
 
 ```xml
 <chart
+  class="trend-chart"
   type="line"
   series="value"
   data="{{chartData}}"
-  width="350"
-  height="150"
-  animate="true"
-  color="#007AFF"
-  smooth="true"
-  show-average="true"
 ></chart>
 ```
 
@@ -25,88 +22,165 @@ Page({
       { label: 'Mon', value: 120 },
       { label: 'Tue', value: 168 },
       { label: 'Wed', value: 142 },
-      { label: 'Thu', value: 196 },
-      { label: 'Fri', value: 210 }
+      { label: 'Thu', value: 196 }
     ]
   }
 });
 ```
 
-## Data Format
-
-The `data` property accepts an array, where each item represents a data point. In most cases, it is recommended that each item contain at least:
-
-- A field used to describe the category or dimension, such as `label`.
-- A field used to represent the numeric value, with the field name specified through `series`, such as `value`.
-
-For example:
-
-```javascript
-const chartData = [
-  { label: 'Voice', value: 72 },
-  { label: 'Vision', value: 86 },
-  { label: 'Interaction', value: 64 }
-];
+```css
+.trend-chart {
+  width: 350px;
+  height: 180px;
+}
 ```
 
-When the component is set to `series="value"`, the chart reads the `value` field in each data item as the value to render.
+`data` accepts an array. `series="value"` tells the chart to use the `value` field from each item. Set the chart size with CSS rather than chart-specific width and height properties.
 
-## Properties
+## Choose a Chart Type
 
-| Property | Type | Description | Default |
-| :--- | :--- | :--- | :--- |
-| `type` | String | Chart type: `line`, `area`, `bar`, `scatter`, `pie`, `radar`, or `funnel`. | `line` |
-| `series` | String | The key in the data object that represents the numeric value. | `value` |
-| `data` | Array | The array of data points to render. | `[]` |
-| `width` | Number | The pixel width of the chart. | `300` |
-| `height` | Number | The pixel height of the chart. | `150` |
-| `animate` | Boolean | Whether to enable animation on first render and data updates. | `false` |
-| `color` | String | The theme color of the chart (Hex, RGB, or color name). | `#00FF7F` |
-| `show-average` | Boolean | Whether to display a dashed line representing the average value (line/area charts only). | `false` |
-| `smooth` | Boolean | Whether to use smooth curves instead of straight lines (line/area charts only). | `true` |
+| What you want to show | Recommended chart | `type` value |
+| --- | --- | --- |
+| Change over time | Line or area | `line`, `area` |
+| Values across categories | Bar | `bar` |
+| Distribution between two values | Scatter | `scatter` |
+| Parts of a whole | Pie | `pie` |
+| Several dimensions | Radar | `radar` |
+| Values across process stages | Funnel | `funnel` |
 
-## Chart Types
+Change `type` to switch the basic chart type:
 
-### line
+```xml
+<chart type="bar" series="value" data="{{chartData}}"></chart>
+```
 
-Line charts are suitable for showing trends over time or across a set of continuous dimensions, such as daily active users, response time, or completed tasks.
+## Display Multiple Series
 
-### area
+When one chart needs several data series, set `series` to a JSON array. Each item needs at least a `yName` for the numeric field. `xName` identifies the horizontal-axis field.
 
-Area charts are suitable for further emphasizing magnitude on top of trend presentation, and are commonly used to show cumulative effects or the overall fluctuation range.
+```xml
+<chart
+  type="line"
+  data="{{weatherData}}"
+  series='[
+    {"xName":"day","yName":"high","color":"#ff6b6b","smooth":true},
+    {"xName":"day","yName":"low","color":"#4dabf7","smooth":true}
+  ]'
+></chart>
+```
 
-### bar
+```javascript
+Page({
+  data: {
+    weatherData: [
+      { day: 'Mon', high: 26, low: 18 },
+      { day: 'Tue', high: 28, low: 19 },
+      { day: 'Wed', high: 25, low: 17 }
+    ]
+  }
+});
+```
 
-Bar charts compare categories and support horizontal and vertical orientations.
+Each series may also provide its own array through `dataSource`, and use `width` to set its line width.
 
-### scatter
+## Show a Horizontal Bar Chart with Values
 
-Scatter charts reveal distributions between two continuous variables.
+Bars are vertical by default. Set `direction="horizontal"` when category names are long and need more room.
 
-### pie
+```xml
+<chart
+  type="bar"
+  direction="horizontal"
+  series="value"
+  data="{{ranking}}"
+  show-value-labels="true"
+></chart>
+```
 
-Pie charts are suitable for showing the proportional relationship of parts within a whole, such as traffic source distribution or feature usage share.
+`show-value-labels` displays each value next to its shape. Use `value-label-format` to format the text, for example `percent` for a percentage or `compact` for abbreviated large values.
 
-### radar
+## Configure the Axes
 
-Radar charts are suitable for side-by-side comparison of multiple dimensions, such as evaluation results across several capability dimensions.
+`x-axis` and `y-axis` accept JSON objects. Common settings include the title, minimum and maximum values, labels, and grid lines.
 
-### funnel
+```xml
+<chart
+  type="line"
+  data="{{chartData}}"
+  series='[{"xName":"label","yName":"value"}]'
+  x-axis='{"title":"Date","showGridLines":false}'
+  y-axis='{"title":"Requests","minimum":0,"showGridLines":true}'
+></chart>
+```
 
-Funnel charts show quantities and conversions across process stages.
+When axis settings are omitted, the component chooses defaults from the data. Beginners usually do not need to configure the axes immediately.
 
-## Features
+## Common Properties
 
-- Supports binding the data source and numeric field through templates.
-- Supports enabling animations on first render or when data updates.
-- Supports customizing the chart theme color with `color`.
-- Supports enabling smooth curves and average guide lines in line and area charts.
-- Supports controlling chart size through `width` and `height`.
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `type` | String | `line` | `line`, `area`, `bar`, `scatter`, `pie`, `radar`, or `funnel`. |
+| `data` | Array | `[]` | Data array used by the chart. |
+| `series` | String / JSON Array | `value` | Numeric field name or a multiple-series configuration. |
+| `color` | String | Theme color | Main color for a single series. |
+| `animate` | Boolean | `false` | Whether to animate the initial drawing and data changes. |
+| `smooth` | Boolean | `true` | Whether line and area charts use smooth curves. |
+| `show-average` | Boolean | `false` | Whether line and area charts show a dashed average line. `showAverage` is also accepted. |
+| `direction` | String | `vertical` | Bar direction: `vertical` or `horizontal`. |
+| `show-value-labels` | Boolean | `false` | Whether values are shown next to their shapes. `showValueLabels` is also accepted. |
+| `value-label-format` | String | - | Value text format: `number`, `grouped`, `percent`, `compact`, `integer`, or `datetime`. `valueLabelFormat` is also accepted. |
+| `value-label-color` | String | Theme text color | Value text color. `valueLabelColor` is also accepted. |
+| `x-axis` | JSON Object | Default x-axis | Horizontal-axis settings. `xAxis` is also accepted. |
+| `y-axis` | JSON Object | Default y-axis | Vertical-axis settings. `yAxis` is also accepted. |
 
-## Usage Recommendations
+## Properties for Specific Chart Types
 
-- If you want to display changing trends, prefer `line` or `area`.
-- If you want to highlight proportions, prefer `pie`.
-- If you want to compare multiple capability dimensions, prefer `radar`.
-- In smaller chart areas, it is recommended to limit the number of data points to avoid visual crowding.
-- It is recommended to keep `width` and `height` consistent with the page layout to avoid excessive compression or empty space in the chart.
+These properties only affect the listed chart types. Ignore them when they are not needed.
+
+| Chart | Property | Default | Description |
+| --- | --- | --- | --- |
+| Scatter, radar | `point-size` | `4` | Point size. `pointSize` is also accepted. |
+| Scatter, radar | `point-color` | Theme color | Point color. `pointColor` is also accepted. |
+| Pie | `show-percentage` | `false` | Whether percentages are displayed. `showPercentage` is also accepted. |
+| Pie | `max-disk-diameter` | - | Maximum pie disk diameter. `maxDiskDiameter` is also accepted. |
+| Pie | `min-radius` | - | Minimum pie radius. `minRadius` is also accepted. |
+| Radar, funnel | `label-key` | - | Data field used as the item name. `labelKey` is also accepted. |
+| Funnel | `value-key` | - | Data field used as the numeric value. `valueKey` is also accepted. |
+| Radar | `levels` | Theme default | Number of grid levels. |
+| Radar | `show-points` | Theme default | Whether data points are displayed. `showPoints` is also accepted. |
+| Radar | `max` | Calculated | Maximum radar value. |
+| Funnel | `show-conversion` | `true` | Whether stage conversion rates are displayed. `showConversion` is also accepted. |
+| Funnel | `funnel-conversion-key` | - | Data field containing a precomputed conversion rate. `funnelConversionKey` is also accepted. |
+| Funnel | `funnel-conversion-title` | `转化率` | Conversion-rate title. `funnelConversionTitle` is also accepted. |
+
+Charts also read color, line, and text settings from the current theme. Start with the defaults, then override colors such as `color`, `label-color`, `grid-color`, or `fill-color` only when the visual design requires it.
+
+## `series` Configuration
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `yName` | String | Yes | Numeric field name. `yKey` is also accepted. |
+| `xName` | String | No | Horizontal-axis field name. `xKey` is also accepted. |
+| `dataSource` | Array | No | Separate data array for this series. |
+| `color` | String | No | Color for this series. |
+| `width` | Number | No | Line width. |
+| `smooth` | Boolean | No | Whether this line is smooth. |
+
+## Axis Configuration
+
+Both `x-axis` and `y-axis` support these common fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `minimum` / `maximum` | Number | Minimum and maximum axis values. `y-axis` also accepts `min` and `max`. |
+| `showAxisLine` | Boolean | Whether the axis line is visible. |
+| `showGridLines` | Boolean | Whether grid lines are visible. |
+| `showLabels` | Boolean | Whether labels are visible. |
+| `showTicks` | Boolean | Whether tick marks are visible. |
+| `tickCount` | Number | Preferred number of ticks. |
+| `tickLength` | Number | Length of each tick mark. |
+| `title` | String | Axis title. |
+| `labelFormat` | String | Label format. `format` is also accepted. |
+| `opposedPosition` | Boolean | Whether the axis appears on the opposite side. |
+
+`y-axis` additionally supports `interval` and `stripLines`. `x-axis` additionally supports `valueType` and `intervalType`.

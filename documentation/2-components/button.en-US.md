@@ -1,14 +1,32 @@
 # Button
 
-The `button` component provides a clickable element.
+Use `button` to create a clickable action, such as submitting a form, confirming a selection, or reloading content.
 
-## Usage
+## Respond to a Tap
+
+Use `bindtap` to bind a handler from the page:
 
 ```xml
-<button bindtap="handleTap">Click Me</button>
+<button bindtap="handleSubmit">Submit</button>
 ```
 
-## Features
+```javascript
+Page({
+  handleSubmit() {
+    console.log('The user tapped Submit');
+  }
+});
+```
 
-- Built-in touch feedback effect.
-- Supports interaction through the `bindtap` event.
+The button centers its child content horizontally and vertically by default. Use CSS to define its background, border, and text color:
+
+```css
+button {
+  padding: 12px 20px;
+  color: #ffffff;
+  background-color: #07c160;
+  border-radius: 8px;
+}
+```
+
+`button` does not add a component-specific touch animation. Add pressed feedback with styles that match your application.

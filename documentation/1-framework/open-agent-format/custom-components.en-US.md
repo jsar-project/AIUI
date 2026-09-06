@@ -115,6 +115,32 @@ export default {
 }
 ```
 
+## Accept Content from the Parent
+
+Use `<slot>` when part of a component should be provided by its parent. This card has a default content area and a named `actions` area:
+
+```xml
+<template>
+  <view class="card">
+    <slot></slot>
+    <view class="actions">
+      <slot name="actions"></slot>
+    </view>
+  </view>
+</template>
+```
+
+When the component is used, content without a `slot` property goes to the default area. Content with `slot="actions"` goes to the matching named area:
+
+```xml
+<demo-card>
+  <text>The device is running normally</text>
+  <button slot="actions" bindtap="openDetails">View details</button>
+</demo-card>
+```
+
+Component logic can call `this.hasSlot('actions')` to check whether the parent provided action content, or read the snapshot from `this.$slots.actions`. See [`Component`](/AIUI/api/framework/component) for the named-slot instance API.
+
 ## Lifecycle
 
 The currently supported component lifecycle hooks are:
@@ -122,6 +148,7 @@ The currently supported component lifecycle hooks are:
 - `created`
 - `attached`
 - `ready`
+- `moved`
 - `detached`
 
 Declare them under `lifetimes`:
@@ -132,6 +159,7 @@ export default {
     created() {},
     attached() {},
     ready() {},
+    moved() {},
     detached() {}
   }
 }
@@ -142,3 +170,4 @@ export default {
 - Components can reference other components to build nested component trees
 - Component styles are scoped to the component subtree and do not leak to the page
 - Child component events can be forwarded outward through parent components when needed
+- Use `<slot>` as a content insertion point inside a custom component template; regular pages do not need to use it directly
