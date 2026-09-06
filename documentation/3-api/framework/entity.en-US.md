@@ -21,6 +21,27 @@ Current behavior:
 - `page.querySelectorAll(selector)` returns an `EntityList`
 - `entity.querySelector(selector)` continues querying only within the current entity subtree
 
+## Control the Scroll Position
+
+After querying a `scroll-view`, read its current position and content size, or move it immediately or smoothly:
+
+```javascript
+const list = page.querySelector('#results');
+
+console.log(list.scrollTop, list.scrollHeight);
+
+const result = await list.scrollTo({
+  top: list.scrollHeight,
+  behavior: 'smooth'
+});
+
+if (result.interrupted) {
+  console.log('A newer operation interrupted the scroll');
+}
+```
+
+`scrollTo()` moves to a position. `scrollBy()` moves by a distance from the current position. User input or a newer scrolling command can interrupt smooth scrolling, in which case `interrupted` is `true`.
+
 ## API Reference
 
 ### Instance Members
@@ -31,8 +52,23 @@ Current behavior:
 | `entity.tagName` | `string` | The tag name of the current entity |
 | `entity.attributes` | `Object` | A snapshot object of the current entity attributes |
 | `entity.dataset` | `DOMStringMap` | A mapped view based on `data-*` attributes |
+| `entity.scrollTop` / `scrollLeft` | `number` | Current vertical or horizontal scroll position; readable and writable |
+| `entity.scrollWidth` / `scrollHeight` | `number` | Width or height of the scrollable content; read-only |
+| `entity.clientWidth` / `clientHeight` | `number` | Width or height of the visible area; read-only |
+| `entity.scrollBottom` | `number` | Remaining vertical distance to the bottom; read-only |
+| `entity.isAtBottom` | `boolean` | Whether the entity is at the bottom; read-only |
+| `entity.scrollTo(x, y)` | `Promise<EntityScrollResult>` | Scrolls to the coordinates |
+| `entity.scrollTo(options?)` | `Promise<EntityScrollResult>` | Scrolls to a position with coordinate and animation options |
+| `entity.scrollBy(x, y)` | `Promise<EntityScrollResult>` | Scrolls from the current position |
+| `entity.scrollBy(options?)` | `Promise<EntityScrollResult>` | Scrolls by a distance with coordinate and animation options |
 | `entity.querySelector(selector)` | `Entity \| null` | Continues querying within the current entity subtree |
 | `entity.querySelectorAll(selector)` | `EntityList` | Queries all matches within the current entity subtree |
+
+### Scrolling Method Parameters
+
+The object form accepts `left`, `top`, and `behavior`. `behavior` can be `auto`, `instant`, or `smooth`. The returned Promise resolves to `{ interrupted: boolean }`.
+
+Assigning `scrollTop` or `scrollLeft` scrolls immediately and clamps values to the valid range. A regular non-scrollable entity remains at `0`.
 
 ### `entity.attributes`
 

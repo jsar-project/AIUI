@@ -13,7 +13,7 @@ Give the component a unique `id`, then pass A2UI instructions through `commands`
 ```
 
 ```javascript
-Page({
+export default {
   data: {
     initialCommands: JSON.stringify([
       {
@@ -31,7 +31,7 @@ Page({
       }
     ])
   }
-});
+};
 ```
 
 `commands` accepts a string, so use `JSON.stringify()` to convert the command array to JSON text.

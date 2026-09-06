@@ -9,6 +9,18 @@ const uuid = crypto.randomUUID();
 console.log(uuid); // 例如: "550e8400-e29b-41d4-a716-446655440000"
 ```
 
+## 生成安全随机数
+
+使用 `getRandomValues()` 填充整数类型数组，适合生成随机标识、挑战值或加密所需的随机数据：
+
+```javascript
+const bytes = new Uint8Array(16);
+crypto.getRandomValues(bytes);
+console.log(bytes);
+```
+
+单次最多生成 65,536 字节。参数必须是整数类型的 TypedArray；传入 `Float32Array`、普通数组或超出限制的数组会抛出异常。
+
 ## 计算 SHA-256 摘要
 
 ```javascript
@@ -66,7 +78,7 @@ async function signMessage(keyText, message) {
 
 - **`randomUUID()`**: 返回一个随机生成的 v4 UUID 字符串。
 - **`subtle`**: 返回一个 `SubtleCrypto` 对象，用于执行底层的加密操作。
-- **`getRandomValues(typedArray)`**: 用随机值填充给定的 TypedArray。*(当前实现中主要作为占位符)*
+- **`getRandomValues(typedArray)`**: 使用安全随机值填充整数类型的 TypedArray，并返回同一个数组对象。单次最多填充 65,536 字节。
 
 ---
 

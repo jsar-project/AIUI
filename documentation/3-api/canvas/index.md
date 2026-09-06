@@ -103,6 +103,18 @@ ctx.fillRect(-25, -25, 50, 50);
 ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 ```
 
+## 绘制圆角路径并检查位置
+
+```javascript
+ctx.beginPath();
+ctx.roundRect(20, 20, 180, 80, 12);
+ctx.fill();
+
+console.log(ctx.isPointInPath(40, 40));
+```
+
+需要复用路径时，可以创建 `Path2D`，再传给 `fill()`、`stroke()`、`clip()`、`isPointInPath()` 或 `isPointInStroke()`。
+
 ## API Reference
 
 ### 接口说明
@@ -130,6 +142,11 @@ ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 | `font` | String | 当前字体设置 | 例如: `"20px sans-serif"` |
 | `textAlign` | String | 文本对齐方式 | `left`, `center`, `right`, `start`, `end` |
 | `textBaseline` | String | 文本基线 | `top`, `middle`, `bottom`, `alphabetic` 等 |
+| `letterSpacing` / `wordSpacing` | String | 字符和单词间距 | 例如 `"2px"` |
+| `direction` | String | 文字方向 | `ltr`, `rtl`, `inherit` |
+| `filter` | String | 绘图滤镜 | CSS filter 字符串 |
+| `imageSmoothingEnabled` | Boolean | 是否平滑缩放图像 | |
+| `imageSmoothingQuality` | String | 图像平滑质量 | `low`, `medium`, `high` |
 
 #### 绘制方法
 
@@ -138,7 +155,7 @@ ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 - **`clearRect(x, y, width, height)`**: 清除指定矩形区域。
 - **`fillText(text, x, y, maxWidth?)`**: 绘制填充文本。
 - **`strokeText(text, x, y, maxWidth?)`**: 绘制文本边框。
-- **`measureText(text)`**: 测量文本宽度，返回 `{ width }`。
+- **`measureText(text)`**: 返回包含宽度、边界、上升高度、下降高度和基线信息的 `TextMetrics`。
 
 #### 路径方法
 
@@ -149,12 +166,15 @@ ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 - **`arc(x, y, r, sAngle, eAngle, anticlockwise?)`**: 绘制圆弧。
 - **`arcTo(x1, y1, x2, y2, r)`**: 绘制切线圆弧。
 - **`rect(x, y, width, height)`**: 绘制矩形路径。
+- **`roundRect(x, y, width, height, radii?)`**: 绘制圆角矩形路径。
 - **`ellipse(x, y, rx, ry, rotation, sAngle, eAngle, anticlockwise?)`**: 绘制椭圆。
 - **`bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)`**: 绘制三次贝塞尔曲线。
 - **`quadraticCurveTo(cpx, cpy, x, y)`**: 绘制二次贝塞尔曲线。
 - **`fill()`**: 填充当前路径。
 - **`stroke()`**: 描边当前路径。
 - **`clip()`**: 裁剪当前路径区域。
+- **`isPointInPath(path?, x, y, fillRule?)`**: 判断坐标是否位于路径内。
+- **`isPointInStroke(path?, x, y)`**: 判断坐标是否位于描边路径上。
 
 #### 状态与变换
 
@@ -163,6 +183,10 @@ ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 - **`translate(dx, dy)`**: 平移坐标系。
 - **`rotate(angle)`**: 旋转坐标系（弧度）。
 - **`scale(sx, sy)`**: 缩放坐标系。
+- **`transform(...)` / `setTransform(...)`**: 叠加或设置变换矩阵。
+- **`getTransform()` / `resetTransform()`**: 读取或重置变换矩阵。
+- **`reset()`**: 恢复初始状态并清空画布。
+- **`getContextAttributes()` / `isContextLost()`**: 查看上下文设置或状态。
 
 #### 图像与像素
 
@@ -175,6 +199,7 @@ ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 
 - **`createLinearGradient(x0, y0, x1, y1)`**: 创建线性渐变。
 - **`createRadialGradient(x0, y0, r0, x1, y1, r1)`**: 创建径向渐变。
+- **`createConicGradient(startAngle, x, y)`**: 创建锥形渐变。
 - **`createPattern(image, repetition)`**: 创建图案填充。
 
 #### ImageData
@@ -196,3 +221,7 @@ ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 表示重复图案的对象。
 
 - **`setTransform(matrix)`**: 设置图案的变换矩阵。
+
+#### Path2D
+
+`new Path2D(path?)` 可以创建空路径、复制现有路径或解析 SVG path 字符串。支持常用路径方法和 `addPath(path, transform?)`。

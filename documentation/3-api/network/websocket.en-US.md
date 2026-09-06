@@ -91,9 +91,9 @@ For these scenarios, [HTTPS](/AIUI/api/network-https) or [Event Source](/AIUI/ap
 
 ## API Reference
 
-### `new WebSocket(url)`
+### `new WebSocket(url, protocols?)`
 
-Creates a Web-standard WebSocket connection. `url` must use the `ws` or `wss` protocol.
+Creates a Web-standard WebSocket connection. `url` must use the `ws` or `wss` protocol. `protocols` can be one protocol string or an array of strings.
 
 ### `WebSocket` Events and Methods
 
@@ -102,7 +102,11 @@ Creates a Web-standard WebSocket connection. `url` must use the `ws` or `wss` pr
 - `addEventListener('close', callback)`: Observes connection closure.
 - `addEventListener('error', callback)`: Observes connection errors.
 - `send(data)`: Sends string or binary data.
-- `close()`: Closes the connection.
+- `close(code?, reason?)`: Closes the connection with an optional close code and reason.
+- `readyState`: Current connection state, comparable with `CONNECTING`, `OPEN`, `CLOSING`, and `CLOSED`.
+- `url`, `protocol`, and `extensions`: Current connection information.
+- `bufferedAmount`: Bytes handed to the connection but not yet fully sent.
+- `binaryType`: Fixed to `arraybuffer`; binary messages expose an `ArrayBuffer` in `event.data`.
 
 ### wx APIs
 

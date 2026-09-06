@@ -3,9 +3,9 @@
 Provides the core low-level audio playback capability for regular playback and streaming scenarios.
 
 > **Why not use AudioContext?**
-> AudioContext is mainly used to process and synthesize raw PCM audio data. Although it can also play music, its processing logic is typically handled in software, which prevents the use of hardware decoding and therefore increases power consumption while reducing performance.
+> [`AudioContext`](/AIUI/api/media-web-audio) is intended for generating sound, processing PCM, applying filters, and analysing audio. For ordinary file playback, `AudioPlayer` is simpler and can use the runtime's file playback path.
 >
-> As a result, `AudioPlayer` is the best choice for audio playback in AIUI as an alternative to `HTMLAudioElement` in Web development. It makes full use of hardware acceleration to ensure smooth playback and energy efficiency.
+> Use `AudioPlayer` as the first choice for ordinary audio files in AIUI, and choose Web Audio when real-time processing is required.
 
 ## File Playback
 

@@ -575,6 +575,12 @@
             "label": "Audio Player"
           },
           {
+            "id": "web-audio",
+            "label": "Web Audio",
+            "docId": "media-web-audio",
+            "docPath": "3-api/media/web-audio.en-US.md"
+          },
+          {
             "id": "media-capture",
             "label": "Media Capture",
             "docId": "media-media-capture",
@@ -613,6 +619,12 @@
             "id": "url",
             "label": "URL",
             "docId": "network-url"
+          },
+          {
+            "id": "streams",
+            "label": "Streams",
+            "docId": "network-streams",
+            "docPath": "3-api/network/streams.en-US.md"
           }
         ]
       },

@@ -103,6 +103,18 @@ ctx.fillRect(-25, -25, 50, 50);
 ctx.restore(); // 恢复到平移/旋转/缩放之前的状态
 ```
 
+## Draw a Rounded Path and Test a Point
+
+```javascript
+ctx.beginPath();
+ctx.roundRect(20, 20, 180, 80, 12);
+ctx.fill();
+
+console.log(ctx.isPointInPath(40, 40));
+```
+
+To reuse a path, create a `Path2D` and pass it to `fill()`, `stroke()`, `clip()`, `isPointInPath()`, or `isPointInStroke()`.
+
 ## API Reference
 
 ### Interface Description
@@ -130,6 +142,11 @@ This is the primary drawing context interface, providing a rich set of propertie
 | `font` | String | Current font setting | For example: `"20px sans-serif"` |
 | `textAlign` | String | Text alignment | `left`, `center`, `right`, `start`, `end` |
 | `textBaseline` | String | Text baseline | `top`, `middle`, `bottom`, `alphabetic` etc. |
+| `letterSpacing` / `wordSpacing` | String | Character and word spacing | For example, `"2px"` |
+| `direction` | String | Text direction | `ltr`, `rtl`, `inherit` |
+| `filter` | String | Drawing filter | A CSS filter string |
+| `imageSmoothingEnabled` | Boolean | Whether scaled images are smoothed | |
+| `imageSmoothingQuality` | String | Image smoothing quality | `low`, `medium`, `high` |
 
 #### Drawing Methods
 
@@ -138,7 +155,7 @@ This is the primary drawing context interface, providing a rich set of propertie
 - **`clearRect(x, y, width, height)`**: Clears the specified rectangular area.
 - **`fillText(text, x, y, maxWidth?)`**: Draws filled text.
 - **`strokeText(text, x, y, maxWidth?)`**: Draws a text outline.
-- **`measureText(text)`**: Measures text width and returns `{ width }`.
+- **`measureText(text)`**: Returns `TextMetrics` containing width, bounds, ascent, descent, and baseline information.
 
 #### Path Methods
 
@@ -149,12 +166,15 @@ This is the primary drawing context interface, providing a rich set of propertie
 - **`arc(x, y, r, sAngle, eAngle, anticlockwise?)`**: Draws an arc.
 - **`arcTo(x1, y1, x2, y2, r)`**: Draws a tangent arc.
 - **`rect(x, y, width, height)`**: Draws a rectangular path.
+- **`roundRect(x, y, width, height, radii?)`**: Draws a rounded rectangular path.
 - **`ellipse(x, y, rx, ry, rotation, sAngle, eAngle, anticlockwise?)`**: Draws an ellipse.
 - **`bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)`**: Draws a cubic Bezier curve.
 - **`quadraticCurveTo(cpx, cpy, x, y)`**: Draws a quadratic Bezier curve.
 - **`fill()`**: Fills the current path.
 - **`stroke()`**: Strokes the current path.
 - **`clip()`**: Clips to the current path area.
+- **`isPointInPath(path?, x, y, fillRule?)`**: Tests whether a point is inside a path.
+- **`isPointInStroke(path?, x, y)`**: Tests whether a point is on a stroked path.
 
 #### State and Transformations
 
@@ -163,6 +183,10 @@ This is the primary drawing context interface, providing a rich set of propertie
 - **`translate(dx, dy)`**: Translates the coordinate system.
 - **`rotate(angle)`**: Rotates the coordinate system in radians.
 - **`scale(sx, sy)`**: Scales the coordinate system.
+- **`transform(...)` / `setTransform(...)`**: Multiplies or sets the transformation matrix.
+- **`getTransform()` / `resetTransform()`**: Reads or resets the transformation matrix.
+- **`reset()`**: Restores the initial state and clears the canvas.
+- **`getContextAttributes()` / `isContextLost()`**: Inspects context settings or status.
 
 #### Images and Pixels
 
@@ -175,6 +199,7 @@ This is the primary drawing context interface, providing a rich set of propertie
 
 - **`createLinearGradient(x0, y0, x1, y1)`**: Creates a linear gradient.
 - **`createRadialGradient(x0, y0, r0, x1, y1, r1)`**: Creates a radial gradient.
+- **`createConicGradient(startAngle, x, y)`**: Creates a conic gradient.
 - **`createPattern(image, repetition)`**: Creates a pattern fill.
 
 #### ImageData
@@ -196,3 +221,7 @@ An object representing a gradient.
 An object representing a repeating pattern.
 
 - **`setTransform(matrix)`**: Sets the transformation matrix for the pattern.
+
+#### Path2D
+
+`new Path2D(path?)` creates an empty path, copies an existing path, or parses an SVG path string. It supports the common path methods and `addPath(path, transform?)`.

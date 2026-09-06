@@ -6,8 +6,20 @@ AIUI provides encryption APIs that follow the Web Crypto API standard. You can a
 
 ```javascript
 const uuid = crypto.randomUUID();
-console.log(uuid); // 例如: "550e8400-e29b-41d4-a716-446655440000"
+console.log(uuid); // For example: "550e8400-e29b-41d4-a716-446655440000"
 ```
+
+## Generate Secure Random Values
+
+Use `getRandomValues()` to fill an integer typed array. This is useful for random identifiers, challenges, and cryptographic random data:
+
+```javascript
+const bytes = new Uint8Array(16);
+crypto.getRandomValues(bytes);
+console.log(bytes);
+```
+
+One call can fill at most 65,536 bytes. The argument must be an integer typed array. A `Float32Array`, regular array, or oversized array causes an exception.
 
 ## Calculate a SHA-256 Digest
 
@@ -17,7 +29,7 @@ async function calculateHash(message) {
   const data = encoder.encode(message);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   
-  // 将 ArrayBuffer 转换为十六进制字符串
+  // Convert the ArrayBuffer to hexadecimal text
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   return hashHex;
@@ -34,7 +46,7 @@ async function signMessage(keyText, message) {
   const keyData = encoder.encode(keyText);
   const data = encoder.encode(message);
 
-  // 1. 导入密钥
+  // 1. Import the key
   const key = await crypto.subtle.importKey(
     'raw',
     keyData,
@@ -43,14 +55,14 @@ async function signMessage(keyText, message) {
     ['sign']
   );
 
-  // 2. 生成签名
+  // 2. Create the signature
   const signature = await crypto.subtle.sign(
     'HMAC',
     key,
     data
   );
 
-  return signature; // 返回 ArrayBuffer
+  return signature; // Returns an ArrayBuffer
 }
 ```
 
@@ -66,7 +78,7 @@ async function signMessage(keyText, message) {
 
 - **`randomUUID()`**: Returns a randomly generated v4 UUID string.
 - **`subtle`**: Returns a `SubtleCrypto` object for low-level cryptographic operations.
-- **`getRandomValues(typedArray)`**: Fills the given TypedArray with random values. *(In the current implementation, this mainly serves as a placeholder.)*
+- **`getRandomValues(typedArray)`**: Fills an integer typed array with secure random values and returns the same array object. One call accepts at most 65,536 bytes.
 
 ---
 

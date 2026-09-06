@@ -16,7 +16,7 @@ This line chart reads the `value` field from each data item:
 ```
 
 ```javascript
-Page({
+export default {
   data: {
     chartData: [
       { label: 'Mon', value: 120 },
@@ -25,7 +25,7 @@ Page({
       { label: 'Thu', value: 196 }
     ]
   }
-});
+};
 ```
 
 ```css
@@ -70,7 +70,7 @@ When one chart needs several data series, set `series` to a JSON array. Each ite
 ```
 
 ```javascript
-Page({
+export default {
   data: {
     weatherData: [
       { day: 'Mon', high: 26, low: 18 },
@@ -78,7 +78,7 @@ Page({
       { day: 'Wed', high: 25, low: 17 }
     ]
   }
-});
+};
 ```
 
 Each series may also provide its own array through `dataSource`, and use `width` to set its line width.

@@ -34,6 +34,17 @@ const url = new URL('aiui/start.html', base);
 console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
 ```
 
+To validate a string without using `try...catch` first:
+
+```javascript
+if (URL.canParse('/items', 'https://example.com')) {
+  const url = URL.parse('/items', 'https://example.com');
+  console.log(url.href);
+}
+```
+
+`URL.parse()` returns `null` on failure, while `new URL()` throws.
+
 ## API Reference
 
 ### Interface Description
@@ -47,6 +58,11 @@ The `URL` interface is used to parse, construct, normalize, and encode URLs.
 - **`new URL(url, base?)`**: Creates and returns a `URL` object.
     - `url`: `String`, a string representing an absolute or relative URL.
     - `base`: `String?`, used as the base URL if `url` is relative.
+
+#### Static Methods
+
+- **`URL.canParse(url, base?)`**: Returns whether the URL can be parsed.
+- **`URL.parse(url, base?)`**: Returns a parsed `URL`, or `null` on failure.
 
 #### Properties
 
@@ -81,10 +97,12 @@ The `URLSearchParams` interface defines methods for working with URL query param
 #### Methods
 
 - **`append(name, value)`**: Appends a new key-value pair.
-- **`delete(name)`**: Deletes all key-value pairs with the specified name.
+- **`delete(name, value?)`**: Deletes entries with the name, or only entries matching `value` when provided.
 - **`get(name)`**: Returns the first value with the specified name, or `null` if it does not exist.
 - **`getAll(name)`**: Returns all values with the specified name as an array.
-- **`has(name)`**: Checks whether a key with the specified name exists.
+- **`has(name, value?)`**: Checks for a name and optional matching value.
 - **`set(name, value)`**: Sets the value for the specified name. If it already exists, the first one is replaced and the rest with the same name are removed.
 - **`sort()`**: Sorts query parameters by key name.
 - **`toString()`**: Returns the serialized query string.
+- **`entries()` / `keys()` / `values()`**: Iterates over entries, keys, or values.
+- Supports direct key-value iteration with `for...of`.

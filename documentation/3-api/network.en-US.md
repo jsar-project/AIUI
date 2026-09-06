@@ -9,6 +9,7 @@ In the AI glasses scenario, networking also needs to balance battery life and po
 - **HTTPS**: Suitable for regular API calls, such as loading configuration, submitting forms, or requesting agent results.
 - **SSE**: Suitable for one-way streaming scenarios where the server keeps pushing text increments, status streams, or task progress.
 - **WebSocket**: Suitable for scenarios where the client and server need to send and receive messages bidirectionally in real time, such as multi-user collaboration, real-time control, or low-latency messaging channels.
+- **Streams**: Suitable for reading, writing, or transforming incoming data in chunks, such as live text, large files, and audio chunks.
 
 ## Simple Example
 
@@ -51,5 +52,6 @@ wx.request({
 - **[HTTPS](/AIUI/api/network-https)**: Learn how ordinary request-response scenarios work in AIUI.
 - **[Event Source](/AIUI/api/network-event-source)**: Learn which business scenarios fit one-way streaming pushes from the server.
 - **[WebSocket](/AIUI/api/network-websocket)**: Learn the typical usage patterns for bidirectional real-time connections, plus connection management and reconnection recommendations.
+- **[Streams](/AIUI/api/network-streams)**: Learn how to read, write, and transform data in chunks.
 - **[Device](/AIUI/api/device)**: See Bluetooth connectivity and device sensor capabilities, including accelerometer, orientation, and gyroscope APIs.
 - **[WeChat Mini Program Compatible APIs](/AIUI/api/weixin-compatible-apis)**: See compatible APIs such as `wx.request`, `wx.connectSocket`, and `wx.createEventSource`.

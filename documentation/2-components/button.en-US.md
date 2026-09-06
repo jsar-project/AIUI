@@ -11,11 +11,11 @@ Use `bindtap` to bind a handler from the page:
 ```
 
 ```javascript
-Page({
+export default {
   handleSubmit() {
     console.log('The user tapped Submit');
   }
-});
+};
 ```
 
 The button centers its child content horizontally and vertically by default. Use CSS to define its background, border, and text color:

@@ -34,6 +34,46 @@ console.log('Recognition session:', sessionId);
 
 <!-- /aiui-api-style -->
 
+## Recognize Existing or Incremental Audio
+
+`SpeechRecognitionSession` does not open the microphone itself. Write a recording, an existing audio file, or incoming audio chunks to its `audio` stream:
+
+```javascript
+const session = new SpeechRecognitionSession({
+  lang: 'en-US',
+  interimResults: true
+});
+
+session.onresult = (event) => {
+  const result = event.results[event.resultIndex][0];
+  console.log(result.transcript);
+};
+
+session.onerror = (event) => {
+  console.error(event.error, event.message);
+};
+
+const audio = await fetch('/assets/question.wav').then(response => response.blob());
+const writer = session.audio.getWriter();
+await writer.write(audio);
+await writer.close();
+```
+
+Each `write()` accepts a `Blob`, `ArrayBuffer`, or typed array. Calling `close()` means all audio has been written and allows recognition to produce its final result. Call `writer.abort()` to cancel.
+
+Raw PCM input requires an explicit format:
+
+```javascript
+const session = new SpeechRecognitionSession({
+  audio: {
+    mimeType: 'audio/pcm',
+    sampleRate: 16000,
+    channelCount: 1,
+    sampleFormat: 's16'
+  }
+});
+```
+
 ## Use Cases
 
 - Voice input fields
@@ -78,3 +118,26 @@ const recognition = new SpeechRecognition();
 
 #### `abort()`
 - Immediately aborts the current recognition session without waiting for a normal final result.
+
+### `new SpeechRecognitionSession(options?)`
+
+Creates a recognition session with a writable audio stream. Common options include:
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `lang` | String | Recognition language, such as `en-US`. |
+| `interimResults` | Boolean | Whether unconfirmed interim results are reported. |
+| `maxAlternatives` | Number | Maximum alternatives returned for each result. |
+| `phrases` | Array | Phrases with an optional `boost` value. |
+| `segmentation` | String | Segmentation mode: `auto`, `vad`, or `semantic`. |
+| `audio` | Object | Audio format with `mimeType`, `sampleRate`, `channelCount`, and `sampleFormat`. |
+
+The instance provides a read-only writable stream in `audio`, a read-only `state`, and the `onstart`, `onaudiostart`, `onresult`, `onerror`, `onaudioend`, and `onend` events.
+
+### `SpeechRecognitionSession.getCapabilities()`
+
+Returns supported audio formats, chunk size, alternative count, and segmentation capabilities. Query it before creating a session when several audio sources must be supported.
+
+### `session.updateContext(messages)`
+
+Updates conversational context during recognition. Each message contains `role` and `text`. The Promise rejects when the active recognition service does not support context updates.

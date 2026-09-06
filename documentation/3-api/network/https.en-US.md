@@ -73,6 +73,27 @@ text += decoder.decode();
 console.log(text);
 ```
 
+## Upload a File and Form Fields
+
+Use `File` and `FormData` to submit text fields and files together:
+
+```javascript
+const attachment = new File(['AIUI 0.18'], 'release.txt', {
+  type: 'text/plain'
+});
+
+const form = new FormData();
+form.append('title', 'Release notes');
+form.append('attachment', attachment);
+
+await fetch('https://example.com/upload', {
+  method: 'POST',
+  body: form
+});
+```
+
+Do not set `content-type` manually for `FormData`; the runtime creates the request header with the required boundary.
+
 ## Observe headers and chunks with `RequestTask`
 
 ```javascript
@@ -138,15 +159,15 @@ AIUI currently provides two common entry points:
 - **`fetch(url, options?)`**: Closer to Web standards and better suited for Promise-based code and `Response`-style consumption.
 - **`wx.request(options)`**: Closer to the WeChat Mini Program compatible API style and better suited for callback-based code and `RequestTask`-style control.
 
-### `fetch(url, options?)`
+### `fetch(input, options?)`
 
 `fetch()` sends an HTTP / HTTPS request and returns a `Promise<Response>`.
 
 #### Parameters
 
-#### `url`
+#### `input`
 
-The request URL. The current implementation requires a string.
+The request address can be a string, `URL`, or `Request`. When a `Request` is passed, fields in `options` override the corresponding request settings.
 
 ```javascript
 const response = await fetch('https://example.com/data.json');
@@ -177,7 +198,7 @@ await fetch('https://example.com/items', {
 
 #### `options.body`
 
-Request body. The current implementation reads `body` as a string and sends its bytes to the server.
+The request body accepts a string, `Blob`, `FormData`, `URLSearchParams`, `ArrayBuffer`, typed array, or `ReadableStream`.
 
 ```javascript
 await fetch('https://example.com/items', {
@@ -211,6 +232,26 @@ const signal = new AbortSignal();
 fetch('https://example.com/items', { signal });
 signal.abort();
 ```
+
+### `Request`
+
+Use `new Request(input, options?)` to prepare and reuse a request. An instance exposes read-only properties including `method`, `url`, `headers`, `body`, `signal`, and `redirect`, and supports `clone()`, `text()`, `json()`, `arrayBuffer()`, and `blob()`.
+
+```javascript
+const request = new Request('https://example.com/items', {
+  method: 'POST',
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ title: 'hello' })
+});
+
+const response = await fetch(request);
+```
+
+### `Blob`, `File`, and `FormData`
+
+- `new Blob(parts, options?)` creates immutable binary data and supports `arrayBuffer()`, `bytes()`, `text()`, `stream()`, and `slice()`.
+- `new File(parts, name, options?)` adds `name` and `lastModified` to `Blob` data.
+- `new FormData()` manages form fields with `append()`, `set()`, `get()`, `getAll()`, `has()`, `delete()`, `entries()`, `keys()`, `values()`, and `forEach()`.
 
 ### `Response`
 
@@ -307,6 +348,10 @@ const response = await fetch('https://example.com/model.bin');
 const buffer = await response.arrayBuffer();
 console.log(buffer.byteLength);
 ```
+
+#### `response.blob()`
+
+Reads the response body as a `Blob`, which is useful for binary content that should retain its media type.
 
 ### wx APIs
 

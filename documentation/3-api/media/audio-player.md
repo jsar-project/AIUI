@@ -3,9 +3,9 @@
 提供底层音频播放的核心能力，支持常规音频播放与流式播放。
 
 > **为什么不使用 AudioContext？**
-> AudioContext 主要用于处理和合成 PCM 原始音频数据。虽然它也可以播放音乐，但由于其处理逻辑通常在软件层面完成，会失去调用硬件解码（Hard Decoded）的能力，从而增加系统功耗并降低性能。
+> [`AudioContext`](/AIUI/api/media-web-audio) 更适合生成声音、处理 PCM、添加滤波器和分析音频。只播放完整音频文件时，`AudioPlayer` 更简单，并且可以使用运行时提供的文件播放能力。
 >
-> 因此，作为 Web 开发中 `HTMLAudioElement` 的替代方案，`AudioPlayer` 是在 AIUI 中播放音频的最佳选择，它能充分利用硬件加速来保证播放的流畅性与能效比。
+> 因此，可以把 `AudioPlayer` 作为 AIUI 中播放普通音频文件的首选；需要实时音频处理时再使用 Web Audio。
 
 ## 文件播放
 

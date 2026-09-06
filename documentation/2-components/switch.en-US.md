@@ -9,12 +9,12 @@
 ```
 
 ```javascript
-Page({
+export default {
   data: { enabled: false },
   handleChange(event) {
     this.setData({ enabled: event.detail.value });
   },
-});
+};
 ```
 
 ## Display a Checkbox

@@ -34,6 +34,17 @@ const url = new URL('aiui/start.html', base);
 console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
 ```
 
+如果只是想先判断字符串是否有效，可以避免使用 `try...catch`：
+
+```javascript
+if (URL.canParse('/items', 'https://example.com')) {
+  const url = URL.parse('/items', 'https://example.com');
+  console.log(url.href);
+}
+```
+
+`URL.parse()` 解析失败时返回 `null`，`new URL()` 解析失败时会抛出异常。
+
 ## API Reference
 
 ### 接口说明
@@ -47,6 +58,11 @@ console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
 - **`new URL(url, base?)`**: 创建并返回一个 `URL` 对象。
     - `url`: `String`，表示绝对或相对 URL 的字符串。
     - `base`: `String?`，如果 `url` 是相对的，则以此作为基准 URL。
+
+#### 静态方法
+
+- **`URL.canParse(url, base?)`**：返回 URL 是否可以解析。
+- **`URL.parse(url, base?)`**：返回解析后的 `URL`，失败时返回 `null`。
 
 #### 属性
 
@@ -81,10 +97,12 @@ console.log(url.href); // "https://rokid.com/docs/aiui/start.html"
 #### 方法
 
 - **`append(name, value)`**: 追加一个新的键值对。
-- **`delete(name)`**: 删除指定名称的所有键值对。
+- **`delete(name, value?)`**: 删除指定名称的键值对；提供 `value` 时只删除匹配的值。
 - **`get(name)`**: 获取指定名称的第一个值，不存在则返回 `null`。
 - **`getAll(name)`**: 获取指定名称的所有值，返回数组。
-- **`has(name)`**: 判断是否存在指定名称的键。
+- **`has(name, value?)`**: 判断是否存在指定名称，以及可选的指定值。
 - **`set(name, value)`**: 设置指定名称的值。如果已存在，则替换第一个并删除其余同名项。
 - **`sort()`**: 按键名对查询参数进行排序。
 - **`toString()`**: 返回序列化后的查询字符串。
+- **`entries()` / `keys()` / `values()`**：遍历键值对、键或值。
+- 支持 `for...of` 直接遍历键值对。

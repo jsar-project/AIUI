@@ -16,7 +16,7 @@ click.play();
 
 - **[音效 (Sound)](/AIUI/api/media-sound)**：查看面向本地短音效的轻量播放接口，适合按钮点击、提示音等高频重播场景。
 - **[音频播放器 (AudioPlayer)](/AIUI/api/media-audio-player)**：查看 AIUI 推荐的音频播放能力，适合本地音频与流式音频场景。
+- **[Web Audio](/AIUI/api/media-web-audio)**：查看声音生成、PCM 播放、音量调节、滤波和音频分析能力。
 - **[媒体采集](/AIUI/api/media-media-capture)**：查看 `navigator.mediaDevices`、`ImageCapture`、`MediaRecorder` 以及 wx 风格的相机和录音接口。
 - **[视频播放](/AIUI/api/media-video)**：查看 `<video>` 组件与 `VideoContext` 播放控制接口。
-- **[音频 (Audio)](/AIUI/api/media-audio)**：查看 Web 标准的音频相关接口。
 - **[微信小程序兼容 API](/AIUI/api/weixin-compatible-apis)**：查看摄像头、录音等设备媒体接口。

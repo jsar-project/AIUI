@@ -1,6 +1,6 @@
 # Web API
 
-AIUI is designed to provide AI + AR developers with a development experience aligned with modern Web standards. Its underlying runtime provides deep Web standards support to improve code reuse and interoperability.
+AIUI provides common Web APIs so developers can handle networking, data, audio, and drawing tasks with familiar JavaScript patterns.
 
 ## WinterCG Compatibility
 
@@ -8,17 +8,17 @@ AIUI actively embraces and primarily supports the following proposal from **Wint
 
 - **[Minimum Common Web API](https://min-common-api.proposal.wintertc.org/)**
 
-This means developers can use common Web APIs such as `fetch`, `URL`, `TextEncoder/Decoder`, and `Web Crypto` in AIUI, allowing a large number of npm packages and existing Web codebases to run seamlessly in an AI + AR environment.
+Developers can use common APIs such as `fetch`, `URL`, `TextEncoder`, `TextDecoder`, and Web Crypto in AIUI. Check each API page for its exact support; existing Web code may still depend on browser capabilities that AIUI does not implement.
 
 ## Capability Distribution
 
 To help developers find documentation faster by usage scenario, Web-standard capabilities are no longer grouped under a single subdirectory. Instead, they are organized into categories that are closer to actual business needs:
 
 - **[Canvas](/AIUI/api/canvas)**: See Canvas 2D drawing APIs and image-processing capabilities.
-- **[Media](/AIUI/api/media)**: See the `Web Audio API` entry point in AIUI.
+- **[Web Audio](/AIUI/api/media-web-audio)**: Generate sound, process PCM, adjust volume, and analyse audio.
 - **[AI](/AIUI/api/ai)**: See the relationship between Web Speech capabilities and AI speech capabilities.
 - **[Device](/AIUI/api/device)**: See perception-related capabilities such as `BarcodeDetector`.
-- **[Network](/AIUI/api/network)**: See common Web networking capabilities such as `fetch` and `URL`.
+- **[Network](/AIUI/api/network)**: See `fetch`, `URL`, WebSocket, and Streams capabilities.
 - **[Encoding](/AIUI/api/encoding)**: See text encoding and decoding capabilities such as `TextEncoder` and `TextDecoder`.
 - **[Crypto](/AIUI/api/crypto)**: See Web Crypto capabilities such as `crypto` and `SubtleCrypto`.
 - **[Storage](/AIUI/api/storage)**: See local persistence through `localStorage` and OPFS.
@@ -31,7 +31,8 @@ To help developers find documentation faster by usage scenario, Web-standard cap
 - **[Encoding](/AIUI/api/encoding)**: Text encoding and decoding.
 - **[Crypto](/AIUI/api/crypto)**: Web Crypto capabilities.
 - **[Storage API](/AIUI/api/storage-api)**: Detailed local storage APIs.
-- **[Audio](/AIUI/api/media-audio)**: Web-standard audio APIs.
+- **[Web Audio](/AIUI/api/media-web-audio)**: Web-standard audio processing APIs.
+- **[Streams](/AIUI/api/network-streams)**: Read, write, and transform data in chunks.
 - **[BarcodeDetector](/AIUI/api/device-barcode)**: Barcode detection API.
 
 ## Core Design Principles
@@ -39,5 +40,5 @@ To help developers find documentation faster by usage scenario, Web-standard cap
 AIUI's Web API implementation follows these principles:
 
 1. **Standards first**: Follow WHATWG and W3C standards whenever possible.
-2. **Spatial adaptation**: Keep API signatures intact while automatically handling coordinate transforms and depth information in 3D space.
-3. **High performance**: All underlying implementations are optimized in C++ to ensure low-latency execution on wearable devices.
+2. **Clear use cases**: Each API page explains when to use the capability, its current behavior, and its limits.
+3. **Use only what is needed**: Start with the simplest interface for the task, then choose advanced capabilities such as streams or audio processing when necessary.

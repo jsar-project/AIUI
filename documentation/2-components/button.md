@@ -11,11 +11,11 @@
 ```
 
 ```javascript
-Page({
+export default {
   handleSubmit() {
     console.log('用户点击了提交按钮');
   }
-});
+};
 ```
 
 按钮会默认让子内容水平、垂直居中。你可以通过 CSS 设置背景、边框和文字颜色：

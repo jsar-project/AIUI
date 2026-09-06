@@ -91,9 +91,9 @@ socket.onClose(() => {
 
 ## API Reference
 
-### `new WebSocket(url)`
+### `new WebSocket(url, protocols?)`
 
-创建 Web 标准的 WebSocket 连接。`url` 必须使用 `ws` 或 `wss` 协议。
+创建 Web 标准的 WebSocket 连接。`url` 必须使用 `ws` 或 `wss` 协议。`protocols` 可以是一个协议字符串或字符串数组。
 
 ### `WebSocket` 事件与方法
 
@@ -102,7 +102,11 @@ socket.onClose(() => {
 - `addEventListener('close', callback)`：监听连接关闭。
 - `addEventListener('error', callback)`：监听连接错误。
 - `send(data)`：发送字符串或二进制数据。
-- `close()`：关闭连接。
+- `close(code?, reason?)`：关闭连接，可携带关闭码和原因。
+- `readyState`：当前连接状态，可与 `CONNECTING`、`OPEN`、`CLOSING`、`CLOSED` 比较。
+- `url`、`protocol`、`extensions`：当前连接信息。
+- `bufferedAmount`：已经交给连接但尚未发送完成的字节数。
+- `binaryType`：当前固定为 `arraybuffer`，收到二进制消息时 `event.data` 为 `ArrayBuffer`。
 
 ### wx APIs
 

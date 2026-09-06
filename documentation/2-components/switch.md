@@ -9,12 +9,12 @@
 ```
 
 ```javascript
-Page({
+export default {
   data: { enabled: false },
   handleChange(event) {
     this.setData({ enabled: event.detail.value });
   },
-});
+};
 ```
 
 ## 显示复选框

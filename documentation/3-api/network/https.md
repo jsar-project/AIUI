@@ -73,6 +73,27 @@ text += decoder.decode();
 console.log(text);
 ```
 
+## 上传文件和表单
+
+使用 `File` 和 `FormData` 可以同时提交文本字段和文件：
+
+```javascript
+const attachment = new File(['AIUI 0.18'], 'release.txt', {
+  type: 'text/plain'
+});
+
+const form = new FormData();
+form.append('title', '版本说明');
+form.append('attachment', attachment);
+
+await fetch('https://example.com/upload', {
+  method: 'POST',
+  body: form
+});
+```
+
+传入 `FormData` 时不需要手动设置 `content-type`；运行时会生成包含 boundary 的请求头。
+
 ## 使用 `RequestTask` 监听响应头和分块
 
 ```javascript
@@ -138,15 +159,15 @@ AIUI 当前提供两种常见入口：
 
 ## API Reference
 
-### `fetch(url, options?)`
+### `fetch(input, options?)`
 
 `fetch()` 会发起一个 HTTP / HTTPS 请求，并返回一个 `Promise<Response>`。
 
 #### 参数
 
-#### `url`
+#### `input`
 
-请求地址。当前实现要求传入字符串。
+请求地址，可以是字符串、`URL` 或 `Request`。传入 `Request` 后，`options` 中提供的字段会覆盖对应设置。
 
 ```javascript
 const response = await fetch('https://example.com/data.json');
@@ -177,7 +198,7 @@ await fetch('https://example.com/items', {
 
 #### `options.body`
 
-请求体。当前实现会把 `body` 按字符串读取，并将其字节发送给服务端。
+请求体支持字符串、`Blob`、`FormData`、`URLSearchParams`、`ArrayBuffer`、TypedArray 和 `ReadableStream`。
 
 ```javascript
 await fetch('https://example.com/items', {
@@ -211,6 +232,26 @@ const signal = new AbortSignal();
 fetch('https://example.com/items', { signal });
 signal.abort();
 ```
+
+### `Request`
+
+使用 `new Request(input, options?)` 可以提前组合并复用请求。实例包含 `method`、`url`、`headers`、`body`、`signal`、`redirect` 等只读属性，并支持 `clone()`、`text()`、`json()`、`arrayBuffer()` 和 `blob()`。
+
+```javascript
+const request = new Request('https://example.com/items', {
+  method: 'POST',
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ title: 'hello' })
+});
+
+const response = await fetch(request);
+```
+
+### `Blob`、`File` 与 `FormData`
+
+- `new Blob(parts, options?)` 创建一组不可变的二进制数据，支持 `arrayBuffer()`、`bytes()`、`text()`、`stream()` 和 `slice()`。
+- `new File(parts, name, options?)` 在 `Blob` 基础上增加 `name` 和 `lastModified`。
+- `new FormData()` 管理表单字段，支持 `append()`、`set()`、`get()`、`getAll()`、`has()`、`delete()`、`entries()`、`keys()`、`values()` 和 `forEach()`。
 
 ### `Response`
 
@@ -307,6 +348,10 @@ const response = await fetch('https://example.com/model.bin');
 const buffer = await response.arrayBuffer();
 console.log(buffer.byteLength);
 ```
+
+#### `response.blob()`
+
+把响应体读取为 `Blob`，适合需要保留媒体类型的二进制内容。
 
 ### wx APIs
 

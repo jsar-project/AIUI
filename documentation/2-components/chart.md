@@ -16,7 +16,7 @@
 ```
 
 ```javascript
-Page({
+export default {
   data: {
     chartData: [
       { label: '周一', value: 120 },
@@ -25,7 +25,7 @@ Page({
       { label: '周四', value: 196 }
     ]
   }
-});
+};
 ```
 
 ```css
@@ -70,7 +70,7 @@ Page({
 ```
 
 ```javascript
-Page({
+export default {
   data: {
     weatherData: [
       { day: '周一', high: 26, low: 18 },
@@ -78,7 +78,7 @@ Page({
       { day: '周三', high: 25, low: 17 }
     ]
   }
-});
+};
 ```
 
 每组数据还可以使用 `dataSource` 提供独立的数据数组，并通过 `width` 设置线宽。

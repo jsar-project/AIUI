@@ -21,6 +21,27 @@ const first = items.item(0);
 - `page.querySelectorAll(selector)` 返回 `EntityList`
 - `entity.querySelector(selector)` 只在当前实体的子树内继续查询
 
+## 控制滚动位置
+
+查询到 `scroll-view` 后，可以读取当前位置和内容尺寸，也可以立即或平滑滚动：
+
+```javascript
+const list = page.querySelector('#results');
+
+console.log(list.scrollTop, list.scrollHeight);
+
+const result = await list.scrollTo({
+  top: list.scrollHeight,
+  behavior: 'smooth'
+});
+
+if (result.interrupted) {
+  console.log('滚动被新的操作打断');
+}
+```
+
+`scrollTo()` 移动到指定位置，`scrollBy()` 在当前位置基础上移动一段距离。用户操作或后续滚动命令可能打断平滑滚动，此时返回结果的 `interrupted` 为 `true`。
+
 ## API Reference
 
 ### 实例成员
@@ -31,8 +52,23 @@ const first = items.item(0);
 | `entity.tagName` | `string` | 当前实体的标签名 |
 | `entity.attributes` | `Object` | 当前实体属性的快照对象 |
 | `entity.dataset` | `DOMStringMap` | 基于 `data-*` 属性的映射视图 |
+| `entity.scrollTop` / `scrollLeft` | `number` | 当前纵向或横向滚动位置，可读写 |
+| `entity.scrollWidth` / `scrollHeight` | `number` | 可滚动内容的宽度或高度，只读 |
+| `entity.clientWidth` / `clientHeight` | `number` | 当前可视区域的宽度或高度，只读 |
+| `entity.scrollBottom` | `number` | 距离内容底部的剩余距离，只读 |
+| `entity.isAtBottom` | `boolean` | 是否已经滚动到底部，只读 |
+| `entity.scrollTo(x, y)` | `Promise<EntityScrollResult>` | 滚动到指定坐标 |
+| `entity.scrollTo(options?)` | `Promise<EntityScrollResult>` | 使用坐标和动画方式滚动到指定位置 |
+| `entity.scrollBy(x, y)` | `Promise<EntityScrollResult>` | 在当前位置基础上滚动 |
+| `entity.scrollBy(options?)` | `Promise<EntityScrollResult>` | 使用坐标和动画方式滚动一段距离 |
 | `entity.querySelector(selector)` | `Entity \| null` | 在当前实体子树内继续查询 |
 | `entity.querySelectorAll(selector)` | `EntityList` | 在当前实体子树内查询全部匹配项 |
+
+### 滚动方法参数
+
+对象形式支持 `left`、`top` 和 `behavior`。`behavior` 可以是 `auto`、`instant` 或 `smooth`。方法返回的 Promise 会得到 `{ interrupted: boolean }`。
+
+设置 `scrollTop` 或 `scrollLeft` 会立即滚动，并把超出范围的值限制在有效滚动区域内。普通的非滚动节点会保持在 `0`。
 
 ### `entity.attributes`
 

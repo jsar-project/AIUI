@@ -13,7 +13,7 @@
 ```
 
 ```javascript
-Page({
+export default {
   data: {
     initialCommands: JSON.stringify([
       {
@@ -31,7 +31,7 @@ Page({
       }
     ])
   }
-});
+};
 ```
 
 `commands` 接收字符串，因此需要使用 `JSON.stringify()` 把指令数组转换成 JSON 字符串。

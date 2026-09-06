@@ -9,12 +9,12 @@
 ```
 
 ```javascript
-Page({
+export default {
   data: { query: '' },
   handleInput(event) {
     this.setData({ query: event.detail.value });
   },
-});
+};
 ```
 
 ## 属性

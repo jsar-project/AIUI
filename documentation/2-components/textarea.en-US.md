@@ -9,12 +9,12 @@
 ```
 
 ```javascript
-Page({
+export default {
   data: { notes: '' },
   handleInput(event) {
     this.setData({ notes: event.detail.value });
   },
-});
+};
 ```
 
 ## Properties

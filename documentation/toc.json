@@ -730,6 +730,12 @@
             "label": "Audio Player"
           },
           {
+            "id": "web-audio",
+            "label": "Web Audio",
+            "docId": "media-web-audio",
+            "docPath": "3-api/media/web-audio.md"
+          },
+          {
             "id": "media-capture",
             "label": "媒体采集",
             "docId": "media-media-capture",
@@ -768,6 +774,12 @@
             "id": "url",
             "label": "URL",
             "docId": "network-url"
+          },
+          {
+            "id": "streams",
+            "label": "数据流",
+            "docId": "network-streams",
+            "docPath": "3-api/network/streams.md"
           }
         ]
       },
