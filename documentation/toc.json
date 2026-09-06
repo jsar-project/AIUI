@@ -722,30 +722,36 @@
         "expanded": false,
         "children": [
           {
-            "id": "sound",
-            "label": "Sound"
+            "id": "overview",
+            "label": "如何选择媒体 API",
+            "docId": "media",
+            "docPath": "3-api/media.md"
           },
           {
             "id": "audio-player",
-            "label": "Audio Player"
+            "label": "音频播放"
+          },
+          {
+            "id": "sound",
+            "label": "短音效（Sound）"
           },
           {
             "id": "web-audio",
-            "label": "Web Audio",
+            "label": "音频处理（Web Audio）",
             "docId": "media-web-audio",
             "docPath": "3-api/media/web-audio.md"
-          },
-          {
-            "id": "media-capture",
-            "label": "媒体采集",
-            "docId": "media-media-capture",
-            "docPath": "3-api/media/media-capture.md"
           },
           {
             "id": "video",
             "label": "视频播放",
             "docId": "media-video",
             "docPath": "3-api/media/video.md"
+          },
+          {
+            "id": "media-capture",
+            "label": "媒体采集",
+            "docId": "media-media-capture",
+            "docPath": "3-api/media/media-capture.md"
           }
         ]
       },

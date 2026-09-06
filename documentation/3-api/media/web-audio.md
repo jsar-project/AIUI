@@ -83,7 +83,7 @@ analyser.getByteFrequencyData(spectrum);
 
 ### `new AudioContext(options?)`
 
-创建音频处理上下文。`options.sampleRate` 设置采样率；`latencyHint` 可设为 `interactive`、`balanced`、`playback` 或数字。
+`AudioContext` 是 Web Audio 的入口，也是唯一需要主动创建的上下文。`options.sampleRate` 设置采样率；`latencyHint` 可设为 `interactive`、`balanced`、`playback` 或数字。
 
 | 成员 | 说明 |
 | --- | --- |
@@ -91,12 +91,18 @@ analyser.getByteFrequencyData(spectrum);
 | `currentTime` | 音频时间线当前秒数。 |
 | `sampleRate` | 当前采样率。 |
 | `destination` | 最终声音输出节点。 |
+| `onstatechange` | 上下文状态变化时调用。 |
 | `resume()` | 恢复处理。 |
 | `suspend()` | 暂停处理。 |
 | `close()` | 关闭上下文并释放资源。 |
 | `decodeAudioData(data)` | 把编码音频的 `ArrayBuffer` 解码为 `AudioBuffer`。 |
+| `createMediaStreamSource(stream)` | 创建读取 `MediaStream` 音轨的节点。 |
 
-### 创建节点
+`AudioContext` 继承 `BaseAudioContext` 的所有属性和创建方法。
+
+### `BaseAudioContext`
+
+`BaseAudioContext` 定义所有音频上下文共用的能力，不能直接使用 `new BaseAudioContext()` 创建。
 
 | 方法 | 返回值 | 用途 |
 | --- | --- | --- |
@@ -106,7 +112,147 @@ analyser.getByteFrequencyData(spectrum);
 | `createBiquadFilter()` | `BiquadFilterNode` | 对声音进行滤波。 |
 | `createAnalyser()` | `AnalyserNode` | 读取波形和频率数据。 |
 | `createBuffer(channels, length, sampleRate)` | `AudioBuffer` | 创建 PCM 音频缓冲区。 |
+| `decodeAudioData(data, success?, error?)` | `Promise<AudioBuffer>` | 解码编码音频，也可以提供成功和失败回调。 |
+
+它还提供只读的 `sampleRate`、`currentTime`、`state`、`destination`，以及 `onstatechange`。
+
+### `AudioNode`
+
+`AudioNode` 是所有处理节点的基类，不能直接构造。节点通过 `connect()` 连接成处理链，通过 `disconnect()` 断开。
+
+| 成员 | 说明 |
+| --- | --- |
+| `context` | 节点所属的 `BaseAudioContext`。 |
+| `numberOfInputs` / `numberOfOutputs` | 输入和输出数量。 |
+| `channelCount` | 处理的声道数。 |
+| `channelCountMode` | `max`、`clamped-max` 或 `explicit`。 |
+| `channelInterpretation` | `speakers` 或 `discrete`。 |
+| `connect(destination, output?, input?)` | 连接到另一个 `AudioNode` 或 `AudioParam`。 |
+| `disconnect(...)` | 断开全部连接，或断开指定输出、节点或参数。 |
+
+### `AudioDestinationNode`
+
+`AudioDestinationNode` 表示最终声音输出，通过 `context.destination` 获得，不能直接构造。只读的 `maxChannelCount` 表示输出支持的最大声道数。
+
+### `AudioScheduledSourceNode`
+
+`AudioScheduledSourceNode` 是可以安排开始和停止时间的声音源基类，不能直接构造。
+
+| 成员 | 说明 |
+| --- | --- |
+| `start(when?)` | 在指定音频时间开始；省略时立即开始。 |
+| `stop(when?)` | 在指定音频时间停止；省略时立即停止。 |
+| `onended` | 声音源播放结束时调用。 |
+
+`OscillatorNode` 和 `AudioBufferSourceNode` 都继承这些能力。
+
+### `new AudioBuffer(options)`
+
+`AudioBuffer` 保存内存中的 PCM 采样。也可以通过 `context.createBuffer()` 创建。
+
+| 成员 | 说明 |
+| --- | --- |
+| `sampleRate` | 采样率。 |
+| `length` | 每个声道的采样数量。 |
+| `duration` | 音频时长，单位为秒。 |
+| `numberOfChannels` | 声道数。 |
+| `getChannelData(channel)` | 返回指定声道的 `Float32Array`。 |
+| `copyToChannel(source, channel, start?)` | 把采样复制到指定声道。 |
+| `copyFromChannel(destination, channel, start?)` | 从指定声道复制采样。 |
+
+构造参数必须包含 `length` 和 `sampleRate`；`numberOfChannels` 可选。
+
+### `new AudioBufferSourceNode(context, options?)`
+
+`AudioBufferSourceNode` 播放一个 `AudioBuffer`。也可以通过 `context.createBufferSource()` 创建。
+
+| 成员 | 说明 |
+| --- | --- |
+| `buffer` | 要播放的 `AudioBuffer`，可以为 `null`。 |
+| `playbackRate` | 控制播放速度的 `AudioParam`。 |
+| `detune` | 以音分为单位调整音高的 `AudioParam`。 |
+| `loop` | 是否循环播放。 |
+| `loopStart` / `loopEnd` | 循环区间，单位为秒。 |
+| `start(when?, offset?, duration?)` | 安排播放，并可指定起点和播放时长。 |
+
+一个声音源只能启动一次。需要再次播放同一个 `AudioBuffer` 时，应创建新的 `AudioBufferSourceNode`。
 
 ### `AudioParam`
 
-音量、频率等可变化参数通过 `AudioParam` 控制。除了直接设置 `value`，还可以使用 `setValueAtTime()`、`linearRampToValueAtTime()`、`exponentialRampToValueAtTime()`、`setTargetAtTime()` 和 `setValueCurveAtTime()` 安排随时间变化的参数。
+`AudioParam` 表示音量、频率等可随时间变化的数值，不能直接构造。它通常由节点的 `gain`、`frequency`、`detune` 等属性提供。
+
+| 成员 | 说明 |
+| --- | --- |
+| `value` | 当前参数值。 |
+| `automationRate` | `a-rate` 或 `k-rate`。 |
+| `defaultValue` / `minValue` / `maxValue` | 默认值和有效范围，只读。 |
+| `setValueAtTime(value, time)` | 在指定时间设置值。 |
+| `linearRampToValueAtTime(value, endTime)` | 线性变化到目标值。 |
+| `exponentialRampToValueAtTime(value, endTime)` | 指数变化到目标值。 |
+| `setTargetAtTime(target, startTime, timeConstant)` | 从指定时间开始趋近目标值。 |
+| `setValueCurveAtTime(values, startTime, duration)` | 按数值曲线变化。 |
+| `cancelScheduledValues(time)` | 取消指定时间之后的安排。 |
+| `cancelAndHoldAtTime(time)` | 取消后续安排并保持该时刻的值。 |
+
+所有设置和安排方法都返回当前 `AudioParam`，可以继续链式调用。
+
+### `new GainNode(context, options?)`
+
+`GainNode` 调整输入声音的音量，也可以通过 `context.createGain()` 创建。只读属性 `gain` 是一个 `AudioParam`；构造选项中的 `gain` 可以设置初始值。
+
+### `new OscillatorNode(context, options?)`
+
+`OscillatorNode` 生成连续波形，也可以通过 `context.createOscillator()` 创建。
+
+| 成员 | 说明 |
+| --- | --- |
+| `type` | `sine`、`square`、`sawtooth` 或 `triangle`。 |
+| `frequency` | 频率 `AudioParam`，单位为 Hz。 |
+| `detune` | 音高偏移 `AudioParam`，单位为音分。 |
+
+构造选项可以设置 `type`、`frequency` 和 `detune`。
+
+### `new BiquadFilterNode(context, options?)`
+
+`BiquadFilterNode` 对声音进行常见滤波，也可以通过 `context.createBiquadFilter()` 创建。
+
+| 成员 | 说明 |
+| --- | --- |
+| `type` | `lowpass`、`highpass`、`bandpass`、`lowshelf`、`highshelf`、`peaking`、`notch` 或 `allpass`。 |
+| `frequency` | 截止或中心频率。 |
+| `detune` | 频率偏移。 |
+| `Q` | 品质因数。 |
+| `gain` | 部分滤波类型使用的增益。 |
+| `getFrequencyResponse(frequencies, magnitudes, phases)` | 计算一组频率对应的幅度和相位响应。 |
+
+`frequency`、`detune`、`Q` 和 `gain` 都是 `AudioParam`。
+
+### `new AnalyserNode(context, options?)`
+
+`AnalyserNode` 读取正在播放的波形和频率数据，也可以通过 `context.createAnalyser()` 创建。它不会改变经过节点的声音。
+
+| 成员 | 说明 |
+| --- | --- |
+| `fftSize` | 分析窗口大小。 |
+| `frequencyBinCount` | 频率数据长度，等于 `fftSize / 2`。 |
+| `minDecibels` / `maxDecibels` | 频率数据的分贝范围。 |
+| `smoothingTimeConstant` | 多次分析结果之间的平滑程度。 |
+| `getFloatTimeDomainData(array)` | 写入浮点波形数据。 |
+| `getByteTimeDomainData(array)` | 写入 0–255 的波形数据。 |
+| `getFloatFrequencyData(array)` | 写入浮点分贝数据。 |
+| `getByteFrequencyData(array)` | 写入 0–255 的频率数据。 |
+
+### `new MediaStreamAudioSourceNode(context, options)`
+
+`MediaStreamAudioSourceNode` 把麦克风等 `MediaStream` 的音轨接入 Web Audio。也可以调用 `context.createMediaStreamSource(mediaStream)` 创建。
+
+```javascript
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+const context = new AudioContext();
+const microphone = context.createMediaStreamSource(stream);
+const analyser = context.createAnalyser();
+
+microphone.connect(analyser);
+```
+
+只读属性 `mediaStream` 返回创建节点时使用的媒体流。构造函数的 `options.mediaStream` 是必填项。
