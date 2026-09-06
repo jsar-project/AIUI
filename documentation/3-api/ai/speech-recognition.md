@@ -74,12 +74,93 @@ const session = new SpeechRecognitionSession({
 });
 ```
 
+## 添加自定义热词
+
+热词可以帮助识别服务更准确地理解产品名、人名、地点和行业词汇。先通过 `getCapabilities()` 确认当前服务支持热词，再通过 `phrases` 创建会话：
+
+```javascript
+const capabilities = await SpeechRecognitionSession.getCapabilities();
+
+const options = {
+  lang: 'zh-CN',
+  interimResults: true,
+};
+
+if (capabilities.phrases) {
+  options.phrases = [
+    { phrase: 'Rokid', boost: 5 },
+    { phrase: 'AIUI', boost: 5 },
+    { phrase: '灵伴', boost: 3 },
+  ];
+}
+
+const session = new SpeechRecognitionSession(options);
+const writer = session.audio.getWriter();
+const audio = await fetch('/assets/product-intro.wav')
+  .then((response) => response.blob());
+
+await writer.write(audio);
+await writer.close();
+```
+
+`phrase` 是希望优先识别的词语，不能为空。`boost` 是可选权重，省略时为 `1`；数值越高，表示越希望识别服务优先考虑这个词。是否支持热词以 `capabilities.phrases` 为准。
+
+## 更新 ASR 上下文
+
+上下文用于告诉识别服务当前对话正在讨论什么。可以在写入第一段音频前设置初始上下文，也可以在识别过程中通过 `updateContext()` 替换上下文：
+
+```javascript
+const capabilities = await SpeechRecognitionSession.getCapabilities();
+const session = new SpeechRecognitionSession({
+  lang: 'zh-CN',
+  audio: {
+    mimeType: 'audio/pcm',
+    sampleRate: 16000,
+    channelCount: 1,
+    sampleFormat: 's16',
+  },
+});
+
+if (capabilities.contextUpdates) {
+  await session.updateContext([
+    { role: 'user', text: '我正在查询杭州明天的天气' },
+    { role: 'assistant', text: '好的，我会关注杭州和明天这个时间范围' },
+  ]);
+}
+
+const writer = session.audio.getWriter();
+const firstPart = await fetch('/assets/question-1.pcm')
+  .then((response) => response.arrayBuffer());
+await writer.write(firstPart);
+
+// 对话主题发生变化时，替换当前上下文。
+if (capabilities.contextUpdates) {
+  await session.updateContext([
+    { role: 'user', text: '接下来改为查询上海的航班' },
+    { role: 'assistant', text: '好的，请告诉我出发日期' },
+  ]);
+}
+
+const secondPart = await fetch('/assets/question-2.pcm')
+  .then((response) => response.arrayBuffer());
+await writer.write(secondPart);
+await writer.close();
+```
+
+每条消息的 `role` 只能是 `user` 或 `assistant`，`text` 不能为空。当前服务不支持更新上下文时，不要调用该方法。
+
 ## 适用场景
 
 - 语音输入框
 - 语音问答
 - 语音控制命令
 - 需要边听边处理的交互流程
+
+## 事件处理建议
+
+- 使用 `onresult` 接收识别结果。
+- 使用 `onerror` 处理权限、设备或识别失败等异常情况。
+- 使用 `onend` 感知本轮识别已经结束，并及时更新界面状态。
 
 ## 使用建议
 
@@ -125,19 +206,73 @@ const recognition = new SpeechRecognition();
 
 | 选项 | 类型 | 说明 |
 | --- | --- | --- |
-| `lang` | String | 识别语言，例如 `zh-CN`。 |
-| `interimResults` | Boolean | 是否接收尚未最终确认的中间结果。 |
-| `maxAlternatives` | Number | 每个结果最多返回多少个候选。 |
-| `phrases` | Array | 提示词及可选的 `boost` 权重。 |
-| `segmentation` | String | 分段方式：`auto`、`vad` 或 `semantic`。 |
-| `audio` | Object | 音频格式，可包含 `mimeType`、`sampleRate`、`channelCount`、`sampleFormat`。 |
+| `lang` | `string` | 识别语言，例如 `zh-CN`。 |
+| `interimResults` | `boolean` | 是否接收尚未最终确认的中间结果，默认 `false`。 |
+| `maxAlternatives` | `number` | 每个结果最多返回多少个候选，默认且最小为 `1`。 |
+| `phrases` | `SpeechRecognitionPhrase[]` | 自定义热词及可选权重。使用前检查 `capabilities.phrases`。 |
+| `segmentation` | `string` | 分段方式：`auto`、`vad` 或 `semantic`。使用前检查 `segmentationModes`。 |
+| `audio` | `SpeechRecognitionAudioOptions` | 输入音频格式。 |
 
-实例提供只读的 `audio` 可写流和 `state` 状态，并支持 `onstart`、`onaudiostart`、`onresult`、`onerror`、`onaudioend`、`onend` 事件。
+**`SpeechRecognitionPhrase`**
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `phrase` | `string` | 是 | 热词文本，不能为空。 |
+| `boost` | `number` | 否 | 热词权重，默认 `1`。 |
+
+**`SpeechRecognitionAudioOptions`**
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `mimeType` | `string` | 音频 MIME 类型，例如 `audio/pcm`。 |
+| `sampleRate` | `number` | 采样率，例如 `16000`。 |
+| `channelCount` | `number` | 声道数，例如单声道为 `1`。 |
+| `sampleFormat` | `'s16' \| 'f32'` | PCM 采样格式。 |
+
+实例提供只读的 `audio` 可写流和 `state`。当前实现中的 `state` 可能为 `idle`、`opening`、`streaming`、`closing` 或 `closed`。实例还支持 `onstart`、`onaudiostart`、`onresult`、`onerror`、`onaudioend` 和 `onend` 事件。
 
 ### `SpeechRecognitionSession.getCapabilities()`
 
-返回当前识别服务支持的音频格式、单个片段大小、候选数量和分段方式等能力。需要适配多种音频来源时，建议在创建会话前查询。
+```javascript
+const capabilities = await SpeechRecognitionSession.getCapabilities();
+```
+
+返回 `Promise<SpeechRecognitionCapabilities>`。建议在创建会话前调用，按照实际支持情况选择音频格式、热词、上下文和分段方式。查询失败时 Promise 会拒绝。
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| `audioFormats` | `SpeechRecognitionAudioFormatCapability[]` | 支持的音频格式及其采样率、声道数和采样格式。 |
+| `maxChunkBytes` | `number` | 每个传输片段支持的最大字节数。写入更大的数据时，会自动拆分后发送。 |
+| `interimResults` | `boolean` | 是否支持返回中间识别结果。 |
+| `maxAlternatives` | `number` | 每个识别结果支持的最大候选数量。 |
+| `phrases` | `boolean` | 是否支持 `phrases` 自定义热词。 |
+| `contextUpdates` | `boolean` | 是否支持设置和更新 ASR 上下文。 |
+| `segmentationModes` | `Array<'auto' \| 'vad' \| 'semantic'>` | 支持的音频分段方式。 |
+
+`audioFormats` 中的每一项包含：
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| `mimeType` | `string` | 支持的音频 MIME 类型。 |
+| `sampleRates` | `number[]` | 支持的采样率；空数组表示不限制。 |
+| `channelCounts` | `number[]` | 支持的声道数；空数组表示不限制。 |
+| `sampleFormats` | `Array<'s16' \| 'f32'>` | 支持的 PCM 采样格式；空数组表示不限制。 |
 
 ### `session.updateContext(messages)`
 
-在识别过程中更新对话上下文。每条消息包含 `role` 和 `text`。如果当前识别服务不支持动态上下文，Promise 会拒绝。
+使用一组新的消息替换当前 ASR 上下文，返回 `Promise<void>`。
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `messages` | `SpeechRecognitionContextMessage[]` | 按对话顺序排列的上下文消息。 |
+
+| 消息字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `role` | `'user' \| 'assistant'` | 消息角色，只支持这两个值。 |
+| `text` | `string` | 消息内容，不能为空。 |
+
+- 在首次写入音频前调用时，上下文会随会话一起开始。
+- 在识别过程中调用时，会立即替换正在使用的上下文。
+- `messages` 不是数组、角色不受支持或文本为空时，会抛出 `TypeError`。
+- 在会话开始前调用时，方法会先保存上下文；如果服务不支持上下文，首次 `writer.write()` 会拒绝。
+- 在识别过程中更新失败时，`updateContext()` 返回的 Promise 会拒绝。调用前应检查 `getCapabilities()` 返回的 `contextUpdates`。
