@@ -17,8 +17,8 @@ export default {
   },
 
   async loadStatus() {
-    const response = await fetch('/api/status');
-    this.status = await response.json();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    this.status = 'ready';
   },
 };
 ```
@@ -35,7 +35,7 @@ export default {
     event.waitUntil(this.synchronize());
   },
   async synchronize() {
-    await fetch('/api/sync', { method: 'POST' });
+    await new Promise((resolve) => setTimeout(resolve, 100));
   },
 };
 ```
@@ -67,7 +67,7 @@ Instead of the default export's `onOpen()`, you can listen for `open` on the glo
 
 ```javascript
 self.addEventListener('open', (event) => {
-  event.waitUntil(fetch('/api/status'));
+  event.waitUntil(new Promise((resolve) => setTimeout(resolve, 100)));
 });
 ```
 
@@ -80,6 +80,7 @@ The `AgentWorker` instance is not an `EventTarget`; use `self` when you need `ad
 - `this.navigator` and the global `navigator` are the same object.
 - Global `self` and `globalThis` refer to the Agent Worker global object, not the `this` value used by `onOpen()`.
 - Every `open` trigger calls `onOpen()`; overlapping asynchronous work is not merged automatically.
+- Agent Workers do not provide `fetch`; start network requests from a Page or Widget.
 
 For declarations and lifetime configuration, see [Agent Worker Development](/AIUI/framework/open-agent-format-agent-worker).
 

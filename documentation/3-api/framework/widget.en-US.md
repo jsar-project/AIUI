@@ -69,7 +69,7 @@ export default {
 - `onDestroy()` is final; release resources that are no longer needed there.
 - Widgets do not provide Page-only routing, world-awareness, or `finish()` features.
 
-For declaration, file structure, and a complete example, see [Widget Development](/AIUI/framework/open-agent-format-widget).
+For declaration, file structure, and a complete example, see [Widget Development](/AIUI/framework/open-agent-format-widget). To open a declared Widget from current content, see `window.open()` in [Routing](/AIUI/api/route).
 
 ## API Reference
 

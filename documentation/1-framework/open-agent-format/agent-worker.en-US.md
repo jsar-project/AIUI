@@ -47,8 +47,8 @@ export default {
   },
 
   async refresh() {
-    const response = await fetch('/api/status');
-    this.latestStatus = await response.json();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    this.latestStatus = 'ready';
   },
 };
 ```
@@ -87,8 +87,7 @@ export default {
   },
 
   async createService() {
-    const response = await fetch('/api/service');
-    return response.json();
+    return { startedAt: Date.now() };
   },
 };
 ```
@@ -100,18 +99,20 @@ export default {
 | `instant` | Stops after the entry script, `onOpen()`, and work registered with `waitUntil()` finish | Synchronize data or complete one short task |
 | `foreground` | Keeps running while the current agent has an open Page or Widget | Shared connections, Bluetooth services, and continuous listeners |
 
-`background` is reserved and is not supported in the current release; using it fails `app.json` validation. `bluetooth-peripheral` can only be used with `foreground`.
+`bluetooth-peripheral` is an optional Bluetooth capability for an Agent Worker. After declaring it, the background task can use `navigator.bluetoothPeripheral` to create a GATT Server, allowing nearby BLE devices to read, write, or subscribe to data provided by the agent. Typical uses include device-state synchronization, sensor-data sharing, and Bluetooth controls.
+
+`background` is reserved and is not supported in the current release; using it fails `app.json` validation. Because a GATT Server must keep running while it provides its service, `bluetooth-peripheral` can only be used with `foreground`.
 
 ## Available Features and Limits
 
 An Agent Worker can use:
 
-- timers, Promises, `fetch`, `console`, and `performance`
+- timers, Promises, `console`, and `performance`
 - URL, text encoding, Web Crypto, and WebAssembly
 - ES Modules from the project
 - extra features explicitly listed in `capabilities`
 
-An Agent Worker does not provide Page, Widget, `window`, `document`, interface rendering, routing, or media capture features. Let a Page or Widget handle visible interface updates.
+An Agent Worker does not provide Page, Widget, `window`, `document`, `fetch`, interface rendering, routing, or media capture features. Let a Page or Widget handle visible interface updates and network requests.
 
 ## Continue Reading
 

@@ -1,6 +1,22 @@
 # Routing
 
-AIUI routing capabilities are used to navigate, go back, redirect, and manage the page stack across different pages. This page does not expand on every API detail. Its main purpose is to help you quickly find the specific documentation related to page navigation.
+AIUI routing APIs open Widgets and support navigation, back navigation, redirects, and page-stack management within an application.
+
+## Open a Widget
+
+Use `window.open()` to open a Widget declared in `app.json`. Omit the `.ink` extension from the path. Query parameters can follow the path:
+
+```javascript
+window.open('widgets/weather?city=hangzhou', '_widget');
+```
+
+The `target` argument is optional and defaults to `_widget`:
+
+```javascript
+window.open('widgets/weather?city=hangzhou');
+```
+
+`window.open()` currently opens Widgets only. Opening another Page is not supported. The call returns immediately without returning a Widget instance or an opening result.
 
 ## Navigate to a Detail Page
 
@@ -21,6 +37,17 @@ Continue reading:
 - **[AgentWorker](/AIUI/api/framework-agent-worker)**: Learn about background-task events and instance APIs.
 
 ## API Reference
+
+### `window.open(url, target?)`
+
+Opens a declared Widget. The equivalent global function `open(url, target?)` is also available.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `url` | `string` | Yes | Widget path with optional query parameters, such as `widgets/weather?city=hangzhou` |
+| `target` | `'_widget'` | No | Opening target; defaults to `'_widget'`, which is currently the only supported value |
+
+Returns `undefined`. A `TypeError` is thrown synchronously when `url` is not a string or is empty after trimming.
 
 ### wx APIs
 

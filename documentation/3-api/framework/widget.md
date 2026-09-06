@@ -69,7 +69,7 @@ export default {
 - `onDestroy()` 表示最终销毁，应在此处释放不再需要的资源。
 - Widget 不提供 Page 专属的路由、环境感知和 `finish()` 能力。
 
-Widget 的声明、文件结构和完整示例请参阅 [Widget 开发](/AIUI/framework/open-agent-format-widget)。
+Widget 的声明、文件结构和完整示例请参阅 [Widget 开发](/AIUI/framework/open-agent-format-widget)。需要从当前内容打开已声明的 Widget 时，请参阅[路由](/AIUI/api/route)中的 `window.open()`。
 
 ## API Reference
 

@@ -16,7 +16,7 @@ npx skills add https://github.com/jsar-project/AIUI/tree/main/skills/aiui-dev
 `aiui-dev` 是一套面向 AIUI 智能体开发的专业 Skill。它为 Coding Agent 提供了完整的 AIUI 开发上下文，让 AI 不只是生成通用前端代码，而是能够按照 AIUI 的项目结构、页面规范、组件体系和设计约束来协助开发。
 
 ### 核心功能
-- **理解 AIUI 项目结构**：识别 `AGENTS.md`、`app.json`、`app.js`、`pages/`、`assets/` 等核心目录和配置文件，帮助你搭建或整理 AIUI 工程。
+- **理解 AIUI 项目结构**：识别 `AGENTS.md`、`app.json`、`app.js`、`pages/`、`widgets/`、`workers/` 和 `assets/` 等核心目录与配置，帮助你搭建或整理 AIUI 工程。
 - **生成符合规范的页面代码**：理解 AIUI 推荐的 `.ink` 单文件组件结构，包括 `<script def>`、`<script setup>`、`<page>` 和 `<style>`，适合直接产出页面原型和业务页面。
 - **掌握页面配置与数据描述**：能基于 `page.json` 或页面定义中的 `description`、`schema`、`data` 等字段，帮助你设计页面输入数据结构和 UI 组件契约。
 - **编写 AIUI 模板与样式**：熟悉 WXML 数据绑定、条件渲染、内置组件，以及 WXSS/Flexbox 布局规则，能更准确地生成 AIUI 页面结构与样式代码。

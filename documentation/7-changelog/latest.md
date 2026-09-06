@@ -152,7 +152,7 @@ AIUI 0.18.0 支持开发 Widget 和后台任务，并带来更多常用 Web API�
   };
   ```
 
-- **打开新内容**：可以使用 `window.open()` 在新页面或 Widget 容器中打开指定内容。
+- **打开 Widget**：可以使用 `window.open()` 打开已声明的 Widget。当前还不支持通过该 API 打开其他 Page。
 
   ```js
   window.open('widgets/weather?city=hangzhou', '_widget');

@@ -99,7 +99,7 @@ Open the **“Code”** tab on the right to inspect or manually edit AIUI CODEIN
 
 ![image.png](../../image/quickstart.en-us/12.png)
 
-An AIUI agent's directory structure usually includes global configuration, pages, components, and assets:
+An AIUI agent's directory structure usually includes global configuration, Pages, Widgets, Agent Workers, components, and assets:
 
 ```latex
 agent-app/
@@ -109,14 +109,21 @@ agent-app/
 ├── pages/
 │   └── index/
 │       └── index.ink
+├── widgets/
+│   └── weather/
+│       └── index.ink
+├── workers/
+│   └── sync.js
 └── assets/
 ```
 
 + `AGENTS.md`: Describes the agent's identity, responsibilities, and behavioral boundaries.
-+ `app.json`: Configures page entry points and global window behavior.
++ `app.json`: Declares Pages, Widgets, Agent Workers, and global window behavior.
 + `pages/`: Stores pages and interaction logic.
++ `widgets/`: Stores compact independent interfaces, with one `.ink` file for each entry.
++ `workers/`: Stores Agent Worker background scripts with no interface.
 + `assets/`: Stores static resources such as images and audio.
-+ `.ink`: A file format that combines page configuration, logic, structure, and styles in a single file.
++ `.ink`: A file format that combines Page or Widget configuration, logic, structure, and styles in a single file.
 + A project can also use a multi-file page structure composed of WXML, WXSS, JavaScript, and JSON.
 
 For more information about AIUI file and page structures, see [Project structure](../structure.en-US.md).

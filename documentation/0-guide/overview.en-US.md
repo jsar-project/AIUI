@@ -90,6 +90,7 @@ In AIUI, the interface is not just decoration. It is part of the interaction its
 
 - a card inside a chat
 - a standalone page
+- an at-a-glance Widget
 - a panel of buttons
 - a set of status hints
 - a continuously updating task interface
@@ -102,7 +103,8 @@ This part defines how the system handles things internally.
 
 For example:
 
-- when a page loads
+- when a Page or Widget is shown
+- which shared tasks an Agent Worker manages
 - what should happen after the user taps a button
 - how network data is requested
 - how state is updated
@@ -118,7 +120,7 @@ Examples include:
 
 - AI capabilities: speech recognition, speech synthesis, large language models
 - network capabilities: requesting remote APIs and getting real-time data
-- device capabilities: Bluetooth, sensors, cameras, and more
+- device capabilities: connecting BLE peripherals, providing a Bluetooth GATT Server, reading sensors, and using cameras
 - rendering capabilities: showing the interface efficiently on the device
 
 If the interface is what users can see, and logic is what makes things work, then underlying capabilities are what make things actually possible.
@@ -140,18 +142,18 @@ This layer answers questions like:
 - What is an agent?
 - How is user intent carried?
 - What is the difference between conversational and immersive interaction?
-- How are pages, logic, and state organized together?
+- How are Pages, Widgets, Agent Workers, logic, and state organized together?
 
 You can think of it as: **the structural model and interaction organization of AIUI**.
 
 ### 2. Agent Runtime (Ink)
 
-This is the underlying runtime foundation of AIUI. It is responsible for actually running code, driving pages, connecting the logic layer with the view layer, and keeping agents running reliably on devices.
+This is the underlying runtime foundation of AIUI. It runs code, drives Pages and Widgets, and executes Agent Worker background tasks.
 
 This layer answers questions like:
 
 - Where does the code actually run?
-- How are page updates executed?
+- How are Page or Widget updates executed?
 - How does the runtime connect UI, logic, and underlying capabilities?
 - Why can AIUI run on AI glasses, AR devices, and similar terminals?
 

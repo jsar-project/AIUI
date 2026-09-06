@@ -1,92 +1,111 @@
 # 代码构成与目录结构
 
-一个标准的 AIUI 智能体可以采用传统的 **多文件结构** 或更现代的 **单文件组件 (SFC)** 结构。
+一个 AIUI 智能体可以同时包含完整页面、便于快速查看的 Widget，以及不显示界面的 Agent Worker 后台任务。页面可以使用传统多文件结构，也可以使用更紧凑的 `.ink` 单文件结构；Widget 使用 `.ink` 文件。
 
-## 1. 传统多文件结构
+## 项目根目录
 
-在这种模式下，一个智能体通常由以下文件组成：
+- `AGENTS.md`：描述智能体的身份、能力、指令和行为边界。
+- `app.json`：声明 Page、Widget、Agent Worker 和全局窗口配置。
+- `app.js`：处理应用级生命周期和共享逻辑。
+- `app.wxss`：定义 Page 和 Widget 可以复用的全局样式。
 
-### 全局配置
-- `app.js`: 智能体逻辑，定义全局生命周期函数。
-- `app.json`: 全局配置文件，配置页面路径、窗口外观等。
-- `app.wxss`: 全局样式表，定义通用的 UI 样式。
-- `AGENTS.md`: 智能体描述文件，定义智能体的能力、系统指令和元数据。
+## Page 目录（`pages/`）
 
-### 页面目录 (`pages/`)
-每个页面通常位于 `pages/` 下的独立子目录中，由四个文件组成：
-- `page.wxml`: 页面结构，使用 WXML 标签。
-- `page.wxss`: 页面样式，仅作用于当前页面。
-- `page.js`: 页面逻辑，处理数据和交互。
-- `page.json`: 页面配置，可覆盖全局配置。
+Page 用于承载完整交互流程，并参与页面导航。它可以采用两种结构：
 
-### 典型目录结构示例
+- 单文件：`pages/home/index.ink`
+- 多文件：同一路径下的 `.wxml`、`.wxss`、`.js` 和 `.json`
 
-```filetree
+当同一路径同时存在多文件入口和 `.ink` 文件时，会优先加载 `.ink` 文件。
+
+## Widget 目录（`widgets/`）
+
+Widget 是独立的小尺寸界面，适合展示天气、设备状态和快捷操作。每个 Widget 使用一个 `.ink` 文件，并需要在 `app.json.widgets` 中声明路径和尺寸类别：
+
+```json
+{
+  "widgets": [
+    { "path": "widgets/weather/index", "family": "1x2" }
+  ]
+}
 ```
 
----
+`family` 当前支持 `1x1` 和 `1x2`。声明的路径必须存在对应的 `.ink` 文件。
 
-## 2. 单文件组件 (SFC) 结构
+## Agent Worker 目录（`workers/`）
 
-为了提升开发效率并减少文件碎片，AIUI 支持 **单文件组件 (Single File Component)**。你可以将一个页面的结构、逻辑和配置统一写在一个 `.ink` 文件中。
+Agent Worker 是不显示界面的后台脚本，适合在多个 Page 或 Widget 打开期间维护一个共享任务，例如同步数据或提供蓝牙 GATT Server。入口文件使用 `.js` 或 `.ts`，并在 `app.json.agentWorkers` 中声明：
 
-之所以使用 `.ink` 作为后缀名，是因为 **Ink 是 AIUI 底层实现的 Agent 运行时**，因此 SFC 结构沿用了这一命名。
+```json
+{
+  "agentWorkers": [
+    {
+      "name": "sync",
+      "script": "workers/sync.js",
+      "trigger": { "type": "open" },
+      "lifetime": "instant"
+    }
+  ]
+}
+```
 
-### 文件构成 (`.ink`)
-一个典型的 `.ink` 文件包含以下三个部分：
+## 典型目录结构
 
-- **`<script def>`**: 对应原有的 `.json` 配置。
-- **`<script setup>`**: 对应原有的 `.js` 逻辑。
-- **`<page>`**: 对应原有的 `.wxml` 结构。
-- **`<style>`**: 对应原有的 `.wxss` 样式。
+```text
+agent-app/
+├── AGENTS.md
+├── app.json
+├── app.js
+├── app.wxss
+├── pages/
+│   └── home/
+│       └── index.ink
+├── widgets/
+│   └── weather/
+│       └── index.ink
+├── workers/
+│   └── sync.js
+├── components/
+│   └── status-card/
+│       └── index.ink
+└── assets/
+    └── weather.png
+```
 
-### 示例代码 (`index.ink`)
+目录名不是固定要求，但应与 `app.json` 中填写的相对路径保持一致。Widget 和 Agent Worker 都是可选的，不使用时可以省略对应配置与目录。
+
+## `.ink` 单文件结构
+
+一个 `.ink` 文件通常包含：
+
+- `<script def>`：页面或 Widget 配置。
+- `<script setup>`：数据、生命周期和事件处理逻辑。
+- `<page>` 或 `<widget>`：界面结构；同一个文件只能选择一种根节点。
+- `<style>`：当前入口的样式。
 
 ```html
-<script def>
-{
-  "navigationBarTitleText": "SFC 示例"
-}
-</script>
-
 <script setup>
 export default {
-  data: {
-    message: 'Hello from Ink SFC!'
-  },
-  onLoad() {
-    console.log('SFC Page Loaded');
-  },
+  data: { message: 'Hello AIUI' },
   handleTap() {
-    this.setData({
-      message: 'You clicked the text!'
-    });
-  }
-}
+    this.setData({ message: '已更新' });
+  },
+};
 </script>
 
 <page>
-  <view class="container">
-    <text class="title" bindtap="handleTap">{{message}}</text>
-  </view>
+  <text bindtap="handleTap">{{message}}</text>
 </page>
 
 <style>
-.container {
-  padding: 40rpx;
-  display: flex;
-  justify-content: center;
-}
-.title {
+text {
   font-size: 32rpx;
-  color: #40FF5E;
 }
 </style>
 ```
 
-### 优势
-- **关注点分离**：虽然代码在同一个文件中，但各部分职责明确。
-- **减少碎片化**：无需在多个文件间频繁切换。
-- **开发体验**：语法更接近现代前端框架（如 Vue）。
+## 继续阅读
 
-当项目目录中同时存在同一页面的多文件和 `.ink` 文件时，**框架会优先加载 `.ink` 文件**。
+- [Widget 开发](/AIUI/framework/open-agent-format-widget)
+- [Agent Worker 开发](/AIUI/framework/open-agent-format-agent-worker)
+- [app.json](/AIUI/framework/open-agent-format-app-json)

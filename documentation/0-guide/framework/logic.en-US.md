@@ -92,10 +92,51 @@ export default {
 | `onHide` | Listen for the page being hidden | Triggered when the page is hidden or enters the background |
 | `onUnload` | Listen for page unload | Triggered when the page is unloaded |
 
-## Page Instance Methods
+## Write Widget Logic
 
-In page logic, you can access the page instance via `this` and call the following common methods. These APIs are the basic tools for turning intent changes into visible interface updates:
+Widget logic lives in the `<script setup>` block of its `.ink` file. Widgets also update their interface through `data` and `setData()`, but use their own display-state callbacks:
 
-- **`this.setData(Object data, Function callback)`**: Sends data from the logic layer to the view layer asynchronously, while also updating the corresponding values in `this.data`.
-- **`this.data`**: Gets the current page data.
-- **`this.route`**: Not supported yet.
+```javascript
+export default {
+  data: { status: 'Ready' },
+  onCreate() {
+    this.setData({ status: 'Created' });
+  },
+  onAttach() {
+    this.setData({ status: 'Visible' });
+  },
+  onDetach() {
+    console.log('Widget hidden');
+  },
+  onDestroy() {
+    console.log('Widget destroyed');
+  },
+};
+```
+
+`onAttach()` and `onDetach()` can run more than once. For declarations, sizes, and the complete file structure, see [Widget Development](/AIUI/framework/open-agent-format-widget).
+
+## Write Agent Worker Logic
+
+An Agent Worker does not render an interface. Each time a Page or Widget opens successfully, the runtime calls `onOpen(event)`. Register asynchronous work immediately with `event.waitUntil()`:
+
+```javascript
+export default {
+  onOpen(event) {
+    event.waitUntil(this.prepare());
+  },
+  async prepare() {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    this.ready = true;
+  },
+};
+```
+
+The same running Agent Worker retains data on its object, which is useful for one shared initialization task or Bluetooth service. For complete configuration, see [Agent Worker Development](/AIUI/framework/open-agent-format-agent-worker).
+
+## Page and Widget Data Methods
+
+In Page or Widget logic, use `this` to access the current instance:
+
+- **`this.setData(Object data, Function callback)`**: Updates data and the affected interface content.
+- **`this.data`**: Gets the current Page or Widget data.

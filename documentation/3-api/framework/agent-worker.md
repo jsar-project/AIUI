@@ -17,8 +17,8 @@ export default {
   },
 
   async loadStatus() {
-    const response = await fetch('/api/status');
-    this.status = await response.json();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    this.status = 'ready';
   },
 };
 ```
@@ -35,7 +35,7 @@ export default {
     event.waitUntil(this.synchronize());
   },
   async synchronize() {
-    await fetch('/api/sync', { method: 'POST' });
+    await new Promise((resolve) => setTimeout(resolve, 100));
   },
 };
 ```
@@ -67,7 +67,7 @@ export default {
 
 ```javascript
 self.addEventListener('open', (event) => {
-  event.waitUntil(fetch('/api/status'));
+  event.waitUntil(new Promise((resolve) => setTimeout(resolve, 100)));
 });
 ```
 
@@ -80,6 +80,7 @@ self.addEventListener('open', (event) => {
 - `this.navigator` 与全局 `navigator` 是同一个对象。
 - 全局 `self` 和 `globalThis` 指向 Agent Worker 的全局对象，不等于 `onOpen()` 中的 `this`。
 - `onOpen()` 每次触发都会调用，不会因为前一次异步操作仍在执行而自动合并。
+- Agent Worker 不提供 `fetch`；网络请求应由 Page 或 Widget 发起。
 
 Agent Worker 的声明方式和运行时长配置请参阅 [Agent Worker 开发](/AIUI/framework/open-agent-format-agent-worker)。
 

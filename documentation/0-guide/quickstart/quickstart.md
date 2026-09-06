@@ -95,7 +95,7 @@ AIUI CODING 是 AIUI Studio 的 AI 开发工具，可以持续用自然语言补
 
 ![image.png](../../image/quickstart/12.png)
 
-项目目录通常包含全局配置、页面、组件和资源：
+项目目录通常包含全局配置、Page、Widget、Agent Worker、组件和资源：
 
 ```text
 agent-app/
@@ -105,16 +105,23 @@ agent-app/
 ├── pages/
 │   └── index/
 │       └── index.ink
+├── widgets/
+│   └── weather/
+│       └── index.ink
+├── workers/
+│   └── sync.js
 └── assets/
 ```
 + `AGENTS.md`：描述智能体身份、职责和行为边界。
-+ `app.json`：配置页面入口和全局窗口行为。
++ `app.json`：声明 Page、Widget、Agent Worker 和全局窗口行为。
 + `pages/`：存放页面及交互逻辑。
++ `widgets/`：存放小尺寸独立界面，每个入口使用 `.ink` 文件。
++ `workers/`：存放不显示界面的 Agent Worker 后台脚本。
 + `assets/`：存放图片、音频等静态资源。
-+ `.ink`：该文件格式可在单个文件中组合页面配置、逻辑、结构和样式；
++ `.ink`：该文件格式可在单个文件中组合 Page 或 Widget 的配置、逻辑、结构和样式；
 + 项目也可以采用 WXML、WXSS、JavaScript 和 JSON 组成的多文件页面结构
 
-了解更多 AIUI 文件页面结构请查看[项目结构](../structure.md)
+了解更多 AIUI 文件结构请查看[项目结构](../structure.md)。
 
 ## 八、发布提审上架到 Rokid Ai 智能体商店
 

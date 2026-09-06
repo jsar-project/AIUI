@@ -1,92 +1,111 @@
 # Code Composition and Directory Structure
 
-A standard AIUI agent can use either a traditional **multi-file structure** or a more modern **Single File Component (SFC)** structure.
+An AIUI agent can contain full Pages, compact Widgets, and Agent Worker background tasks with no interface. Pages can use either a traditional multi-file layout or a compact `.ink` single-file layout. Widgets use `.ink` files.
 
-## 1. Traditional Multi-file Structure
+## Project Root
 
-In this mode, an agent usually consists of the following files:
+- `AGENTS.md`: Describes the agent's identity, capabilities, instructions, and behavioral boundaries.
+- `app.json`: Declares Pages, Widgets, Agent Workers, and global window configuration.
+- `app.js`: Handles application-level lifecycle callbacks and shared logic.
+- `app.wxss`: Defines global styles that Pages and Widgets can reuse.
 
-### Global Configuration
-- `app.js`: Agent logic that defines global lifecycle functions.
-- `app.json`: Global configuration file that defines page paths, window appearance, and more.
-- `app.wxss`: Global stylesheet that defines shared UI styles.
-- `AGENTS.md`: Agent description file that defines the agent's capabilities, system instructions, and metadata.
+## Page Directory (`pages/`)
 
-### Page Directory (`pages/`)
-Each page is usually placed in its own subdirectory under `pages/` and consists of four files:
-- `page.wxml`: Page structure written with WXML tags.
-- `page.wxss`: Page styles that apply only to the current page.
-- `page.js`: Page logic that handles data and interactions.
-- `page.json`: Page configuration that can override global configuration.
+A Page carries a complete interaction flow and participates in page navigation. It can use either layout:
 
-### Typical Directory Structure Example
+- Single file: `pages/home/index.ink`
+- Multiple files: `.wxml`, `.wxss`, `.js`, and `.json` files at the same path
 
-```filetree
+When both layouts exist for the same path, the `.ink` file is loaded first.
+
+## Widget Directory (`widgets/`)
+
+A Widget is an independent compact interface for information such as weather, device status, or quick actions. Each Widget uses one `.ink` file and declares its path and size category in `app.json.widgets`:
+
+```json
+{
+  "widgets": [
+    { "path": "widgets/weather/index", "family": "1x2" }
+  ]
+}
 ```
 
----
+`family` currently supports `1x1` and `1x2`. Each declared path must have a matching `.ink` file.
 
-## 2. Single File Component (SFC) Structure
+## Agent Worker Directory (`workers/`)
 
-To improve development efficiency and reduce file fragmentation, AIUI supports **Single File Components (SFCs)**. You can put a page's structure, logic, and configuration into a single `.ink` file.
+An Agent Worker is a background script with no interface. Use it to maintain one shared task while multiple Pages or Widgets are open, such as synchronizing data or providing a Bluetooth GATT Server. Its entry is a `.js` or `.ts` file declared in `app.json.agentWorkers`:
 
-The `.ink` extension is used because **Ink is the Agent runtime underlying AIUI**, so the SFC structure follows that naming convention.
+```json
+{
+  "agentWorkers": [
+    {
+      "name": "sync",
+      "script": "workers/sync.js",
+      "trigger": { "type": "open" },
+      "lifetime": "instant"
+    }
+  ]
+}
+```
 
-### File Structure (`.ink`)
-A typical `.ink` file contains the following four parts:
+## Typical Directory Structure
 
-- **`<script def>`**: Corresponds to the original `.json` configuration.
-- **`<script setup>`**: Corresponds to the original `.js` logic.
-- **`<page>`**: Corresponds to the original `.wxml` structure.
-- **`<style>`**: Corresponds to the original `.wxss` styles.
+```text
+agent-app/
+├── AGENTS.md
+├── app.json
+├── app.js
+├── app.wxss
+├── pages/
+│   └── home/
+│       └── index.ink
+├── widgets/
+│   └── weather/
+│       └── index.ink
+├── workers/
+│   └── sync.js
+├── components/
+│   └── status-card/
+│       └── index.ink
+└── assets/
+    └── weather.png
+```
 
-### Example (`index.ink`)
+These directory names are conventions rather than fixed requirements, but their relative paths must match `app.json`. Widgets and Agent Workers are optional, so omit their configuration and directories when they are not needed.
+
+## `.ink` Single-file Structure
+
+An `.ink` file usually contains:
+
+- `<script def>`: Page or Widget configuration.
+- `<script setup>`: Data, lifecycle callbacks, and event handlers.
+- `<page>` or `<widget>`: Interface structure; one file can use only one of these root elements.
+- `<style>`: Styles for the current entry.
 
 ```html
-<script def>
-{
-  "navigationBarTitleText": "SFC Example"
-}
-</script>
-
 <script setup>
 export default {
-  data: {
-    message: 'Hello from Ink SFC!'
-  },
-  onLoad() {
-    console.log('SFC Page Loaded');
-  },
+  data: { message: 'Hello AIUI' },
   handleTap() {
-    this.setData({
-      message: 'You clicked the text!'
-    });
-  }
-}
+    this.setData({ message: 'Updated' });
+  },
+};
 </script>
 
 <page>
-  <view class="container">
-    <text class="title" bindtap="handleTap">{{message}}</text>
-  </view>
+  <text bindtap="handleTap">{{message}}</text>
 </page>
 
 <style>
-.container {
-  padding: 40rpx;
-  display: flex;
-  justify-content: center;
-}
-.title {
+text {
   font-size: 32rpx;
-  color: #40FF5E;
 }
 </style>
 ```
 
-### Advantages
-- **Separation of concerns**: Even though the code is in one file, each part still has a clear responsibility.
-- **Less fragmentation**: No need to switch back and forth between multiple files.
-- **Developer experience**: The syntax is closer to modern frontend frameworks such as Vue.
+## Continue Reading
 
-When both a multi-file page and a `.ink` file exist for the same page, **the framework loads the `.ink` file first**.
+- [Widget Development](/AIUI/framework/open-agent-format-widget)
+- [Agent Worker Development](/AIUI/framework/open-agent-format-agent-worker)
+- [app.json](/AIUI/framework/open-agent-format-app-json)

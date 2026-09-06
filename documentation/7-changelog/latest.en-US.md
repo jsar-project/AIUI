@@ -152,7 +152,7 @@ AIUI 0.18.0 lets you build Widgets and background tasks, and adds more familiar 
   };
   ```
 
-- **Open New Content**: Use `window.open()` to open content in a new page or Widget container.
+- **Open a Widget**: Use `window.open()` to open a declared Widget. Opening another Page through this API is not currently supported.
 
   ```js
   window.open('widgets/weather?city=hangzhou', '_widget');

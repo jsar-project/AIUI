@@ -1,10 +1,10 @@
 # User Interface (UI) Development
 
-In AIUI, the view layer is the surface where intent is made visible and interactive. It is mainly composed of WXML (WeiXin Markup Language) and WXSS (WeiXin Style Sheets). Together with base components and the event system, they build high-performance interfaces that present intent, collect user actions, and return feedback for intelligent agents.
+In AIUI, the view layer makes intent visible and interactive. Pages carry complete interactions, while Widgets support at-a-glance information and quick actions. Both can use WXML, WXSS, built-in components, and the event system.
 
-## WXML (Page Structure)
+## WXML (Page and Widget Structure)
 
-WXML is a markup language similar to HTML and is used to describe page structure. In an intent-driven framework, it is responsible for exposing current state and available actions in a structured way. It supports data binding, conditional rendering, list rendering, and template references.
+WXML is a markup language similar to HTML and describes Page or Widget structure. It supports data binding, conditional rendering, list rendering, and template references.
 
 ### Core Features
 
@@ -25,13 +25,15 @@ WXML is a markup language similar to HTML and is used to describe page structure
   <view class="list">
     <view class="item" ink:for="{{items}}" ink:key="id" bindtap="handleItemClick">
       <text>{{index + 1}}. {{item.name}}</text>
-      <text ink:if="{{item.status === 'active'}}" class="badge">进行中</text>
+      <text ink:if="{{item.status === 'active'}}" class="badge">Active</text>
     </view>
   </view>
 </view>
 ```
 
-## WXSS (Page Styles)
+In an `.ink` single-file entry, a Page uses the `<page>` root element and a Widget uses `<widget>`. One file cannot contain both.
+
+## WXSS (Page and Widget Styles)
 
 WXSS is a style language used to describe component styles in WXML. It extends CSS features to better fit agent development scenarios and helps turn intent and state into clear visual feedback.
 
@@ -75,4 +77,6 @@ WXSS is a style language used to describe component styles in WXML. It extends C
 ## Rendering Flow
 
 1. **Data-driven updates**: When the logic layer calls `this.setData`, the view layer performs incremental updates based on the new data, so intent changes can be reflected quickly.
-2. **High-performance rendering**: The AIUI view layer runs on the JSAR rendering engine, which delivers a smooth 2D/3D hybrid rendering experience and is especially suitable for AI + AR devices.
+2. **Shared development model**: Pages and Widgets use the same data binding, components, events, and styles, but have separate entries and lifecycle callbacks.
+
+For a complete Widget file, see [Widget Development](/AIUI/framework/open-agent-format-widget).

@@ -7,7 +7,7 @@ Welcome to AIUI! AIUI is an AI-native GUI local agent framework designed specifi
 You can switch between different functional modules through the top navigation bar:
 
 - **Quick Overview**: If this is your first time working with AIUI, start here. It covers the core concepts of intelligent agents, the directory structure, and how to build your first agent.
-- **Agent Framework**: Learn more about AIUI's runtime model, including configuration conventions (`AGENTS.md`, `app.json`), [framework structure](/AIUI/framework/structure-app) (agents and pages), and the WXML/WXSS reference documentation.
+- **Agent Framework**: Learn more about AIUI's runtime model, including configuration conventions (`AGENTS.md`, `app.json`), [framework structure](/AIUI/framework/structure-app) (Pages, Widgets, and Agent Workers), and the WXML/WXSS reference documentation.
 - **Components**: Lists all UI components supported by AIUI in detail, such as `view`, `scroll-view`, `image`, and more, together with their properties and usage.
 - **API**: Provides the JavaScript API reference for AIUI, including framework core APIs, open service APIs, multimedia APIs, network requests, and WeChat Mini Program-compatible APIs.
 - **Developer Tools**: Introduces the AIUI developer tooling system, including the CLI and on-device debugging capabilities.

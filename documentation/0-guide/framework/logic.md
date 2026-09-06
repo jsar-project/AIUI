@@ -92,10 +92,51 @@ export default {
 | `onHide` | 监听页面隐藏 | 页面隐藏/切入后台时触发 |
 | `onUnload` | 监听页面卸载 | 页面卸载时触发 |
 
-## 页面实例方法
+## 编写 Widget 逻辑
 
-在页面逻辑中，你可以通过 `this` 访问页面实例，并调用以下常用方法。这些 API 也是把意图变化转成可见界面反馈的基础工具：
+Widget 的逻辑写在 `.ink` 文件的 `<script setup>` 中。它同样通过 `data` 和 `setData()` 更新界面，但使用自己的显示状态回调：
 
-- **`this.setData(Object data, Function callback)`**: 将数据从逻辑层发送到视图层（异步），同时改变对应的 `this.data` 的值。
-- **`this.data`**: 获取当前页面的数据。
-- **`this.route`**: 暂不支持。
+```javascript
+export default {
+  data: { status: '准备就绪' },
+  onCreate() {
+    this.setData({ status: '已创建' });
+  },
+  onAttach() {
+    this.setData({ status: '正在显示' });
+  },
+  onDetach() {
+    console.log('Widget 已隐藏');
+  },
+  onDestroy() {
+    console.log('Widget 已销毁');
+  },
+};
+```
+
+`onAttach()` 和 `onDetach()` 可能多次调用。Widget 的声明、尺寸和完整结构请参阅 [Widget 开发](/AIUI/framework/open-agent-format-widget)。
+
+## 编写 Agent Worker 逻辑
+
+Agent Worker 不渲染界面。每次 Page 或 Widget 成功打开时，运行时调用 `onOpen(event)`。如果其中启动了异步任务，需要立即用 `event.waitUntil()` 登记：
+
+```javascript
+export default {
+  onOpen(event) {
+    event.waitUntil(this.prepare());
+  },
+  async prepare() {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    this.ready = true;
+  },
+};
+```
+
+同一个正在运行的 Agent Worker 会保留对象上的数据，适合管理多个入口共用的初始化任务或蓝牙服务。完整配置请参阅 [Agent Worker 开发](/AIUI/framework/open-agent-format-agent-worker)。
+
+## Page 与 Widget 数据方法
+
+在 Page 或 Widget 逻辑中，可以通过 `this` 访问当前实例：
+
+- **`this.setData(Object data, Function callback)`**：更新数据和受影响的界面内容。
+- **`this.data`**：获取当前 Page 或 Widget 的数据。

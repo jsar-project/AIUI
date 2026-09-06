@@ -8,5 +8,5 @@ Click the sub-sections in the left-side menu to view details:
 - **Storage**: Persist local data.
 - **Modularization**: Organize and manage code modules.
 - **Canvas**: Use Canvas for 2D drawing.
-- **Device**: Connect BLE peripherals and read the accelerometer, gyroscope, and orientation sensor.
+- **Device**: Connect BLE peripherals, provide a Bluetooth GATT Server, and read motion and orientation sensors.
 - **AI Capabilities**: Speech recognition, speech synthesis, and large language model invocation.

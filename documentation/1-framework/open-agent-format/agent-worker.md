@@ -47,8 +47,8 @@ export default {
   },
 
   async refresh() {
-    const response = await fetch('/api/status');
-    this.latestStatus = await response.json();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    this.latestStatus = 'ready';
   },
 };
 ```
@@ -87,8 +87,7 @@ export default {
   },
 
   async createService() {
-    const response = await fetch('/api/service');
-    return response.json();
+    return { startedAt: Date.now() };
   },
 };
 ```
@@ -100,18 +99,20 @@ export default {
 | `instant` | 入口脚本、`onOpen()` 和通过 `waitUntil()` 登记的任务完成后停止 | 同步一次数据、完成一次短任务 |
 | `foreground` | 只要当前智能体仍有 Page 或 Widget 打开就继续运行 | 共享连接、蓝牙服务、持续监听 |
 
-`background` 是预留值，当前版本不支持；使用它会导致 `app.json` 校验失败。`bluetooth-peripheral` 只能与 `foreground` 一起使用。
+`bluetooth-peripheral` 是 Agent Worker 的可选蓝牙能力。声明后，后台任务可以通过 `navigator.bluetoothPeripheral` 创建 GATT Server，让附近的 BLE 设备读取、写入或订阅智能体提供的数据。适合设备状态同步、传感器数据共享和蓝牙控制等场景。
+
+`background` 是预留值，当前版本不支持；使用它会导致 `app.json` 校验失败。由于 GATT Server 需要在服务期间持续运行，`bluetooth-peripheral` 只能与 `foreground` 一起使用。
 
 ## 可用能力与限制
 
 Agent Worker 可以使用：
 
-- 定时器、Promise、`fetch`、`console` 和 `performance`
+- 定时器、Promise、`console` 和 `performance`
 - URL、文本编解码、Web Crypto 和 WebAssembly
 - 项目内的 ES Module
 - 在 `capabilities` 中显式声明的附加能力
 
-Agent Worker 不提供 Page、Widget、`window`、`document`、界面渲染、路由和媒体采集能力。需要更新界面时，应由 Page 或 Widget 自己处理显示逻辑。
+Agent Worker 不提供 Page、Widget、`window`、`document`、`fetch`、界面渲染、路由和媒体采集能力。需要更新界面或发送网络请求时，应由 Page 或 Widget 处理。
 
 ## 继续阅读
 
