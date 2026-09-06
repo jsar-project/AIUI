@@ -1,6 +1,6 @@
-# aix-cli Tool
+# AIX-CLI Tool
 
-`aix` is the official command line tool for managing, packaging, and inspecting AIX files.
+`AIX-CLI` is the official command line tool for managing, packaging, and inspecting AIX files.
 
 ## Installation
 
@@ -37,9 +37,9 @@ aix pack <source-directory> -O --opt-level 3
 View the file list and sizes inside an AIX package without extracting it:
 
 ```bash
-aix list <AIX-file>
+aix list <aix-file>
 # Or use the alias
-aix ls <AIX-file>
+aix ls <aix-file>
 ```
 
 ## Ignore Files (.aixignore)
