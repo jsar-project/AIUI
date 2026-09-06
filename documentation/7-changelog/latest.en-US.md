@@ -1,3 +1,204 @@
+# v0.18.0
+
+AIUI 0.18.0 lets you build Widgets and background tasks, and adds more familiar Web APIs together with richer audio, speech, animation, scrolling, and drawing capabilities. Apps also stay smoother and more stable on complex pages and during long-running sessions.
+
+## Development Capabilities
+
+- **Widget Development**: You can declare `1x1` and `1x2` Widgets in `app.json` and build their interfaces with a `<widget>` block in an `.ink` file. Widgets can update displayed data, reuse existing components and styles, and run code when they are created, shown, hidden, or destroyed.
+
+  ```json
+  {
+    "pages": ["pages/index/index"],
+    "widgets": [
+      { "path": "widgets/weather/index", "family": "1x2" }
+    ]
+  }
+  ```
+
+  ```html
+  <script def>
+  { "widget": { "family": "1x2" } }
+  </script>
+
+  <script setup>
+  export default {
+    data: { temperature: 24 },
+    refresh() {
+      this.setData({ temperature: this.data.temperature + 1 });
+    },
+  };
+  </script>
+
+  <widget>
+    <view bindtap="refresh">
+      <text>{{temperature}}°C</text>
+    </view>
+  </widget>
+  ```
+
+- **Background Tasks (Agent Workers)**: You can run a background script with an agent to share state across pages or Widgets, or to keep tasks such as Bluetooth services active. Configuration now uses `agentWorkers` instead of the old `workers` field.
+- **More Consistent Imports**: The same module path now resolves consistently from apps, pages, and background tasks, avoiding imports that work from one entry but fail from another.
+- **Faster Data Updates**: Large pages, lists, and Widgets process only the data that actually changed, reducing waiting and unnecessary rendering work.
+- **Controllable Scrolling**: You can read a list's current position and content size, jump or scroll smoothly with `scrollTo()` and `scrollBy()`, and react while scrolling or when scrolling finishes.
+
+  ```js
+  const list = page.querySelector('#results');
+  const result = await list.scrollTo({
+    top: list.scrollHeight,
+    behavior: 'smooth',
+  });
+  console.log(result.interrupted);
+  ```
+
+## APIs, Networking, and Speech
+
+- **More Familiar Web APIs**: Apps can now create real-time connections, process data as it arrives, upload files and forms, work with URLs, generate secure random values, and measure how long an operation takes. Relevant APIs include `WebSocket`, Streams, `File`, `FormData`, `URL`, Web Crypto, and User Timing.
+
+  ```js
+  const attachment = new File(['AIUI 0.18'], 'release.txt', {
+    type: 'text/plain',
+  });
+  const form = new FormData();
+  form.append('attachment', attachment);
+
+  await fetch('/api/releases', {
+    method: 'POST',
+    body: form,
+  });
+  ```
+
+- **More Flexible Audio**: Web Audio can play or generate sounds, adjust volume, add filters, inspect waveforms and frequency data, and continuously play PCM audio data.
+
+  ```js
+  const context = new AudioContext();
+  await context.resume();
+
+  const oscillator = context.createOscillator();
+  oscillator.frequency.value = 440;
+  oscillator.connect(context.destination);
+  oscillator.start();
+  oscillator.stop(context.currentTime + 0.2);
+  ```
+
+- **Continuous Audio Recognition**: Apps can write recorded or existing audio to `SpeechRecognitionSession` in parts, receive updated recognition text as it becomes available, and finish or cancel the task at any time. Spoken output can now also be cancelled directly.
+
+  ```js
+  const recognition = new SpeechRecognitionSession({
+    lang: 'zh-CN',
+    interimResults: true,
+  });
+  recognition.onresult = (event) => {
+    const result = event.results[event.resultIndex][0];
+    console.log(result.transcript);
+  };
+
+  const recordedAudioBlob = await fetch('/assets/question.wav')
+    .then((response) => response.blob());
+  const writer = recognition.audio.getWriter();
+  await writer.write(recordedAudioBlob);
+  await writer.close();
+  ```
+
+- **Provide Data as a Bluetooth Peripheral**: `navigator.bluetoothPeripheral.openGattServer()` lets nearby BLE devices discover the device and read, write, or subscribe to data services defined by the app.
+
+  ```json
+  {
+    "agentWorkers": [
+      {
+        "name": "bluetooth",
+        "script": "workers/bluetooth.js",
+        "trigger": { "type": "open" },
+        "lifetime": "foreground",
+        "capabilities": ["bluetooth-peripheral"]
+      }
+    ]
+  }
+  ```
+
+  ```js
+  const serviceUuid = '12345678-1234-5678-1234-56789abcdef0';
+  const valueUuid = '12345678-1234-5678-1234-56789abcdef1';
+
+  export default {
+    server: null,
+    onOpen(event) {
+      event.waitUntil(this.publish());
+    },
+    async publish() {
+      if (this.server?.state === 'open') return;
+
+      this.server = await navigator.bluetoothPeripheral.openGattServer({
+        services: [{
+          uuid: serviceUuid,
+          characteristics: [{
+            uuid: valueUuid,
+            properties: { read: true, notify: true },
+          }],
+        }],
+      });
+
+      const value = this.server
+        .getService(serviceUuid)
+        .getCharacteristic(valueUuid);
+      value.addEventListener('readrequest', (event) => {
+        event.respondWith(new Uint8Array([1]));
+      });
+
+      await this.server.startAdvertising({
+        name: 'AIUI Sensor',
+        serviceUUIDs: [serviceUuid],
+      });
+    },
+  };
+  ```
+
+- **Open New Content**: Use `window.open()` to open content in a new page or Widget container.
+
+  ```js
+  window.open('widgets/weather?city=hangzhou', '_widget');
+  ```
+
+## Interfaces and Animation
+
+- **More Lottie Animations Work Correctly**: `<lottie-view>` can now display more common shape, image, text, gradient, path, and mask animations.
+- **Animate More Styles**: Size, spacing, color, opacity, position, rotation, and scale can now change smoothly with CSS transitions or `@keyframes`.
+
+  ```css
+  .card {
+    opacity: 0.7;
+    translate: 0 0;
+    transition: translate 180ms ease-out, opacity 180ms ease-out;
+  }
+
+  .card:focus {
+    opacity: 1;
+    translate: 0 -4px;
+  }
+  ```
+
+- **Improved Canvas and Images**: Apps can read and change image pixels, create reusable bitmaps, and draw text spacing and moved, rotated, or scaled paths more accurately.
+
+  ```js
+  const canvas = page.querySelector('#preview');
+  const ctx = canvas.getContext('2d');
+  const pixels = ctx.createImageData(64, 64);
+  pixels.data.set([255, 0, 0, 255]);
+  ctx.putImageData(pixels, 0, 0);
+
+  const bitmap = await createImageBitmap(pixels);
+  ctx.drawImage(bitmap, 80, 0);
+  ```
+
+- **Images and Canvas in Widgets**: Widgets can display images or draw custom icons, charts, and changing content.
+- **Improved Chinese, Japanese, and Korean Text**: Text size and wrapping are more accurate when these languages appear in horizontal layouts.
+
+## Performance and Stability
+
+- **Responsive During Complex Work**: Interfaces respond more quickly when animations, network requests, and background tasks run together. Live previews and WebSocket communication are smoother as well.
+- **Lower Memory Use Over Time**: Reduced memory growth from repeated page changes, image and Canvas reuse, network requests, and audio or video recording.
+- **More Reliable Media**: Recording stops reliably, Opus audio plays correctly, video completion state is more accurate, and images load correctly after a page is reopened.
+- **Data Binding and Scrolling Fixes**: Fixed constant-value binding issues and incorrect values when reading dynamically set `scroll-left` or `scroll-top` positions.
+
 # v0.17.0
 
 AIUI 0.17.0 brings richer agent surfaces, media capabilities, persistent file storage, and improved rendering diagnostics. This release is especially useful for agents that combine wearable interaction, streaming content, and native host capabilities.

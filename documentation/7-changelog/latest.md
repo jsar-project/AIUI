@@ -1,3 +1,204 @@
+# v0.18.0
+
+AIUI 0.18.0 支持开发 Widget 和后台任务，并带来更多常用 Web API，以及更丰富的音频、语音、动画、滚动和绘图能力。应用在复杂页面和长时间运行时也会更加流畅、稳定。
+
+## 开发能力
+
+- **Widget 开发支持**：可以在 `app.json` 中声明 `1x1`、`1x2` Widget，并在 `.ink` 文件中使用 `<widget>` 编写界面。Widget 可以更新显示数据、复用已有组件和样式，并在创建、显示、隐藏和销毁时执行相应代码。
+
+  ```json
+  {
+    "pages": ["pages/index/index"],
+    "widgets": [
+      { "path": "widgets/weather/index", "family": "1x2" }
+    ]
+  }
+  ```
+
+  ```html
+  <script def>
+  { "widget": { "family": "1x2" } }
+  </script>
+
+  <script setup>
+  export default {
+    data: { temperature: 24 },
+    refresh() {
+      this.setData({ temperature: this.data.temperature + 1 });
+    },
+  };
+  </script>
+
+  <widget>
+    <view bindtap="refresh">
+      <text>{{temperature}}°C</text>
+    </view>
+  </widget>
+  ```
+
+- **后台任务（Agent Worker）**：可以创建随智能体运行的后台脚本，用于在多个页面或 Widget 之间共享状态，或持续处理蓝牙等任务。配置字段现统一使用 `agentWorkers`，不再使用旧的 `workers` 字段。
+- **模块导入更一致**：同一个模块路径可以从应用、页面和后台任务中得到一致结果，减少“在一个页面能导入、换个入口却找不到”的问题。
+- **数据更新更高效**：大型页面、列表和 Widget 更新数据时，只处理真正发生变化的部分，减少等待和不必要的重新渲染。
+- **可控制滚动位置**：可以读取列表当前的滚动位置和内容尺寸，并通过 `scrollTo()`、`scrollBy()` 跳转或平滑滚动；还可以在滚动中和滚动结束时执行操作。
+
+  ```js
+  const list = page.querySelector('#results');
+  const result = await list.scrollTo({
+    top: list.scrollHeight,
+    behavior: 'smooth',
+  });
+  console.log(result.interrupted);
+  ```
+
+## API、网络与语音
+
+- **更多常用 Web API**：现在可以建立实时连接、边接收边处理数据、上传文件和表单、处理 URL、生成安全随机值，以及测量一段操作所花费的时间。相关接口包括 `WebSocket`、Streams、`File`、`FormData`、`URL`、Web Crypto 和 User Timing。
+
+  ```js
+  const attachment = new File(['AIUI 0.18'], 'release.txt', {
+    type: 'text/plain',
+  });
+  const form = new FormData();
+  form.append('attachment', attachment);
+
+  await fetch('/api/releases', {
+    method: 'POST',
+    body: form,
+  });
+  ```
+
+- **更灵活的音频处理**：通过 Web Audio 可以播放或生成声音、调节音量、添加滤波效果、读取波形和频谱，并连续播放 PCM 音频数据。
+
+  ```js
+  const context = new AudioContext();
+  await context.resume();
+
+  const oscillator = context.createOscillator();
+  oscillator.frequency.value = 440;
+  oscillator.connect(context.destination);
+  oscillator.start();
+  oscillator.stop(context.currentTime + 0.2);
+  ```
+
+- **持续识别音频内容**：可以把录制或已有的音频逐段写入 `SpeechRecognitionSession`，持续收到最新识别文字，并随时结束或取消任务；语音播报也支持直接取消。
+
+  ```js
+  const recognition = new SpeechRecognitionSession({
+    lang: 'zh-CN',
+    interimResults: true,
+  });
+  recognition.onresult = (event) => {
+    const result = event.results[event.resultIndex][0];
+    console.log(result.transcript);
+  };
+
+  const recordedAudioBlob = await fetch('/assets/question.wav')
+    .then((response) => response.blob());
+  const writer = recognition.audio.getWriter();
+  await writer.write(recordedAudioBlob);
+  await writer.close();
+  ```
+
+- **作为蓝牙外设提供数据**：可以通过 `navigator.bluetoothPeripheral.openGattServer()` 让设备被附近的 BLE 设备发现，并定义可读取、写入或订阅变化的数据服务。
+
+  ```json
+  {
+    "agentWorkers": [
+      {
+        "name": "bluetooth",
+        "script": "workers/bluetooth.js",
+        "trigger": { "type": "open" },
+        "lifetime": "foreground",
+        "capabilities": ["bluetooth-peripheral"]
+      }
+    ]
+  }
+  ```
+
+  ```js
+  const serviceUuid = '12345678-1234-5678-1234-56789abcdef0';
+  const valueUuid = '12345678-1234-5678-1234-56789abcdef1';
+
+  export default {
+    server: null,
+    onOpen(event) {
+      event.waitUntil(this.publish());
+    },
+    async publish() {
+      if (this.server?.state === 'open') return;
+
+      this.server = await navigator.bluetoothPeripheral.openGattServer({
+        services: [{
+          uuid: serviceUuid,
+          characteristics: [{
+            uuid: valueUuid,
+            properties: { read: true, notify: true },
+          }],
+        }],
+      });
+
+      const value = this.server
+        .getService(serviceUuid)
+        .getCharacteristic(valueUuid);
+      value.addEventListener('readrequest', (event) => {
+        event.respondWith(new Uint8Array([1]));
+      });
+
+      await this.server.startAdvertising({
+        name: 'AIUI Sensor',
+        serviceUUIDs: [serviceUuid],
+      });
+    },
+  };
+  ```
+
+- **打开新内容**：可以使用 `window.open()` 在新页面或 Widget 容器中打开指定内容。
+
+  ```js
+  window.open('widgets/weather?city=hangzhou', '_widget');
+  ```
+
+## 界面与动画
+
+- **支持更多 Lottie 动画**：`<lottie-view>` 现在可以正确显示更多常见的形状、图片、文字、渐变、路径和遮罩动画。
+- **更多样式可以添加动画**：尺寸、间距、颜色、透明度、位置、旋转和缩放等样式都可以使用 CSS transition 或 `@keyframes` 平滑变化。
+
+  ```css
+  .card {
+    opacity: 0.7;
+    translate: 0 0;
+    transition: translate 180ms ease-out, opacity 180ms ease-out;
+  }
+
+  .card:focus {
+    opacity: 1;
+    translate: 0 -4px;
+  }
+  ```
+
+- **Canvas 与图像能力增强**：可以读取和修改图片像素、创建可复用的位图，并更准确地绘制文字间距和经过移动、旋转或缩放的路径。
+
+  ```js
+  const canvas = page.querySelector('#preview');
+  const ctx = canvas.getContext('2d');
+  const pixels = ctx.createImageData(64, 64);
+  pixels.data.set([255, 0, 0, 255]);
+  ctx.putImageData(pixels, 0, 0);
+
+  const bitmap = await createImageBitmap(pixels);
+  ctx.drawImage(bitmap, 80, 0);
+  ```
+
+- **Widget 支持图片和 Canvas**：可以在 Widget 中展示图片，或自行绘制图标、图表和动态内容。
+- **中日韩文本布局改进**：中文、日文和韩文在横向排列时的尺寸计算和换行更加准确。
+
+## 性能与稳定性
+
+- **复杂任务下仍保持流畅**：动画、网络请求和后台任务同时运行时，界面响应更及时；实时预览和 WebSocket 通信也更加顺畅。
+- **长时间运行更省内存**：减少页面反复切换、图片和 Canvas 重复使用、网络请求以及录音录像带来的内存增长。
+- **音视频更加可靠**：录制可以稳定停止，Opus 音频播放更正常，视频结束状态更准确，页面重新打开后图片也能正常加载。
+- **数据绑定与滚动修复**：修复固定值绑定异常，以及动态设置 `scroll-left`、`scroll-top` 后读取结果不正确的问题。
+
 # v0.17.0
 
 AIUI 0.17.0 带来了更丰富的智能体界面、媒体能力、持久化文件存储与更完善的渲染诊断。此次发布尤其适合结合可穿戴交互、流式内容与原生宿主能力的智能体。
